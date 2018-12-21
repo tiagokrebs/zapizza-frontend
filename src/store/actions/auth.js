@@ -19,21 +19,31 @@ export const registerError = (error) => {
 export const registerSuccess = (data) => {
     return {
         type: AUTH.REGISTER_SUCCESS,
-        success: data
+        message: data.message
     };
 };
 
+// Retorna funcao sincrona para 
 export const register = (registerData) => {
     return dispatch => {
         dispatch(registerStart());
-        axios.post('/api/signup', registerData)
+        return axios.post('/api/signup', registerData)
         .then(response => {
             dispatch(registerSuccess(response.data.data));
         })
         .catch(error => {
-            dispatch(registerError(error.response.data.error));
-        });
-    }
+            if (error.response) {
+                // Request enviado e resposta do servidor com status erro
+                dispatch(registerError(error.response.data.error));
+              } else if (error.request && !error.status) {
+                // Request enviado sem resposta do servidor
+                dispatch(registerError({ code: null, message: error.message }));
+              } else {
+                // Algo aconteceu na criacao do request e gerou um erro
+                dispatch(registerError({ code: null, message: error.message }));
+              }
+        });  
+    };
 };
 
 // Confirma registro
@@ -53,19 +63,32 @@ export const confirmError = (error) => {
 export const confirmSuccess = (data) => {
     return {
         type: AUTH.CONFIRM_SUCCESS,
-        success: data
+        message: data.message
     };
 };
 
 export const confirm = (token) => {
     return dispatch => {
         dispatch(confirmStart());
-        axios.post('/api/confirm/' + token)
+        axios.post('/api/confirm', {
+            token: token
+        }, {
+            withCredentials: true
+        })
         .then(response => {
             dispatch(confirmSuccess(response.data.data));
         })
         .catch(error => {
-            dispatch(confirmError(error.response.data.error));
+            if (error.response) {
+                // Request enviado e resposta do servidor com status erro
+                dispatch(confirmError(error.response.data.error));
+              } else if (error.request && !error.status) {
+                // Request enviado sem resposta do servidor
+                dispatch(confirmError({ code: null, message: error.message }));
+              } else {
+                // Algo aconteceu na criacao do request e gerou um erro
+                dispatch(confirmError({ code: null, message: error.message }));
+              }
         });
     }
 };
@@ -97,52 +120,112 @@ export const loginSuccess = (data) => {
     return {
         type: AUTH.LOGIN_SUCCESS,
         idToken: data.idToken,
-        userId: data.userId
+        userId: data.userId,
+        message: data.message,
+        emailConfirmed: data.emailConfirmed
     };
 };
 
-export const login = (loginData) => {
-    return dispatch => {
+export const login = (loginData) => dispatch => {
         dispatch(loginStart());
-        axios.post('/api/login', loginData, { withCredentials: true })
+        axios.post('/api/login', 
+        loginData, {
+            withCredentials: true
+        })
             .then(response => {
+                const expirationDate = new Date(new Date().getTime() + response.data.data.expiresIn * 1000);
                 localStorage.setItem('idToken', response.data.data.idToken);
+                localStorage.setItem('expirationDate', expirationDate);
                 localStorage.setItem('userId', response.data.data.userId);
                 dispatch(loginSuccess(response.data.data))
             })
             .catch(error => {
-                dispatch(loginError(error.response.data.error));
+                if (error.response) {
+                    // Request enviado e resposta do servidor com status erro
+                    dispatch(loginError(error.response.data.error));
+                  } else if (error.request && !error.status) {
+                    // Request enviado sem resposta do servidor
+                    dispatch(loginError({ code: null, message: error.message }));
+                  } else {
+                    // Algo aconteceu na criacao do request e gerou um erro
+                    dispatch(loginError({ code: null, message: error.message }));
+                  }
+            });
+};
+
+// Logout
+export const logoutStart = () => {
+    return {
+        type: AUTH.LOGOUT_START
+    };
+};
+
+export const logoutError = (error) => {
+    return {
+        type: AUTH.LOGOUT_ERROR,
+        error: error
+    };
+};
+
+export const logoutSuccess = () => {
+    return {
+        type: AUTH.LOGOUT_SUCCESS
+    };
+};
+
+export const logout = () => {
+    return dispatch => {
+        dispatch(logoutStart());
+        axios.get('/api/logout', { withCredentials: true })
+            .then(response => {
+                localStorage.removeItem('idToken');
+                localStorage.removeItem('expirationDate');
+                localStorage.removeItem('userId');
+                dispatch(logoutSuccess());
+            })
+            .catch(error => {
+                if (error.response) {
+                    // Request enviado e resposta do servidor com status erro
+                    dispatch(logoutError(error.response.data.error));
+                  } else if (error.request && !error.status) {
+                    // Request enviado sem resposta do servidor
+                    dispatch(logoutError({ code: null, message: error.message }));
+                  } else {
+                    // Algo aconteceu na criacao do request e gerou um erro
+                    dispatch(logoutError({ code: null, message: error.message }));
+                  }
             });
     };
 };
 
-// Logout
-export const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    return {
-        type: AUTH.LOGOUT
-    };
-};
-
-// Garantia de autenticacao
-export const loginCheck = () => {
-    return dispatch => {
-        const idToken = localStorage.getItem('idToken');
-        if (!idToken) {
-            dispatch(logout());
+export const loginCheck = () => dispatch => new Promise ((resolve, reject) => {
+        const expirationDate = new Date(localStorage.getItem('expirationDate'));
+        if (!localStorage.getItem('idToken')){
+            dispatch(logoutSuccess());
+        } else if (localStorage.getItem('idToken') && expirationDate > new Date()) {
+            dispatch(loginSuccess({userId: localStorage.getItem('userId'), idToken: localStorage.getItem('idToken') }))
         } else {
             dispatch(loginStart());
             axios.get('/api/authenticated', { withCredentials: true })
             .then(response => {
-                localStorage.setItem('idToken', response.data.idToken);
-                localStorage.setItem('userId', response.data.userId);
-                dispatch(loginSuccess(response.data.data))
+                const expirationDate = new Date(new Date().getTime() + response.data.data.expiresIn * 1000);
+                localStorage.setItem('idToken', response.data.data.idToken);
+                localStorage.setItem('expirationDate', expirationDate);
+                localStorage.setItem('userId', response.data.data.userId);
+                dispatch(loginSuccess(response.data.data));
             })
             .catch(error => {
-                dispatch(loginError(error.response.data.error));
-                dispatch(logout());
+                if (error.response) {
+                    // Request enviado e resposta do servidor com status erro
+                    dispatch(loginError(error.response.data.error));
+                    } else if (error.request && !error.status) {
+                    // Request enviado sem resposta do servidor
+                    dispatch(loginError({ code: null, message: error.message }));
+                    } else {
+                    // Algo aconteceu na criacao do request e gerou um erro
+                    dispatch(loginError({ code: null, message: error.message }));
+                    }
             });
         }
-    };
-};
+        resolve();
+});

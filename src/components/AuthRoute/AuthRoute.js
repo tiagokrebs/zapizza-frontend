@@ -5,8 +5,8 @@ import { Route, Redirect } from 'react-router-dom';
 const authRoute = (props) => {
         if (!props.isAuthenticated) {
             return <Redirect to={{
-                pathname: props.redirectTo,
-                state: {nextRedirect: props.location.pathname}
+                pathname: '/login',
+                state: { from: props.location }
             }}/>
         }
 

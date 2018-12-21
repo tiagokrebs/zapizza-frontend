@@ -1,33 +1,53 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { createBrowserHistory } from 'history';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
+import { connectRouter, ConnectedRouter, routerMiddleware } from 'connected-react-router'
 import thunk from 'redux-thunk';
 
 import './index.css';
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import authReducer from './store/reducers/auth';
+import { loginCheck } from './store/actions';
+
+const history = createBrowserHistory();
 
 const composeEnhancers = process.env.NODE_ENV === 'development' ? (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose) : compose;
 
-const rootReducer = combineReducers({
-    auth: authReducer
-});
+const rootReducer = (history) => combineReducers({
+    auth: authReducer,
+    router: connectRouter(history)
+  })
 
-const store = createStore(rootReducer, composeEnhancers(
-    applyMiddleware(thunk)
+const store = createStore(
+    rootReducer(history),
+    composeEnhancers(
+        applyMiddleware(
+            routerMiddleware(history),
+            thunk
+        ),
 ));
 
 const app = (
     <Provider store={store}>
-        <BrowserRouter>
+        <ConnectedRouter history={history}>
             <App />
-        </BrowserRouter>
+        </ConnectedRouter>
     </Provider>
 );
 
-ReactDOM.render(app, document.getElementById('root'));
-serviceWorker.unregister();
+const render = () => {
+    ReactDOM.render(app, document.getElementById('root'));
+    serviceWorker.unregister();
+
+};
+
+store.dispatch(loginCheck())
+ .then(() => {
+    render();
+ });
+
+// ReactDOM.render(app, document.getElementById('root'));
+// serviceWorker.unregister();

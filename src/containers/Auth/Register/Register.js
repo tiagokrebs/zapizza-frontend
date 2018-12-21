@@ -3,13 +3,14 @@ import { connect } from 'react-redux';
 
 import classes from './Register.module.css';
 import { Form, FormControl, Button, Alert} from 'react-bootstrap';
-import ZappSpinner from '../../components/UI/ZappSpinner/ZappSpinner';
+import ZappSpinner from '../../../components/UI/ZappSpinner/ZappSpinner';
 import * as yup from 'yup';
-import * as actions from '../../store/actions/auth';
-import updateObject from '../../shared/updateObject';
+import * as actions from '../../../store/actions';
+import updateObject from '../../../shared/updateObject';
 
 class RegisterForm extends Component {
     state = {
+        loading: false,
         inputs: {
             email: {
                 value: '',
@@ -168,10 +169,9 @@ class RegisterForm extends Component {
 
     registerHandler = (event) => {
         event.preventDefault();
+        this.setState({ loading: true });
         this.checkFormIsValid()
             .then(() => {
-                console.log('formIsValid', this.state.formIsValid);
-
                 const registerData = {
                     email: this.state.inputs.email.value,
                     password: this.state.inputs.password.value,
@@ -196,7 +196,7 @@ class RegisterForm extends Component {
                         onBlur={this.inputBlurHandler}
                         isInvalid={this.state.inputs.email.touched && this.state.inputs.email.invalid}
                         autoFocus
-                        disabled={this.props.success}
+                        disabled={this.props.register.message}
                     />
                     <FormControl.Feedback type="invalid">
                         {this.state.inputs.email.error}
@@ -211,7 +211,7 @@ class RegisterForm extends Component {
                         onChange={this.inputChangeHandler}
                         onBlur={this.inputBlurHandler}
                         isInvalid={this.state.inputs.password.touched && this.state.inputs.password.invalid}
-                        disabled={this.props.success}
+                        disabled={this.props.register.message}
                     />
                     <FormControl.Feedback type="invalid">
                         {this.state.inputs.password.error}
@@ -226,7 +226,7 @@ class RegisterForm extends Component {
                         onChange={this.inputChangeHandler}
                         onBlur={this.inputBlurHandler}
                         isInvalid={this.state.inputs.passConf.touched && this.state.inputs.passConf.invalid}
-                        disabled={this.props.success}
+                        disabled={this.props.register.message}
                     />
                     <FormControl.Feedback type="invalid">
                         {this.state.inputs.passConf.error}
@@ -241,7 +241,7 @@ class RegisterForm extends Component {
                         onChange={this.inputChangeHandler}
                         onBlur={this.inputBlurHandler}
                         isInvalid={this.state.inputs.firstName.touched && this.state.inputs.firstName.invalid}
-                        disabled={this.props.success}
+                        disabled={this.props.register.message}
                     />
                     <FormControl.Feedback type="invalid">
                         {this.state.inputs.firstName.error}
@@ -256,7 +256,7 @@ class RegisterForm extends Component {
                         onChange={this.inputChangeHandler}
                         onBlur={this.inputBlurHandler}
                         isInvalid={this.state.inputs.lastName.touched && this.state.inputs.lastName.invalid}
-                        disabled={this.props.success}
+                        disabled={this.props.register.message}
                     />
                     <FormControl.Feedback type="invalid">
                         {this.state.inputs.lastName.error}
@@ -272,28 +272,26 @@ class RegisterForm extends Component {
                     isInvalid={this.state.inputs.terms.touched && this.state.inputs.terms.invalid}
                     feedback={this.state.inputs.terms.error}
                     id="terms"
-                    disabled={this.props.success}
+                    disabled={this.props.register.message}
                     />
                 </Form.Group>
-                <Button disabled={this.props.success} type="submit">Registrar</Button>
+                <Button disabled={this.props.register.message} type="submit">Registrar</Button>
             </Form>
         );
 
-        if (this.props.loading) {
+        if (this.props.pending) {
             form = <ZappSpinner />
         }
 
         let message = null;
-
         if (this.props.error) {
             message = (
                 <Alert dismissible variant="danger">{this.props.error.message}</Alert>
             );
-        }
-
-        if (this.props.success) {
+        } 
+        if (this.props.register.message) {
             message = (
-                <Alert dismissible variant="success">{this.props.success.message}</Alert>
+                <Alert dismissible variant="success">{this.props.register.message}</Alert>
             );
         }
 
@@ -313,9 +311,9 @@ class RegisterForm extends Component {
 
 const mapStateToProps = state => {
     return {
-        loading: state.auth.loading,
-        error: state.auth.error,
-        success: state.auth.success
+        pending: state.auth.register.api.pending,
+        error: state.auth.register.api.error,
+        register: state.auth.register
     };
 };
 

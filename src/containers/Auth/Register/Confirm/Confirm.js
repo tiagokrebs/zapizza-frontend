@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as actions from '../../../store/actions/auth';
+import * as actions from '../../../../store/actions';
 
 class Confirm extends Component {
-    componentWillMount () {
-        console.log('params', this.props.match);
+    componentDidMount () {
         const token = this.props.match.params.token;
         this.props.onConfirm(token);
     }
@@ -16,10 +15,16 @@ class Confirm extends Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        isAuthenticated: state.auth.isAuthenticated,
+    };
+};
+
 const mapDispatchToProps = dispatch => {
     return {
         onConfirm: (token) => dispatch(actions.confirm(token))
     };
 };
 
-export default connect(null, mapDispatchToProps)(Confirm);
+export default connect(mapStateToProps, mapDispatchToProps)(Confirm);

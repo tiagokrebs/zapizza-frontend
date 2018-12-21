@@ -6,7 +6,7 @@ import { Form, FormControl, Button, Alert } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import ZappSpinner from '../../components/UI/ZappSpinner/ZappSpinner';
 import * as yup from 'yup';
-import * as actions from '../../store/actions/auth';
+import * as actions from '../../store/actions';
 import updateObject from '../../shared/updateObject';
 
 
@@ -30,9 +30,8 @@ class Auth extends Component {
     }
 
     componentDidMount () {
-        console.log(this.props);
         if (this.props.location.state) {
-            this.props.onSetAuthRedirectPath(this.props.location.state.nextRedirect);
+            this.props.onSetAuthRedirectPath(this.props.location.state.from.pathname);
         } else {
             this.props.onSetAuthRedirectPath("/");
         }
@@ -139,8 +138,6 @@ class Auth extends Component {
         event.preventDefault();
         this.checkFormIsValid()
             .then(() => {
-                console.log('formIsValid', this.state.formIsValid);
-
                 const loginData = {
                     username: this.state.inputs.username.value,
                     password: this.state.inputs.password.value
@@ -186,7 +183,7 @@ class Auth extends Component {
             </Form>
         );
 
-        if (this.props.loading) {
+        if (this.props.pending) {
             form = <ZappSpinner />
         }
 
@@ -197,7 +194,7 @@ class Auth extends Component {
             );
         }
 
-        let authRedirect = null
+        let authRedirect = null;
         if (this.props.isAuthenticated) {
             authRedirect = <Redirect to={this.props.authRedirectPath}/>
         }
@@ -219,9 +216,9 @@ class Auth extends Component {
 
 const mapStateToProps = state => {
     return {
-        loading: state.auth.loading,
-        error: state.auth.error,
-        success: state.auth.success,
+        pending: state.auth.api.pending,
+        error: state.auth.api.error,
+        register: state.auth.login,
         isAuthenticated: state.auth.isAuthenticated,
         authRedirectPath: state.auth.authRedirectPath
     };

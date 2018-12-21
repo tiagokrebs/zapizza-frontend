@@ -1,0 +1,39 @@
+// Store
+// Cada container que necessida de contato com a API tem um registro pai na store
+// Cada container filho é um filho também na store caso necessite de contato com a API. Exemplo: auth:confirm
+// 'pending' define periodo de fetching/loading da consulta a api
+// 'data' é o nome dos dados retornados pela API (login, bordas, perfil)
+// Containers podem compartilhar dados da store. Exemplo: Home utiliza auth:isAuthenticated
+// Somente atributos utilizados nos componentes são inicializados. Exemplo: auth:isAuthenticated
+
+auth: {
+    api {...},
+    idToken: null
+    userId: null
+    authRedirectPath: "/"
+    isAuthenticated: false
+    emailConfirmed: false,
+    message: 'Login efetuad com sucesso',
+    register: {
+        api {
+            pending: false,
+            error: {
+                code: 409
+                type: 'INVALID_USER_PASSWORD' *
+                message: 'E-mail ou password inválidos'
+                fields: [] *
+            }
+        },
+        objetoA: {...},
+        objetoB: {...},
+        message: 'Registro efetuado, verifique seu e-mail'
+    },
+    confirm: {
+        api: {...},
+        message: 'Confirmação realizada com sucesso'
+    },
+    logout: {
+        api: {...},
+        message: 'Logout efetuado com sucesso'
+    }
+}
