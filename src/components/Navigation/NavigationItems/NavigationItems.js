@@ -1,17 +1,15 @@
 import React from 'react';
 
-//import classes from './NavigationItems.module.css';
-// import NavigationItem from './NavigationItem/NavigationItem';
+import classes from './NavigationItems.module.css';
 import NavAlerts from './NavAlerts/NavAlerts';
+import NavLinks from './NavLinks/NavLinks';
+import NavUser from './NavUser/NavUser';
 
 const navigationItems = (props) => (
-    <ul className="navbar-nav content-rigth">
+    <ul className={`navbar-nav content-rigth ${classes.NavigationItems}`}>
         <NavAlerts />
-        {/* <NavigationItem link="/" exact>Burger Builder</NavigationItem>
-        {props.isAuthenticated ? <NavigationItem link="/orders">Orders</NavigationItem> : null}
-        {!props.isAuthenticated 
-            ? <NavigationItem link="/auth">Authenticate</NavigationItem> 
-            : <NavigationItem link="/logout">Logout</NavigationItem>} */}
+        <NavLinks />
+        <NavUser userName={props.userName} />
     </ul>
 );
 

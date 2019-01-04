@@ -6,3 +6,7 @@ export {
     logout,
     loginCheck
 } from './auth';
+
+export {
+    setUserData
+} from './user'

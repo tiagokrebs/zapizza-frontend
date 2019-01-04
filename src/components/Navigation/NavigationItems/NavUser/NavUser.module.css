@@ -1,0 +1,45 @@
+.NavUser {
+    position: relative;
+}
+
+.Button {
+    color: #d4c3ba;
+    position: relative;
+    padding-left: 40px !important;
+}
+
+.Pic {
+    color: white;
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 3px;
+    background: #ffffff;
+    position: absolute;
+    left: 0;
+    top: 3px;
+}
+
+.Pic img {
+    height: auto;
+    width: 100%;
+    border: 0;
+    vertical-align: top
+}
+
+.Name {
+    color: white;
+}
+
+.Menu {
+    margin-top: 12px;
+}
+
+@media screen and (max-width: 1019px) {
+    .Name {
+        display: none;
+      }
+}

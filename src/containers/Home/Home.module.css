@@ -1,1 +1,33 @@
-/*  */
+.Title {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.Title h3 {
+    color: white;
+    font-weight: 300;
+}
+
+.Title p {
+    color: #b79b8a;
+    margin: 0;
+}
+
+.Card {
+    margin: 15px auto 15px auto;
+    background: #392b23;
+}
+
+.CardHeader {
+    background: transparent;
+    border-bottom: 1px solid #594336;
+}
+
+.CardTitle {
+    font-size: 18px;
+    margin: 0;
+    line-height: 30px;
+    font-weight: 300;
+    color: white;
+    vertical-align: middle;
+}

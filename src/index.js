@@ -10,6 +10,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import authReducer from './store/reducers/auth';
+import userReducer from './store/reducers/user';
 import { loginCheck } from './store/actions';
 
 const history = createBrowserHistory();
@@ -18,7 +19,8 @@ const composeEnhancers = process.env.NODE_ENV === 'development' ? (window.__REDU
 
 const rootReducer = (history) => combineReducers({
     auth: authReducer,
-    router: connectRouter(history)
+    router: connectRouter(history),
+    user: userReducer
   })
 
 const store = createStore(

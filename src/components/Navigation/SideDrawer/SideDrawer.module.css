@@ -1,0 +1,23 @@
+.SideDrawer {
+    width: 270px;
+    top: 0;
+    display: block;
+    min-height: 100%;
+    height: 100%;
+    z-index: 9;
+    transition: 0.5s ease all;
+    padding-top: 65px;
+    background: #3c2d25;
+    position: fixed;
+    overflow-y: auto;
+    left: 0;
+    box-shadow: 2px 0px 5px 0px rgba(0, 0, 0, 0.1);
+}
+
+.Open {
+    transform: translateX(0);
+}
+
+.Close {
+    transform: translateX(-100%);
+}

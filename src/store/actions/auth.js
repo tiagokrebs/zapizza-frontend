@@ -1,6 +1,7 @@
 import axios from '../../shared/axios-auth';
 
 import { AUTH } from './actionsTypes';
+import { setUserData } from './user';
 
 // Registro
 export const registerStart = () => {
@@ -120,7 +121,7 @@ export const loginSuccess = (data) => {
     return {
         type: AUTH.LOGIN_SUCCESS,
         idToken: data.idToken,
-        userId: data.userId,
+        // userId: data.userId,
         message: data.message,
         emailConfirmed: data.emailConfirmed
     };
@@ -136,8 +137,15 @@ export const login = (loginData) => dispatch => {
                 const expirationDate = new Date(new Date().getTime() + response.data.data.expiresIn * 1000);
                 localStorage.setItem('idToken', response.data.data.idToken);
                 localStorage.setItem('expirationDate', expirationDate);
-                localStorage.setItem('userId', response.data.data.userId);
-                dispatch(loginSuccess(response.data.data))
+                // localStorage.setItem('userId', response.data.data.userId);
+                localStorage.setItem('USER', JSON.stringify({
+                    userId: response.data.data.userId,
+                    emailConfirmed: response.data.data.emailConfirmed,
+                    firstName: response.data.data.firstName,
+                    lastName: response.data.data.lastName
+                }));
+                dispatch(loginSuccess(response.data.data));
+                dispatch(setUserData(response.data.data));
             })
             .catch(error => {
                 if (error.response) {
@@ -180,7 +188,7 @@ export const logout = () => {
             .then(response => {
                 localStorage.removeItem('idToken');
                 localStorage.removeItem('expirationDate');
-                localStorage.removeItem('userId');
+                localStorage.removeItem('USER');
                 dispatch(logoutSuccess());
             })
             .catch(error => {
@@ -200,10 +208,19 @@ export const logout = () => {
 
 export const loginCheck = () => dispatch => new Promise ((resolve, reject) => {
         const expirationDate = new Date(localStorage.getItem('expirationDate'));
-        if (!localStorage.getItem('idToken')){
+        if (!localStorage.getItem('idToken') || !localStorage.getItem('USER')){
             dispatch(logoutSuccess());
-        } else if (localStorage.getItem('idToken') && expirationDate > new Date()) {
-            dispatch(loginSuccess({userId: localStorage.getItem('userId'), idToken: localStorage.getItem('idToken') }))
+        } else if (localStorage.getItem('idToken') && localStorage.getItem('idToken') && expirationDate > new Date()) {
+            const strObject = localStorage.getItem('USER');
+            const storage = JSON.parse(strObject);
+            // dispatch(loginSuccess({userId: localStorage.getItem('userId'), idToken: localStorage.getItem('idToken') }))
+            dispatch(loginSuccess({ userId: storage.userId, idToken: localStorage.getItem('idToken') }))
+            dispatch(setUserData({
+                userId: storage.userId,
+                emailConfirmed: storage.emailConfirmed,
+                firstName: storage.firstName,
+                lastName: storage.lastName
+            }));
         } else {
             dispatch(loginStart());
             axios.get('/api/authenticated', { withCredentials: true })
@@ -211,8 +228,15 @@ export const loginCheck = () => dispatch => new Promise ((resolve, reject) => {
                 const expirationDate = new Date(new Date().getTime() + response.data.data.expiresIn * 1000);
                 localStorage.setItem('idToken', response.data.data.idToken);
                 localStorage.setItem('expirationDate', expirationDate);
-                localStorage.setItem('userId', response.data.data.userId);
+                // localStorage.setItem('userId', response.data.data.userId);
+                localStorage.setItem('USER', JSON.stringify({
+                    userId: response.data.data.userId,
+                    emailConfirmed: response.data.data.emailConfirmed,
+                    firstName: response.data.data.firstName,
+                    lastName: response.data.data.lastName
+                }));
                 dispatch(loginSuccess(response.data.data));
+                dispatch(setUserData(response.data.data));
             })
             .catch(error => {
                 if (error.response) {

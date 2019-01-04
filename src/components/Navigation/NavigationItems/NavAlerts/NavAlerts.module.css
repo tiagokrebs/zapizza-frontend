@@ -2,7 +2,32 @@
     position: relative;
 }
 
-.NavAlerts button {
+.Button {
     color: #d4c3ba;
     position: relative;
+}
+
+.Bell {
+    vertical-align: middle;
+    margin: 0 3px;
+}
+
+.Badge {
+    cursor: default;
+    border-radius: 50%;
+    color: #fff;
+    font-weight: bold;
+    font-size: 10px;
+    height: 6px;
+    letter-spacing: -1px;
+    line-height: 10px;
+    top: 10px;
+    right: 10px;
+    position: absolute;
+    text-align: center;
+    width: 6px;
+}
+
+.Menu {
+    margin-top: 12px;
 }

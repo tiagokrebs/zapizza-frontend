@@ -1,0 +1,58 @@
+.DrawerMenu li {
+    line-height: 28px;
+    position: relative;
+}
+
+.Dropdown {
+    color: white;
+    padding: 0.5em 1.8em;
+    position: relative;
+}
+
+.Dropdown i {
+    float: right;
+    margin-right: 0;
+    text-align: center;
+    vertical-align: middle;
+    height: 28px;
+    width: 12px;
+    line-height: 28px;
+}
+
+.FirstLevel {
+    color: white;
+    padding: 0.5em 1.8em;
+    position: relative;
+}
+
+.SecondLevel {
+    display: none;
+}
+
+.SecondLevel li {
+    position: relative;
+}
+
+.SecondLevel li a {
+    color: #d4c3ba;
+    padding-left: 3em;
+}
+
+.SecondLevel li a i {
+    margin-right: 10px;
+    width: 20px;
+}
+
+.SideMenuCustom .divider {
+    background-color: #ABABAB;
+    font-weight: 600;
+  }
+  .SideMenuCustom .item {
+    background-color: #CCC;
+  }
+  .SideMenuCustom .item.item-level-1 .item-label {
+    font-style: italic;
+  }
+  .SideMenuCustom .item.item-level-2 .item-label {
+    font-size: 10px;
+  }

@@ -1,0 +1,17 @@
+.NavAlerts {
+    position: relative;
+}
+
+.Button {
+    color: #d4c3ba;
+    position: relative;
+}
+
+.Th {
+    vertical-align: middle;
+    margin: 0 3px;
+}
+
+.Menu {
+    margin-top: 12px;
+}

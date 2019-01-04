@@ -2,11 +2,15 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 import Logo from '../../Logo/Logo';
+import NavigationItems from '../NavigationItems/NavigationItems';
+import DrawerToggle from '../SideDrawer/DrawerToggle/DrawerToggle';
 import { Button } from 'react-bootstrap';
 import classes from './Toolbar.module.css';
 
+// todo: trocar <nav> por React-Bootstrap <NavBar/>
+
 const toolbar = (props) => {
-    let navItems = (
+    let navButtons = (
         <form className="form-inline my-2 my-lg-0 text-right justify-content-end pull-right">
             <Link to="/login">
                 <Button className="my-sm-0" variant="success">Login</Button>
@@ -18,23 +22,23 @@ const toolbar = (props) => {
     );
     
     if (props.isAuthenticated) {
-        navItems = (
-            <form className="form-inline my-2 my-lg-0 text-right justify-content-end pull-right">
-                <Link to="/logout">
-                    <Button className="ml-2 my-sm-0" variant="primary">Logout</Button>
-                </Link>
-            </form>
-        );
-    }   
+        navButtons = null;
+    }
+
+    let navItems = props.isAuthenticated ? <NavigationItems userName={props.userName}/> : null;
+
+    let drawerToggle = props.isAuthenticated ? <DrawerToggle clicked={props.drawerToggleClicked}/> : null;
 
     return (
-        <header className={classes.Toolbar}>
-        <nav>
-           <Logo />
-           <div className="d-flex mr-auto"></div>
-            {navItems}        
-        </nav>
-    </header>
+        <header className={props.isAuthenticated ? classes.AuthToolbar : classes.Toolbar}>
+            <nav>
+                <Logo />
+                {drawerToggle}
+                <div className="d-flex mr-auto"></div>
+                {navButtons}
+                {navItems}
+            </nav>
+        </header>
     );
 };
 

@@ -16,6 +16,10 @@ const AUTH = {
     LOGOUT_SUCCESS: 'AUTH_LOGOUT_SUCCESS',
 };
 
+const USER = {
+    SET_DATA: 'USER_SET_DATA'
+}
+
 export {
-    AUTH
+    AUTH, USER
 };
