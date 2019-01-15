@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import PageTitle from '../../components/Page/PageTitle/PageTitle';
 import classes from './Home.module.css'
 
 class Home extends Component {
     render () {
-        let pageTitle = (
-            <div className="row align-items-center justify-content-between">
-                <div className={`col-11 col-sm-12 page-title ${classes.Title}`}>
-                    <h3>Bem vindo ao Zapizza caro {this.props.user.firstName}</h3>
-                    <p>Vamo dale, agora com React</p>
-                </div>
-            </div>
-        );
+        let pageTitle = <PageTitle 
+                            title={'Bem vindo ao Zapizza caro ' + this.props.user.firstName}
+                            subtitle='Vamo dale, agora com React'/>
 
         if (!this.props.isAuthenticated) {
             pageTitle = null;

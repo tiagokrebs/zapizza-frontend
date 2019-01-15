@@ -1,40 +1,38 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import classes from './Auth.module.css';
+import classes from './Reset.module.css';
 import { Form, FormControl, Button, Alert } from 'react-bootstrap';
 import { Redirect, Link } from 'react-router-dom';
-import ZappSpinner from '../../components/UI/ZappSpinner/ZappSpinner';
+import ZappSpinner from '../../../../components/UI/ZappSpinner/ZappSpinner';
 import * as yup from 'yup';
-import * as actions from '../../store/actions';
-import updateObject from '../../shared/updateObject';
+import * as actions from '../../../../store/actions';
+import updateObject from '../../../../shared/updateObject';
 
 
-class Auth extends Component {
+class Reset extends Component {
     state = {
         inputs: {
-            username: {
-                value: '',
-                invalid: false,
-                error: '',
-                touched: false
-            },
             password: {
                 value: '',
                 invalid: false,
                 error: '',
                 touched: false
             },
+            passConf: {
+                value: '',
+                invalid: false,
+                error: '',
+                touched: false
+            }
         },
-        formIsValid: false
+        formIsValid: false,
+        token: null
     }
 
     componentDidMount () {
-        if (this.props.location.state) {
-            this.props.onSetAuthRedirectPath(this.props.location.state.from.pathname);
-        } else {
-            this.props.onSetAuthRedirectPath("/");
-        }
+        const token = this.props.match.params.token;
+        this.setState({token: token});
     }
 
     inputChangeHandler = (event) => {
@@ -76,12 +74,14 @@ class Auth extends Component {
 
             // Cria schema de validacao
             const schema = yup.object().shape({
-                username: yup
-                    .string()
-                    .required(),
                 password: yup
                     .string()
                     .required()
+                    .matches(/.{6,120}/, {message: 'A senha deve conter no mínimo 6 caracteres', excludeEmptyString: true}),
+                passConf: yup
+                    .string()
+                    .required()
+                    .oneOf([yup.ref('password'), null], 'A senha não confere')
             });
 
             // Cria objeto com base em state para validacao
@@ -134,37 +134,22 @@ class Auth extends Component {
         });
     };
 
-    loginHandler = (event) => {
+    resetHandler = (event) => {
         event.preventDefault();
         this.checkFormIsValid()
             .then(() => {
-                const loginData = {
-                    username: this.state.inputs.username.value,
+                const resetData = {
+                    token: this.state.token,
                     password: this.state.inputs.password.value
                 }
 
-                this.props.submitLogin(loginData);
+                this.props.submitReset(resetData);
             });
     }
 
     render () {
         let form = (
-            <Form noValidate onSubmit={this.loginHandler}>
-                <Form.Group controlId="username">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="username"
-                        value={this.state.inputs.username.value}
-                        onChange={this.inputChangeHandler}
-                        onBlur={this.inputBlurHandler}
-                        isInvalid={this.state.inputs.username.touched && this.state.inputs.username.invalid}
-                        autoFocus
-                    />
-                    <FormControl.Feedback type="invalid">
-                        {this.state.inputs.username.error}
-                    </FormControl.Feedback>
-                </Form.Group>
+            <Form noValidate onSubmit={this.resetHandler}>
                 <Form.Group controlId="password">
                     <Form.Label>Senha</Form.Label>
                     <Form.Control
@@ -174,12 +159,28 @@ class Auth extends Component {
                         onChange={this.inputChangeHandler}
                         onBlur={this.inputBlurHandler}
                         isInvalid={this.state.inputs.password.touched && this.state.inputs.password.invalid}
+                        disabled={this.props.reset.message}
                     />
                     <FormControl.Feedback type="invalid">
                         {this.state.inputs.password.error}
                     </FormControl.Feedback>
                 </Form.Group>
-                <Button type="submit">Entrar</Button>
+                <Form.Group controlId="passConf">
+                    <Form.Label>Confirmar</Form.Label>
+                    <Form.Control
+                        type="password"
+                        name="passConf"
+                        value={this.state.inputs.passConf.value}
+                        onChange={this.inputChangeHandler}
+                        onBlur={this.inputBlurHandler}
+                        isInvalid={this.state.inputs.passConf.touched && this.state.inputs.passConf.invalid}
+                        disabled={this.props.reset.message}
+                    />
+                    <FormControl.Feedback type="invalid">
+                        {this.state.inputs.passConf.error}
+                    </FormControl.Feedback>
+                </Form.Group>
+                <Button type="submit">Enviar</Button>
             </Form>
         );
 
@@ -194,23 +195,20 @@ class Auth extends Component {
             );
         }
 
-        let authRedirect = null;
-        if (this.props.isAuthenticated) {
-            authRedirect = <Redirect to={this.props.authRedirectPath}/>
+        let resetRedirect = null;
+        if (this.props.reset.message) {
+            resetRedirect = <Redirect to="/login"/>
         }
 
         return (
-            <div className={classes.LoginContent}>
-                {authRedirect}
+            <div className={classes.ResetContent}>
+                {resetRedirect}
                 <div className="container text-center">
-                    <div className={classes.LoginForm}>
-                        <h2>Login</h2>
+                    <div className={classes.ResetForm}>
+                        <h2>Redefinir Senha</h2>
                         {message}
                         {form}
                     </div>
-                    <Link to="/forgot">
-                        <small>Esqueci a senha</small>
-                    </Link>
                 </div>
             </div>
         );
@@ -219,18 +217,16 @@ class Auth extends Component {
 
 const mapStateToProps = state => {
     return {
-        pending: state.auth.api.pending,
-        error: state.auth.api.error,
-        isAuthenticated: state.auth.isAuthenticated,
-        authRedirectPath: state.auth.authRedirectPath
+        pending: state.auth.reset.api.pending,
+        error: state.auth.reset.api.error,
+        reset: state.auth.reset
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path)),
-        submitLogin: (loginData) => dispatch(actions.login(loginData))
+        submitReset: (resetData) => dispatch(actions.reset(resetData))
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Reset);

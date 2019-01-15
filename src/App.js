@@ -8,6 +8,9 @@ import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout/Logout';
 import Register from './containers/Auth/Register/Register';
 import Confirm from './containers/Auth/Register/Confirm/Confirm';
+import Profile from './containers/Profile/Profile';
+import Forgot from './containers/Auth/Forgot/Forgot';
+import Reset from './containers/Auth/Forgot/Reset/Reset';
 import AuthRoute from './components/AuthRoute/AuthRoute';
 import NotFound from './components/HttpExceptions/NotFound/NotFound';
 import Forbidden from './components/HttpExceptions/Forbidden/Forbidden';
@@ -19,11 +22,6 @@ import * as actions from './store/actions/auth';
 // });
 
 class App extends Component {
-  // componentDidMount () {
-  //   if (this.props.pathname !== '/logout') {
-  //    this.props.tryAutoLogin();
-  //   }
-  // }
 
   render() {
     let routes = (
@@ -32,11 +30,12 @@ class App extends Component {
         <Route path="/login" exact component={Auth}/>
         <Route path="/logout" exact component={Logout}/>
         <Route path="/registro" exact component={Register}/>
-        {/* <Route path="/confirma/:token" exact component={Confirm}/> */}
         <Route path="/ops" exact component={BadError}/>
         <Route path="/forbidden" component={Forbidden} />
         <AuthRoute path="/confirma/:token" component={Confirm} isAuthenticated={this.props.isAuthenticated} />
-        {/* <PrivateRoute path='/confirma/:token' component={Confirm} /> */}
+        <AuthRoute path="/perfil" component={Profile} isAuthenticated={this.props.isAuthenticated} />
+        <Route path="/forgot" exact component={Forgot} />
+        <Route path="/reset/:token" exact component={Reset} />
         <Route component={NotFound}/>        
       </Switch>
     );

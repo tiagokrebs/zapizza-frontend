@@ -3,6 +3,7 @@ import React from 'react';
 import classes from './NavUser.module.css';
 import userHeader from '../../../../assets/images/user-header.png'
 import { Dropdown, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 class CustomToggle extends React.Component {
     constructor(props, context) {
@@ -33,10 +34,10 @@ const navLiks = (props) => {
         <Dropdown>
             <Dropdown.Toggle as={CustomToggle} id="dropdown-nav-user" userName={props.userName} />
             <Dropdown.Menu className={classes.Menu}>
-                <Dropdown.Item eventKey="1">Meu Perfil</Dropdown.Item>
+                <Dropdown.Item eventKey="1" as={Link} to='/perfil'>Meu Perfil</Dropdown.Item>
                 <Dropdown.Item eventKey="2">Configurações</Dropdown.Item>
                 <Dropdown.Divider />
-                <Dropdown.Item eventKey="2" href="/logout">sair</Dropdown.Item>
+                <Dropdown.Item eventKey="3" href="/logout">sair</Dropdown.Item>
             </Dropdown.Menu>
 
         </Dropdown>

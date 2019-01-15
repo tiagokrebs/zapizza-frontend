@@ -1,0 +1,38 @@
+.ResetContent {
+    width: 100%;
+    margin: 0 auto;
+    padding: 5px 10px 40px 10px;
+    min-height: 100%;
+    height: auto;
+    z-index: 1;
+    position: relative;
+}
+
+.ResetForm {
+    width: 100%;
+    padding: 5px;
+    margin: 40px auto 0 auto;
+    margin-top: 5%;
+    background: transparent;
+    color: #ffffff;
+    max-width: 400px;
+}
+
+.ResetForm input {
+    border: 1px solid #594336;
+    background-color: transparent;
+    color: white;
+    border-radius: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.ResetForm input:disabled {
+    background-color: #7a685e;
+    opacity: 1;
+}
+
+.ResetForm input:focus {
+    border-color: #594336;
+    box-shadow: 0 0 0 0.2rem rgba(133, 82, 82, 0.5);
+}

@@ -1,0 +1,14 @@
+.Title {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.Title h3 {
+    color: white;
+    font-weight: 300;
+}
+
+.Title p {
+    color: #b79b8a;
+    margin: 0;
+}

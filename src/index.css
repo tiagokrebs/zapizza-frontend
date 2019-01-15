@@ -7,8 +7,8 @@ body {
   color: #d4c3ba;
   direction: ltr;
   background: #392b23;
-  background: -moz-radial-gradient(center, ellipse cover, #362921 0%, #291f19 100%);
-  background: -webkit-radial-gradient(center, ellipse cover, #362921 0%, #291f19 100%);
+  background: -moz-radial-gradient(center, ellipse farthest-corner, #362921 0%, #291f19 100%);
+  background: -webkit-radial-gradient(center, ellipse farthest-corner, #362921 0%, #291f19 100%);
   background: radial-gradient(ellipse at center, #362921 0%, #291f19 100%);
   font-weight: 400;
   background-attachment: fixed;

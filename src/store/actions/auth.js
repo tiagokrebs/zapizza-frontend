@@ -28,7 +28,7 @@ export const registerSuccess = (data) => {
 export const register = (registerData) => {
     return dispatch => {
         dispatch(registerStart());
-        return axios.post('/api/signup', registerData)
+        return axios.post('/signup', registerData)
         .then(response => {
             dispatch(registerSuccess(response.data.data));
         })
@@ -71,7 +71,7 @@ export const confirmSuccess = (data) => {
 export const confirm = (token) => {
     return dispatch => {
         dispatch(confirmStart());
-        axios.post('/api/confirm', {
+        axios.post('/confirm', {
             token: token
         }, {
             withCredentials: true
@@ -129,7 +129,7 @@ export const loginSuccess = (data) => {
 
 export const login = (loginData) => dispatch => {
         dispatch(loginStart());
-        axios.post('/api/login', 
+        axios.post('/login', 
         loginData, {
             withCredentials: true
         })
@@ -184,7 +184,7 @@ export const logoutSuccess = () => {
 export const logout = () => {
     return dispatch => {
         dispatch(logoutStart());
-        axios.get('/api/logout', { withCredentials: true })
+        axios.get('/logout', { withCredentials: true })
             .then(response => {
                 localStorage.removeItem('idToken');
                 localStorage.removeItem('expirationDate');
@@ -206,6 +206,7 @@ export const logout = () => {
     };
 };
 
+// Login check
 export const loginCheck = () => dispatch => new Promise ((resolve, reject) => {
         const expirationDate = new Date(localStorage.getItem('expirationDate'));
         if (!localStorage.getItem('idToken') || !localStorage.getItem('USER')){
@@ -223,7 +224,7 @@ export const loginCheck = () => dispatch => new Promise ((resolve, reject) => {
             }));
         } else {
             dispatch(loginStart());
-            axios.get('/api/authenticated', { withCredentials: true })
+            axios.get('/authenticated', { withCredentials: true })
             .then(response => {
                 const expirationDate = new Date(new Date().getTime() + response.data.data.expiresIn * 1000);
                 localStorage.setItem('idToken', response.data.data.idToken);
@@ -253,3 +254,91 @@ export const loginCheck = () => dispatch => new Promise ((resolve, reject) => {
         }
         resolve();
 });
+
+// esqueci a senha
+export const forgotStart = () => {
+    return {
+        type: AUTH.FORGOT_START
+    };
+};
+
+export const forgotError = (error) => {
+    return {
+        type: AUTH.FORGOT_ERROR,
+        error: error
+    };
+};
+
+export const forgotSuccess = (data) => {
+    return {
+        type: AUTH.FORGOT_SUCCESS,
+        message: data.message
+    };
+};
+
+// Retorna funcao sincrona para 
+export const forgot = (forgotData) => {
+    return dispatch => {
+        dispatch(forgotStart());
+        return axios.post('/forgot', forgotData)
+        .then(response => {
+            dispatch(forgotSuccess(response.data.data));
+        })
+        .catch(error => {
+            if (error.response) {
+                // Request enviado e resposta do servidor com status erro
+                dispatch(forgotError(error.response.data.error));
+              } else if (error.request && !error.status) {
+                // Request enviado sem resposta do servidor
+                dispatch(forgotError({ code: null, message: error.message }));
+              } else {
+                // Algo aconteceu na criacao do request e gerou um erro
+                dispatch(forgotError({ code: null, message: error.message }));
+              }
+        });  
+    };
+};
+
+// redefinir a senha
+export const resetStart = () => {
+    return {
+        type: AUTH.RESET_START
+    };
+};
+
+export const resetError = (error) => {
+    return {
+        type: AUTH.RESET_ERROR,
+        error: error
+    };
+};
+
+export const resetSuccess = (data) => {
+    return {
+        type: AUTH.RESET_SUCCESS,
+        message: data.message
+    };
+};
+
+// Retorna funcao sincrona para 
+export const reset = (resetData) => {
+    return dispatch => {
+        dispatch(resetStart());
+        return axios.post('/reset', resetData)
+        .then(response => {
+            dispatch(resetSuccess(response.data.data));
+        })
+        .catch(error => {
+            if (error.response) {
+                // Request enviado e resposta do servidor com status erro
+                dispatch(resetError(error.response.data.error));
+              } else if (error.request && !error.status) {
+                // Request enviado sem resposta do servidor
+                dispatch(resetError({ code: null, message: error.message }));
+              } else {
+                // Algo aconteceu na criacao do request e gerou um erro
+                dispatch(resetError({ code: null, message: error.message }));
+              }
+        });  
+    };
+};

@@ -1,40 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import classes from './Auth.module.css';
+import classes from './Forgot.module.css';
 import { Form, FormControl, Button, Alert } from 'react-bootstrap';
-import { Redirect, Link } from 'react-router-dom';
-import ZappSpinner from '../../components/UI/ZappSpinner/ZappSpinner';
+import ZappSpinner from '../../../components/UI/ZappSpinner/ZappSpinner';
 import * as yup from 'yup';
-import * as actions from '../../store/actions';
-import updateObject from '../../shared/updateObject';
+import * as actions from '../../../store/actions';
+import updateObject from '../../../shared/updateObject';
 
 
-class Auth extends Component {
+class Forgot extends Component {
     state = {
         inputs: {
-            username: {
+            email: {
                 value: '',
                 invalid: false,
                 error: '',
                 touched: false
-            },
-            password: {
-                value: '',
-                invalid: false,
-                error: '',
-                touched: false
-            },
+            }
         },
         formIsValid: false
-    }
-
-    componentDidMount () {
-        if (this.props.location.state) {
-            this.props.onSetAuthRedirectPath(this.props.location.state.from.pathname);
-        } else {
-            this.props.onSetAuthRedirectPath("/");
-        }
     }
 
     inputChangeHandler = (event) => {
@@ -71,17 +56,18 @@ class Auth extends Component {
                 mixed: {
                 default: 'Campo inválido',
                 required: 'Campo obrigatório'
+                },
+                string: {
+                    email: 'E-mail inválido'
                 }
             });
 
             // Cria schema de validacao
             const schema = yup.object().shape({
-                username: yup
-                    .string()
-                    .required(),
-                password: yup
+                email: yup
                     .string()
                     .required()
+                    .email(),
             });
 
             // Cria objeto com base em state para validacao
@@ -134,52 +120,37 @@ class Auth extends Component {
         });
     };
 
-    loginHandler = (event) => {
+    forgotHandler = (event) => {
         event.preventDefault();
         this.checkFormIsValid()
             .then(() => {
-                const loginData = {
-                    username: this.state.inputs.username.value,
-                    password: this.state.inputs.password.value
+                const forgotData = {
+                    email: this.state.inputs.email.value
                 }
 
-                this.props.submitLogin(loginData);
+                this.props.submitForgot(forgotData);
             });
     }
 
     render () {
         let form = (
-            <Form noValidate onSubmit={this.loginHandler}>
+            <Form noValidate onSubmit={this.forgotHandler}>
                 <Form.Group controlId="username">
-                    <Form.Label>Username</Form.Label>
                     <Form.Control
-                        type="text"
-                        name="username"
-                        value={this.state.inputs.username.value}
+                        type="email"
+                        name="email"
+                        value={this.state.inputs.email.value}
                         onChange={this.inputChangeHandler}
                         onBlur={this.inputBlurHandler}
-                        isInvalid={this.state.inputs.username.touched && this.state.inputs.username.invalid}
+                        isInvalid={this.state.inputs.email.touched && this.state.inputs.email.invalid}
                         autoFocus
+                        disabled={this.props.forgot.message}
                     />
                     <FormControl.Feedback type="invalid">
-                        {this.state.inputs.username.error}
+                        {this.state.inputs.email.error}
                     </FormControl.Feedback>
                 </Form.Group>
-                <Form.Group controlId="password">
-                    <Form.Label>Senha</Form.Label>
-                    <Form.Control
-                        type="password"
-                        name="password"
-                        value={this.state.inputs.password.value}
-                        onChange={this.inputChangeHandler}
-                        onBlur={this.inputBlurHandler}
-                        isInvalid={this.state.inputs.password.touched && this.state.inputs.password.invalid}
-                    />
-                    <FormControl.Feedback type="invalid">
-                        {this.state.inputs.password.error}
-                    </FormControl.Feedback>
-                </Form.Group>
-                <Button type="submit">Entrar</Button>
+                <Button type="submit" disabled={this.props.forgot.message}>Enviar</Button>
             </Form>
         );
 
@@ -193,24 +164,20 @@ class Auth extends Component {
                 <Alert dismissible variant="danger">{this.props.error.message}</Alert>
             );
         }
-
-        let authRedirect = null;
-        if (this.props.isAuthenticated) {
-            authRedirect = <Redirect to={this.props.authRedirectPath}/>
+        if (this.props.forgot.message) {
+            message = (
+                <Alert dismissible variant="success">{this.props.forgot.message}</Alert>
+            );
         }
 
         return (
-            <div className={classes.LoginContent}>
-                {authRedirect}
+            <div className={classes.ForgotContent}>
                 <div className="container text-center">
-                    <div className={classes.LoginForm}>
-                        <h2>Login</h2>
+                    <div className={classes.ForgotForm}>
+                        <h2>Esqueci a senha</h2>
                         {message}
                         {form}
                     </div>
-                    <Link to="/forgot">
-                        <small>Esqueci a senha</small>
-                    </Link>
                 </div>
             </div>
         );
@@ -219,18 +186,16 @@ class Auth extends Component {
 
 const mapStateToProps = state => {
     return {
-        pending: state.auth.api.pending,
-        error: state.auth.api.error,
-        isAuthenticated: state.auth.isAuthenticated,
-        authRedirectPath: state.auth.authRedirectPath
+        pending: state.auth.forgot.api.pending,
+        error: state.auth.forgot.api.error,
+        forgot: state.auth.forgot
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path)),
-        submitLogin: (loginData) => dispatch(actions.login(loginData))
+        submitForgot: (forgotData) => dispatch(actions.forgot(forgotData))
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Forgot);

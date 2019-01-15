@@ -34,6 +34,18 @@ const initialState = {
             pending: false,
             error: null
         }
+    },
+    forgot: {
+        api: {
+            pending: false,
+            error: null
+        }
+    },
+    reset: {
+        api: {
+            pending: false,
+            error: null
+        }
     }
 };
 
@@ -136,6 +148,46 @@ const logoutSuccess = (state, action) => {
     });
 };
 
+// esqueci a senha
+const forgotStart = (state, action) => {
+    const api = { pending: true, error: null }
+    const forgot = { forgot: { api: api }}
+    return updateObject(state, forgot);
+};
+
+const forgotError = (state, action) => {
+    const error = action.error;
+    const api = { pending: false, error: error };
+    const forgot = { forgot: { api: api }};
+    return updateObject(state, forgot);
+};
+
+const forgotSuccess = (state, action) => {
+    const api = { pending: false, error: null }
+    const forgot = { forgot: { api: api, message: action.message }}
+    return updateObject(state, forgot);
+};
+
+// redefinir senha
+const resetStart = (state, action) => {
+    const api = { pending: true, error: null }
+    const reset = { reset: { api: api }}
+    return updateObject(state, reset);
+};
+
+const resetError = (state, action) => {
+    const error = action.error;
+    const api = { pending: false, error: error };
+    const reset = { reset: { api: api }};
+    return updateObject(state, reset);
+};
+
+const resetSuccess = (state, action) => {
+    const api = { pending: false, error: null }
+    const reset = { reset: { api: api, message: action.message }}
+    return updateObject(state, reset);
+};
+
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case AUTH.REGISTER_START: return registerStart(state, action);
@@ -151,6 +203,12 @@ const reducer = (state = initialState, action) => {
         case AUTH.LOGOUT_START: return logoutStart(state, action);
         case AUTH.LOGOUT_ERROR: return logoutError(state, action);
         case AUTH.LOGOUT_SUCCESS: return logoutSuccess(state, action);
+        case AUTH.FORGOT_START: return forgotStart(state, action);
+        case AUTH.FORGOT_ERROR: return forgotError(state, action);
+        case AUTH.FORGOT_SUCCESS: return forgotSuccess(state, action);
+        case AUTH.RESET_START: return resetStart(state, action);
+        case AUTH.RESET_ERROR: return resetError(state, action);
+        case AUTH.RESET_SUCCESS: return resetSuccess(state, action);
         default: return state;
     }
 };

@@ -4,9 +4,13 @@ export {
     setAuthRedirectPath,
     login,
     logout,
-    loginCheck
+    loginCheck,
+    forgot,
+    reset
 } from './auth';
 
 export {
-    setUserData
+    setUserData,
+    getProfile,
+    postProfile,
 } from './user'

@@ -3,6 +3,7 @@ import React from 'react';
 import classes from './DrawerUser.module.css';
 import userHeader from '../../../../assets/images/user-header.png'
 import { ButtonGroup, Dropdown, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 class CustomToggle extends React.Component {
     constructor(props, context) {
@@ -36,7 +37,7 @@ const drawerUser = (props) => (
             <Dropdown style={{width: '100%'}}>
                 <Dropdown.Toggle as={CustomToggle} id="dropdown-drawer-user" userName={props.userName} />
                 <Dropdown.Menu className={classes.Menu}>
-                    <Dropdown.Item eventKey="1">Meu Perfil</Dropdown.Item>
+                    <Dropdown.Item eventKey="1" as={Link} to="/perfil">Meu Perfil</Dropdown.Item>
                     <Dropdown.Item eventKey="2">Configurações</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
