@@ -11,6 +11,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import authReducer from './store/reducers/auth';
 import userReducer from './store/reducers/user';
+import pizzaReducer from './store/reducers/pizza';
 import { loginCheck } from './store/actions';
 
 const history = createBrowserHistory();
@@ -20,7 +21,8 @@ const composeEnhancers = process.env.NODE_ENV === 'development' ? (window.__REDU
 const rootReducer = (history) => combineReducers({
     auth: authReducer,
     router: connectRouter(history),
-    user: userReducer
+    user: userReducer,
+    pizza: pizzaReducer
   })
 
 const store = createStore(

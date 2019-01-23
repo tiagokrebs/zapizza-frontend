@@ -5,16 +5,17 @@ import { connect } from 'react-redux';
 import Layout from './hoc/Layout/Layout';
 import Home from './containers/Home/Home';
 import Auth from './containers/Auth/Auth';
-import Logout from './containers/Auth/Logout/Logout';
-import Register from './containers/Auth/Register/Register';
-import Confirm from './containers/Auth/Register/Confirm/Confirm';
-import Profile from './containers/Profile/Profile';
-import Forgot from './containers/Auth/Forgot/Forgot';
-import Reset from './containers/Auth/Forgot/Reset/Reset';
 import AuthRoute from './components/AuthRoute/AuthRoute';
 import NotFound from './components/HttpExceptions/NotFound/NotFound';
 import Forbidden from './components/HttpExceptions/Forbidden/Forbidden';
 import BadError from './components/HttpExceptions/BadError/BadError';
+import Logout from './containers/Auth/Logout/Logout';
+import Register from './containers/Auth/Register/Register';
+import Confirm from './containers/Auth/Register/Confirm/Confirm';
+import Forgot from './containers/Auth/Forgot/Forgot';
+import Reset from './containers/Auth/Forgot/Reset/Reset';
+import Profile from './containers/Profile/Profile';
+import Tamanho from './containers/Pizza/Tamanho/Tamanho';
 import * as actions from './store/actions/auth';
 
 // const asyncRegister = asyncComponent(() => {
@@ -36,6 +37,7 @@ class App extends Component {
         <AuthRoute path="/perfil" component={Profile} isAuthenticated={this.props.isAuthenticated} />
         <Route path="/forgot" exact component={Forgot} />
         <Route path="/reset/:token" exact component={Reset} />
+        <AuthRoute path="/tamanhos" component={Tamanho} isAuthenticated={this.props.isAuthenticated} />
         <Route component={NotFound}/>        
       </Switch>
     );

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import classes from './Reset.module.css';
 import { Form, FormControl, Button, Alert } from 'react-bootstrap';
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import ZappSpinner from '../../../../components/UI/ZappSpinner/ZappSpinner';
 import * as yup from 'yup';
 import * as actions from '../../../../store/actions';

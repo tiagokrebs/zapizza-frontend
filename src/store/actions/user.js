@@ -80,7 +80,7 @@ export const postProfileSuccess = (data) => {
 export const postProfile = (username, profileData) => {
     return dispatch => {
         dispatch(postProfileStart());
-        return axios.post('/user/' + username + '/profile' , profileData, { withCredentials: true })
+        return axios.put('/user/' + username + '/profile' , profileData, { withCredentials: true })
         .then(response => {
             dispatch(postProfileSuccess(response.data.data));
             return response;

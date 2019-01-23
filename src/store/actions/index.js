@@ -13,4 +13,8 @@ export {
     setUserData,
     getProfile,
     postProfile,
-} from './user'
+} from './user';
+
+export {
+    getTamanhos
+} from './pizza';
