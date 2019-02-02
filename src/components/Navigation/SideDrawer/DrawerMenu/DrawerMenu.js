@@ -5,10 +5,15 @@ import { withRouter } from 'react-router-dom';
 import './DrawerMenu.css';
 
 class DrawerMenu extends Component {
+    clickHandler = (value) => {
+        this.props.clicked();
+        this.props.history.push(value);
+    }
+
     render () {
         return (
             <div>
-                <SideMenu onMenuItemClick={(value) => this.props.history.push(value)} activeItem="">
+                <SideMenu onMenuItemClick={(value) => this.clickHandler(value)} activeItem="">
                     <Item label="Produtos">
                         <Item label="Bebidas" value="/bebidas" icon="fas fa-beer"/>
                         <Item label="Bordas" value="/bordas" icon="far fa-circle"/>

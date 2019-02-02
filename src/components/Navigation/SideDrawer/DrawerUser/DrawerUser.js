@@ -35,7 +35,7 @@ const drawerUser = (props) => (
     <div>
         <ButtonGroup bsPrefix={`btn-group list-unstyled ${classes.Group}`}>
             <Dropdown style={{width: '100%'}}>
-                <Dropdown.Toggle as={CustomToggle} id="dropdown-drawer-user" userName={props.userName} />
+                <Dropdown.Toggle as={CustomToggle} id="dropdown-drawer-user" userName={props.userName}/>
                 <Dropdown.Menu className={classes.Menu}>
                     <Dropdown.Item eventKey="1" as={Link} to="/perfil">Meu Perfil</Dropdown.Item>
                     <Dropdown.Item eventKey="2">Configurações</Dropdown.Item>

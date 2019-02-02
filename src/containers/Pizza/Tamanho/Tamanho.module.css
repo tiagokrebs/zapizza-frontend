@@ -6,6 +6,8 @@
 .CardHeader {
     background: transparent;
     border-bottom: 1px solid #594336;
+    display: flex;
+    justify-content: space-between;
 }
 
 .CardTitle {
@@ -40,4 +42,8 @@
     border: 1px solid #594336;
     background-color: transparent;
     color: white;
+}
+
+.Modal h4 {
+    color: #594336;
 }

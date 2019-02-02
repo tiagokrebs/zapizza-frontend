@@ -16,5 +16,7 @@ export {
 } from './user';
 
 export {
-    getTamanhos
+    getTamanhos,
+    postTamanho,
+    putTamanho
 } from './pizza';
