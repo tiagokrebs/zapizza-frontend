@@ -234,6 +234,7 @@ class TamanhoForm extends Component {
                             });
                         });
                         this.setState({inputs: updatedInputs});
+                        this.setState({ loading: false });
                     });
                 } else if (this.props.formAction === 'update'){
                     this.props.onPutTamanho(this.state.inputs.hash_id.value, tamanhoData)
@@ -257,6 +258,7 @@ class TamanhoForm extends Component {
                             });
                         });
                         this.setState({inputs: updatedInputs});
+                        this.setState({ loading: false });
                     });
                 }
             });        
@@ -360,9 +362,10 @@ class TamanhoForm extends Component {
             </Form>
         );
 
-        // if (this.state.loading) {
-        //     form = <ZapSpinner />
-        // }
+        let spinner;
+        if (this.state.loading) {
+            spinner = <ZapSpinner />
+        }
 
         let message = null;
         // if (this.props.error) {
@@ -385,6 +388,7 @@ class TamanhoForm extends Component {
                 <div className="col-sm-12">
                     {message}
                     {form}
+                    {spinner}
                 </div>
             </div>
         );

@@ -70,7 +70,7 @@ const postTamanhoStart = (state, action) => {
             ...state.tamanho,
             api: {
                 ...state.tamanho.api,
-                pending: true,
+                // pending: true,
                 error: null
             }
         }
@@ -84,7 +84,7 @@ const postTamanhoError = (state, action) => {
             ...state.tamanho,
             api: {
                 ...state.tamanho.api,
-                pending: false,
+                // pending: false,
                 error: action.error
             }
         }
@@ -98,7 +98,7 @@ const postTamanhoSuccess = (state, action) => {
             ...state.tamanho,
             api: {
                 ...state.tamanho.api,
-                pending: false,
+                // pending: false,
                 error: null
             },
             tamanhos: [
