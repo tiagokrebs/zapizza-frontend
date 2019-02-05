@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Button, Form, FormControl } from 'react-bootstrap';
-import Spinner from '../../../../components/UI/Spinner/Spinner';
 import ZapSpinner from '../../../../components/UI/ZappSpinner/ZappSpinner';
 import classes from './TamanhoForm.module.css';
 import * as yup from 'yup';
@@ -194,6 +193,8 @@ class TamanhoForm extends Component {
                 this.setState({formIsValid: valid});
                 if (valid){
                     resolve();
+                } else {
+                    this.setState({ loading: false });
                 }
             });
         });

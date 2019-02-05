@@ -7,7 +7,7 @@ import classes from './Home.module.css'
 class Home extends Component {
     render () {
         let pageTitle = <PageTitle 
-                            title={'Bem vindo ao Zapizza caro ' + this.props.user.firstName}
+                            title={'Bem vindo caro ' + this.props.user.firstName}
                             subtitle='Vamo dale, agora com React'/>
 
         if (!this.props.isAuthenticated) {

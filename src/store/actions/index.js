@@ -18,5 +18,6 @@ export {
 export {
     getTamanhos,
     postTamanho,
-    putTamanho
+    putTamanho,
+    putTamanhoEnable
 } from './pizza';

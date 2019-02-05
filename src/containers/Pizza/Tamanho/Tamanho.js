@@ -5,7 +5,7 @@ import PageTitle from '../../../components/Page/PageTitle/PageTitle';
 import { connect } from 'react-redux';
 import './table.css';
 import BootstrapTable from 'react-bootstrap-table-next';
-import { Badge, Nav, Button } from 'react-bootstrap';
+import { Badge, Nav, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import ZappSpinner from '../../../components/UI/ZappSpinner/ZappSpinner';
 import ModalB from '../../../components/UI/ModalB/ModalB';
 import Aux from '../../../hoc/Aux/Aux';
@@ -49,36 +49,27 @@ class Tamanho extends Component {
             },
             {
                 dataField: 'botoes',
+                isDummyField: true,
                 text: '',
-                idDumyfield: true,
                 align: 'center',
-                formatter: (cell, row, rowIndex) => {
+                formatter: (cellContent, row) => {
+                    // todo: transformar em componente
                     if (row.ativo) {
-                        return (
-                            <div>
-                                <i className="fas fa-edit" 
-                                    style={{color: '#d4c3ba', margin: '0.5em'}} 
-                                    onClick={() => this.modalFormUpdate(row)}
-                                ></i>
-                                <i className="fa fa-ban" 
-                                    style={{color: '#d4c3ba', margin: '0.5em'}} 
-                                    onClick={() => alert('desativar')}
-                                ></i>
-                            </div>
-                        );
-                    }
-                    return (
-                        <div>
-                            <i className="fas fa-edit" 
-                                style={{color: '#d4c3ba', margin: '0.5em'}} 
-                                onClick={() => this.modalFormUpdate(row)}
-                            ></i>
-                            <i className="fas fa-check" 
-                                style={{color: '#d4c3ba', margin: '0.5em'}} 
-                                onClick={() => alert('ativar')}
-                            ></i>
+                        return <div variant="success">
+                            <i className={`fas fa-edit ${classes.tooltip}`} style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.modalFormUpdate(row)}>
+                                <span>Editar</span>
+                            </i>
+                            <OverlayTrigger key='top' placement='top' overlay={
+                                <Tooltip id='tooltip-top'>Desativar</Tooltip>
+                                }>
+                                <i className="fas fa-ban" style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.submitEnableHandler(row)}></i>
+                            </OverlayTrigger>
                         </div>
-                    );
+                    }
+                    return <div variant="danger">
+                        <i className="fas fa-edit" style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.modalFormUpdate(row)}></i>
+                        <i className="fas fa-check" style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.submitEnableHandler(row)}></i>
+                    </div>
                 }
             },
             {
@@ -114,6 +105,16 @@ class Tamanho extends Component {
 
     modalHandleOk = () => {
         this.setState({ modalShow: false });
+    }
+
+    submitEnableHandler = (row) => {
+        const tamanhoData = {
+            ativo: !row.ativo
+        }
+
+        const id = row.hash_id;
+
+        this.props.onPutTamanhoEnable(id, tamanhoData);
     }
 
     render () {
@@ -205,7 +206,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onGetTamanhos: () => dispatch(actions.getTamanhos())
+        onGetTamanhos: () => dispatch(actions.getTamanhos()),
+        onPutTamanhoEnable: (tamanhoId, TamanhoData) => dispatch(actions.putTamanhoEnable(tamanhoId, TamanhoData))
     };
 }
 

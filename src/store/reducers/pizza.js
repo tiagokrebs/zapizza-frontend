@@ -163,6 +163,60 @@ const putTamanhoSuccess = (state, action) => {
     }
 };
 
+// Ativa/Desativa
+const putTamanhoEnableStart = (state, action) => {
+    return {
+        ...state,
+        tamanho: {
+            ...state.tamanho,
+            api: {
+                ...state.tamanho.api,
+                // pending: true,
+                error: null
+            }
+        }
+    }
+};
+
+const putTamanhoEnableError = (state, action) => {
+    return {
+        ...state,
+        tamanho: {
+            ...state.tamanho,
+            api: {
+                ...state.tamanho.api,
+                // pending: false,
+                error: action.error
+            }
+        }
+    }
+};
+
+const putTamanhoEnableSuccess = (state, action) => {
+    return {
+        ...state,
+        tamanho: {
+            ...state.tamanho,
+            api: {
+                ...state.tamanho.api,
+                // pending: false,
+                error: null
+            },
+            tamanhos: [
+                ...state.tamanho.tamanhos.map((item) => {
+                    if (item.hash_id === action.tamanho.hash_id) {
+                        return {
+                            ...item,
+                            ativo: action.tamanho.ativo
+                        }
+                    }
+                    return item;
+                }),
+            ]
+        }
+    }
+};
+
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case PIZZA.GET_TAMANHO_LIST_START: return getTamanhosStart(state, action);
@@ -174,6 +228,9 @@ const reducer = (state = initialState, action) => {
         case PIZZA.PUT_TAMANHO_START: return putTamanhoStart(state, action);
         case PIZZA.PUT_TAMANHO_ERROR: return putTamanhoError(state, action);
         case PIZZA.PUT_TAMANHO_SUCCESS: return putTamanhoSuccess(state, action);
+        case PIZZA.PUT_TAMANHO_ENABLE_START: return putTamanhoEnableStart(state, action);
+        case PIZZA.PUT_TAMANHO_ENABLE_ERROR: return putTamanhoEnableError(state, action);
+        case PIZZA.PUT_TAMANHO_ENABLE_SUCCESS: return putTamanhoEnableSuccess(state, action);
         default: return state;
     }
 };

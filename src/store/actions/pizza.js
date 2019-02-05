@@ -135,3 +135,47 @@ export const putTamanho = (tamanhoId, tamanhoData) => {
         });
     };
 };
+
+// Ativar/Desativar
+export const putTamanhoEnableStart = () => {
+    return {
+        type: PIZZA.PUT_TAMANHO_ENABLE_START
+    };
+};
+
+export const putTamanhoEnableError = (error) => {
+    return {
+        type: PIZZA.PUT_TAMANHO_ENABLE_ERROR,
+        error: error
+    };
+};
+
+export const putTamanhoEnableSuccess = (data) => {
+    return {
+        type: PIZZA.PUT_TAMANHO_ENABLE_SUCCESS,
+        tamanho: data.tamanho
+    };
+};
+
+export const putTamanhoEnable = (tamanhoId, tamanhoData) => {
+    return dispatch => {
+        dispatch(putTamanhoEnableStart());
+        axios.put('/tamanhos/' + tamanhoId + '/enable', tamanhoData, { withCredentials: true })
+        .then(response => {
+            dispatch(putTamanhoEnableSuccess(response.data.data));
+            return response;
+        })
+        .catch(error => {
+            if (error.response) {
+                // Request enviado e resposta do servidor com status erro
+                dispatch(putTamanhoEnableError(error.response.data.error));
+              } else if (error.request && !error.status) {
+                // Request enviado sem resposta do servidor
+                dispatch(putTamanhoEnableError({ code: null, message: error.message }));
+              } else {
+                // Algo aconteceu na criacao do request e gerou um erro
+                dispatch(putTamanhoEnableError({ code: null, message: error.message }));
+              }
+        });
+    };
+};
