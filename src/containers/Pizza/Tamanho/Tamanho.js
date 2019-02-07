@@ -56,19 +56,29 @@ class Tamanho extends Component {
                     // todo: transformar em componente
                     if (row.ativo) {
                         return <div variant="success">
-                            <i className={`fas fa-edit ${classes.tooltip}`} style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.modalFormUpdate(row)}>
-                                <span>Editar</span>
-                            </i>
-                            <OverlayTrigger key='top' placement='top' overlay={
-                                <Tooltip id='tooltip-top'>Desativar</Tooltip>
+                            <OverlayTrigger key='top-edit' placement='top' overlay={
+                                <Tooltip id='tooltip-top-edit'>Editar</Tooltip>
+                                }>
+                                <i className={`fas fa-edit ${classes.tooltip}`} style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.modalFormUpdate(row)}></i>
+                            </OverlayTrigger>
+                            <OverlayTrigger key='top-desable' placement='top' overlay={
+                                <Tooltip id='tooltip-top-desable'>Desativar</Tooltip>
                                 }>
                                 <i className="fas fa-ban" style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.submitEnableHandler(row)}></i>
                             </OverlayTrigger>
                         </div>
                     }
                     return <div variant="danger">
-                        <i className="fas fa-edit" style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.modalFormUpdate(row)}></i>
-                        <i className="fas fa-check" style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.submitEnableHandler(row)}></i>
+                        <OverlayTrigger key='top-edit' placement='top' overlay={
+                            <Tooltip id='tooltip-top-edit'>Editar</Tooltip>
+                            }>
+                            <i className={`fas fa-edit ${classes.tooltip}`} style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.modalFormUpdate(row)}></i>
+                        </OverlayTrigger>
+                        <OverlayTrigger key='top-enable' placement='top' overlay={
+                            <Tooltip id='tooltip-top-enable'>Ativar</Tooltip>
+                            }>
+                            <i className="fas fa-check" style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.submitEnableHandler(row)}></i>
+                        </OverlayTrigger>
                     </div>
                 }
             },

@@ -207,6 +207,12 @@ export const logout = () => {
 };
 
 // Login check
+export const loginCheckFail = (error) => {
+    return {
+        type: AUTH.LOGIN_CHECK_FAIL
+    };
+};
+
 export const loginCheck = () => dispatch => new Promise ((resolve, reject) => {
         const expirationDate = new Date(localStorage.getItem('expirationDate'));
         if (!localStorage.getItem('idToken') || !localStorage.getItem('USER')){
@@ -242,13 +248,13 @@ export const loginCheck = () => dispatch => new Promise ((resolve, reject) => {
             .catch(error => {
                 if (error.response) {
                     // Request enviado e resposta do servidor com status erro
-                    dispatch(loginError(error.response.data.error));
+                    dispatch(loginCheckFail(error.response.data.error));
                     } else if (error.request && !error.status) {
                     // Request enviado sem resposta do servidor
-                    dispatch(loginError({ code: null, message: error.message }));
+                    dispatch(loginCheckFail({ code: null, message: error.message }));
                     } else {
                     // Algo aconteceu na criacao do request e gerou um erro
-                    dispatch(loginError({ code: null, message: error.message }));
+                    dispatch(loginCheckFail({ code: null, message: error.message }));
                     }
             });
         }

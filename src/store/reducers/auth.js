@@ -122,6 +122,13 @@ const loginSuccess = (state, action) => {
     });
 };
 
+const loginCheckFail = (state, action) => {
+    const api = { pending: false, error: null };
+    return updateObject(state, {
+        api: api
+    });
+};
+
 // Logout
 const logoutStart = (state, action) => {
     const api = { pending: true, error: null }
@@ -200,6 +207,7 @@ const reducer = (state = initialState, action) => {
         case AUTH.LOGIN_START: return loginStart(state, action);
         case AUTH.LOGIN_ERROR: return loginError(state, action);
         case AUTH.LOGIN_SUCCESS: return loginSuccess(state, action);
+        case AUTH.LOGIN_CHECK_FAIL: return loginCheckFail(state, action);
         case AUTH.LOGOUT_START: return logoutStart(state, action);
         case AUTH.LOGOUT_ERROR: return logoutError(state, action);
         case AUTH.LOGOUT_SUCCESS: return logoutSuccess(state, action);
