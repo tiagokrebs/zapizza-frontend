@@ -5,19 +5,21 @@ import PageTitle from '../../../components/Page/PageTitle/PageTitle';
 import { connect } from 'react-redux';
 import './table.css';
 import BootstrapTable from 'react-bootstrap-table-next';
-import { Badge, Nav, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Badge, Nav, Button, OverlayTrigger, Tooltip, Alert } from 'react-bootstrap';
 import ZappSpinner from '../../../components/UI/ZappSpinner/ZappSpinner';
 import ModalB from '../../../components/UI/ModalB/ModalB';
 import Aux from '../../../hoc/Aux/Aux';
 import TamanhoForm from './TamanhoForm/TamanhoForm';
+import DeleteForm from '../../../components/DeleteForm/DeleteForm';
 import * as actions from '../../../store/actions';
 
 class Tamanho extends Component {
     state = {
         loading: false,
         modalShow: false,
-        formAction: null, // insert/update/view
+        formActionType: null, // insert/update/view
         formElementId: null,
+        formElementDescricao: null,
         colunas: [
             {
                 dataField: 'hash_id',
@@ -54,30 +56,29 @@ class Tamanho extends Component {
                 align: 'center',
                 formatter: (cellContent, row) => {
                     // todo: transformar em componente
-                    if (row.ativo) {
-                        return <div variant="success">
-                            <OverlayTrigger key='top-edit' placement='top' overlay={
-                                <Tooltip id='tooltip-top-edit'>Editar</Tooltip>
-                                }>
-                                <i className={`fas fa-edit ${classes.tooltip}`} style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.modalFormUpdate(row)}></i>
-                            </OverlayTrigger>
-                            <OverlayTrigger key='top-desable' placement='top' overlay={
-                                <Tooltip id='tooltip-top-desable'>Desativar</Tooltip>
-                                }>
-                                <i className="fas fa-ban" style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.submitEnableHandler(row)}></i>
-                            </OverlayTrigger>
-                        </div>
+                    let enable = 'enable'
+                    let icon = 'ban'
+                    let tip = 'Desativar'
+                    if (!row.ativo){
+                        enable = 'disable'
+                        icon = 'check'
+                        tip = 'Ativar'
                     }
-                    return <div variant="danger">
+                    return <div>
                         <OverlayTrigger key='top-edit' placement='top' overlay={
                             <Tooltip id='tooltip-top-edit'>Editar</Tooltip>
                             }>
-                            <i className={`fas fa-edit ${classes.tooltip}`} style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.modalFormUpdate(row)}></i>
+                            <i className='fas fa-edit' style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.modalFormUpdate(row)}></i>
                         </OverlayTrigger>
-                        <OverlayTrigger key='top-enable' placement='top' overlay={
-                            <Tooltip id='tooltip-top-enable'>Ativar</Tooltip>
+                        <OverlayTrigger key={`top-${enable}`} placement='top' overlay={
+                            <Tooltip id={`tooltip-top-${enable}`}>{tip}</Tooltip>
                             }>
-                            <i className="fas fa-check" style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.submitEnableHandler(row)}></i>
+                            <i className={`fas fa-${icon}`} style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.submitEnableHandler(row)}></i>
+                        </OverlayTrigger>
+                        <OverlayTrigger key='top-delete' placement='top' overlay={
+                            <Tooltip id='tooltip-top-delete'>Excluir</Tooltip>
+                            }>
+                            <i className='fas fa-trash-alt' style={{color: '#d4c3ba', margin: '0.5em'}} onClick={() => this.modalFormDelete(row)}></i>
                         </OverlayTrigger>
                     </div>
                 }
@@ -109,11 +110,17 @@ class Tamanho extends Component {
         this.setState({ modalShow: true, formActionType: 'update', formElementId: row.hash_id });
     }
 
+    modalFormDelete = (row) => {
+        this.setState({ modalShow: true, formActionType: 'delete', formElementId: row.hash_id, formElementDescricao: row.descricao });
+    }
+
     modalHandleClose = () => {
         this.setState({ modalShow: false });
     }
 
-    modalHandleOk = () => {
+    modalHandleDelete = (event) => {
+        event.preventDefault()
+        this.props.onDeleteTamanho(this.state.formElementId);
         this.setState({ modalShow: false });
     }
 
@@ -121,10 +128,7 @@ class Tamanho extends Component {
         const tamanhoData = {
             ativo: !row.ativo
         }
-
-        const id = row.hash_id;
-
-        this.props.onPutTamanhoEnable(id, tamanhoData);
+        this.props.onPutTamanhoEnable(row.hash_id, tamanhoData);
     }
 
     render () {
@@ -169,12 +173,16 @@ class Tamanho extends Component {
             pageTitle = null;
         }
 
-        
+        let message;
+        if (this.props.error && this.props.error.message) {
+            message = <Alert variant="danger">{this.props.error.message}</Alert>
+        }
+
         let pageContent = (
             <div className="row">
                 <div className="col-sm-12">
                     <div className={`card ${classes.Card}`}>
-                        {/* {message} */}
+                        {message}
                         {grid}
                     </div>
                 </div>
@@ -183,7 +191,8 @@ class Tamanho extends Component {
 
         let modalForm = (
             <ModalB className={classes.Modal}
-                show={this.state.modalShow}
+                size='lg'
+                show={this.state.modalShow && this.state.formActionType !== 'delete'}
                 title="Tamanho"
                 handleClose={this.modalHandleClose}
             >
@@ -195,9 +204,24 @@ class Tamanho extends Component {
             </ModalB>
         );
 
+        let modalFormDelete = (
+            <ModalB className={classes.Modal}
+                size='md'
+                title='Você tem certeza?'
+                show={this.state.modalShow && this.state.formActionType === 'delete'}
+                handleClose={this.modalHandleClose}
+            >
+                <DeleteForm 
+                    deleteConfirm={this.modalHandleDelete}
+                    elementDesc={this.state.formElementDescricao}
+                />
+            </ModalB>
+        );
+
         return (
             <Aux>
                 {modalForm}
+                {modalFormDelete}
                 {pageTitle}
                 {pageContent}
             </Aux>
@@ -217,7 +241,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onGetTamanhos: () => dispatch(actions.getTamanhos()),
-        onPutTamanhoEnable: (tamanhoId, TamanhoData) => dispatch(actions.putTamanhoEnable(tamanhoId, TamanhoData))
+        onPutTamanhoEnable: (tamanhoId, TamanhoData) => dispatch(actions.putTamanhoEnable(tamanhoId, TamanhoData)),
+        onDeleteTamanho: (tamanhoId) => dispatch(actions.deleteTamanho(tamanhoId))
     };
 }
 

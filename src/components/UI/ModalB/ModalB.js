@@ -6,7 +6,7 @@ import { Modal } from 'react-bootstrap';
 
 const modalB = (props) => {
     return (
-        <Modal show={props.show} onHide={props.handleClose} backdrop='static' size='lg'>
+        <Modal show={props.show} onHide={props.handleClose} backdrop='static' size={props.size}>
             <Modal.Header closeButton>
                 <Modal.Title style={{color: '#594336'}}>{props.title}</Modal.Title>
             </Modal.Header>

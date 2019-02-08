@@ -179,3 +179,47 @@ export const putTamanhoEnable = (tamanhoId, tamanhoData) => {
         });
     };
 };
+
+// Deletar
+export const deleteTamanhoStart = () => {
+    return {
+        type: PIZZA.DELETE_TAMANHO_START
+    };
+};
+
+export const deleteTamanhoError = (error) => {
+    return {
+        type: PIZZA.DELETE_TAMANHO_ERROR,
+        error: error
+    };
+};
+
+export const deleteTamanhoSuccess = (tamanhoId) => {
+    return {
+        type: PIZZA.DELETE_TAMANHO_SUCCESS,
+        tamanhoId: tamanhoId
+    };
+};
+
+export const deleteTamanho = (tamanhoId) => {
+    return dispatch => {
+        dispatch(deleteTamanhoStart());
+        return axios.delete('/tamanhos/' + tamanhoId, { withCredentials: true })
+        .then(response => {
+            dispatch(deleteTamanhoSuccess(tamanhoId));
+            return response;
+        })
+        .catch(error => {
+            if (error.response) {
+                // Request enviado e resposta do servidor com status erro
+                dispatch(deleteTamanhoError(error.response.data.error));
+              } else if (error.request && !error.status) {
+                // Request enviado sem resposta do servidor
+                dispatch(deleteTamanhoError({ code: null, message: error.message }));
+              } else {
+                // Algo aconteceu na criacao do request e gerou um erro
+                dispatch(deleteTamanhoError({ code: null, message: error.message }));
+              }
+        });
+    };
+};

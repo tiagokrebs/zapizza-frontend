@@ -217,6 +217,57 @@ const putTamanhoEnableSuccess = (state, action) => {
     }
 };
 
+// Deleta
+const deleteTamanhoStart = (state, action) => {
+    return {
+        ...state,
+        tamanho: {
+            ...state.tamanho,
+            api: {
+                ...state.tamanho.api,
+                // pending: true,
+                error: null
+            }
+        }
+    }
+};
+
+const deleteTamanhoError = (state, action) => {
+    return {
+        ...state,
+        tamanho: {
+            ...state.tamanho,
+            api: {
+                ...state.tamanho.api,
+                // pending: false,
+                error: action.error
+            }
+        }
+    }
+};
+
+const deleteTamanhoSuccess = (state, action) => {
+    return {
+        ...state,
+        tamanho: {
+            ...state.tamanho,
+            api: {
+                ...state.tamanho.api,
+                // pending: false,
+                error: null
+            },
+            tamanhos: [
+                ...state.tamanho.tamanhos.filter((item) => {
+                    if (item.hash_id === action.tamanhoId) {
+                        return false;
+                    }
+                    return true;
+                }),
+            ]
+        }
+    }
+};
+
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case PIZZA.GET_TAMANHO_LIST_START: return getTamanhosStart(state, action);
@@ -231,6 +282,9 @@ const reducer = (state = initialState, action) => {
         case PIZZA.PUT_TAMANHO_ENABLE_START: return putTamanhoEnableStart(state, action);
         case PIZZA.PUT_TAMANHO_ENABLE_ERROR: return putTamanhoEnableError(state, action);
         case PIZZA.PUT_TAMANHO_ENABLE_SUCCESS: return putTamanhoEnableSuccess(state, action);
+        case PIZZA.DELETE_TAMANHO_START: return deleteTamanhoStart(state, action);
+        case PIZZA.DELETE_TAMANHO_ERROR: return deleteTamanhoError(state, action);
+        case PIZZA.DELETE_TAMANHO_SUCCESS: return deleteTamanhoSuccess(state, action);
         default: return state;
     }
 };
