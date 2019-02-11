@@ -5,6 +5,7 @@ import PageTitle from '../../../components/Page/PageTitle/PageTitle';
 import { connect } from 'react-redux';
 import './table.css';
 import BootstrapTable from 'react-bootstrap-table-next';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Badge, Nav, Button, OverlayTrigger, Tooltip, Alert } from 'react-bootstrap';
 import ZappSpinner from '../../../components/UI/ZappSpinner/ZappSpinner';
 import ModalB from '../../../components/UI/ModalB/ModalB';
@@ -35,19 +36,19 @@ class Tamanho extends Component {
                 dataField: 'quantSabores',
                 text: 'Sabores',
                 align: 'center',
-                sort: true
+                // sort: true
             }, 
             {
                 dataField: 'quantBordas',
                 text: 'Bordas',
                 align: 'center',
-                sort: true
+                // sort: true
             },
             {
                 dataField: 'quantFatias',
                 text: 'Fatias',
                 align: 'center',
-                sort: true
+                // sort: true
             },
             {
                 dataField: 'botoes',
@@ -95,11 +96,15 @@ class Tamanho extends Component {
                     return <Badge variant="danger">Inativo</Badge>
                 }
             }
-        ]
+        ],
+        page: 1,
+        pageSize: 10,
+        sortField: 'descricao',
+        sortOrder: 'asc'
     }
 
     componentDidMount () {
-        this.props.onGetTamanhos();
+        this.props.onGetTamanhos(this.state.page-1, this.state.pageSize, this.state.sortField, this.state.sortOrder);
     }
 
     modalFormInsert = () => {
@@ -131,7 +136,32 @@ class Tamanho extends Component {
         this.props.onPutTamanhoEnable(row.hash_id, tamanhoData);
     }
 
+    handleTableChange = (type, { page, sizePerPage, sortField, sortOrder }) => {
+        const currentIndex = (page - 1) * sizePerPage;
+        // handle paginação
+        if (type === 'pagination') {
+            this.props.onGetTamanhos(currentIndex, sizePerPage, sortField, sortOrder);
+            this.setState(() => ({
+                page: page,
+                pageSize: sizePerPage
+            }));
+        }
+
+        // handle ordenação
+        if (type === 'sort') {
+            this.props.onGetTamanhos(currentIndex, sizePerPage, sortField, sortOrder);
+            this.setState(() => ({
+                sortField: sortField,
+                sortOrder: sortOrder
+            }));
+        }
+      }
+
     render () {
+        let spinner;
+        if (this.props.pending) {
+            spinner = <ZappSpinner />
+        }
         let grid = (
             <div>
                 <div className={`card-header ${classes.CardHeader}`}>
@@ -150,9 +180,16 @@ class Tamanho extends Component {
                     <div className="row justify-content-center">
                         <div className="col-md-12">
                             <BootstrapTable 
+                                remote
                                 keyField='hash_id'
                                 data={this.props.tamanhos}
                                 columns={this.state.colunas}
+                                pagination={paginationFactory({
+                                    page: this.state.page,
+                                    sizePerPage: this.state.pageSize,
+                                    totalSize: this.props.totalItems
+                                })}
+                                onTableChange={this.handleTableChange}
                                 bootstrap4={true}
                                 noDataIndication={'Nenhum resgistro encontrado :('}
                                 bordered={false}
@@ -160,12 +197,9 @@ class Tamanho extends Component {
                         </div>
                     </div>
                 </div>
+                {spinner}
             </div>
         );
-
-        if (this.props.pending) {
-            grid = <ZappSpinner />
-        }
 
         let pageTitle = <PageTitle title={'Tamanhos'} subtitle='Informe os seus tamanhos'/>
 
@@ -234,13 +268,14 @@ const mapStateToProps = state => {
         isAuthenticated: state.auth.isAuthenticated,
         pending: state.pizza.tamanho.api.pending,
         error: state.pizza.tamanho.api.error,
-        tamanhos: state.pizza.tamanho.tamanhos
+        tamanhos: state.pizza.tamanho.tamanhos,
+        totalItems: state.pizza.tamanho.totalItems
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onGetTamanhos: () => dispatch(actions.getTamanhos()),
+        onGetTamanhos: (start, pageSize, sortField, sortOrder) => dispatch(actions.getTamanhos(start, pageSize, sortField, sortOrder)),
         onPutTamanhoEnable: (tamanhoId, TamanhoData) => dispatch(actions.putTamanhoEnable(tamanhoId, TamanhoData)),
         onDeleteTamanho: (tamanhoId) => dispatch(actions.deleteTamanho(tamanhoId))
     };

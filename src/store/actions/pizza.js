@@ -19,14 +19,23 @@ export const getTamanhosError = (error) => {
 export const getTamanhosSuccess = (data) => {
     return {
         type: PIZZA.GET_TAMANHO_LIST_SUCCESS,
-        tamanhos: data.tamanhos
+        tamanhos: data.tamanhos,
+        totalItems: data.totalItems
     };
 };
 
-export const getTamanhos = () => {
+export const getTamanhos = (start, pageSize, sortField, sortOrder) => {
     return dispatch => {
         dispatch(getTamanhosStart());
-        axios.get('/tamanhos', { withCredentials: true })
+        axios.get('/tamanhos', { 
+            params: {
+                start: start,
+                size: pageSize,
+                sort: sortField,
+                order: sortOrder
+            },
+            withCredentials: true 
+        })
         .then(response => {
             dispatch(getTamanhosSuccess(response.data.data));
             return response;

@@ -7,7 +7,8 @@ const initialState = {
             pending: false,
             error: null
         },
-        tamanhos: []
+        tamanhos: [],
+        totalItems: 0
     }
 }
 
@@ -23,7 +24,8 @@ const getTamanhosStart = (state, action) => {
                 pending: true,
                 error: null
             },
-            tamanhos: []
+            tamanhos: [],
+            totalItems: 0
         }
     };
     
@@ -57,7 +59,8 @@ const getTamanhosSuccess = (state, action) => {
                 pending: false,
                 error: null
             },
-            tamanhos: action.tamanhos
+            tamanhos: action.tamanhos,
+            totalItems: action.totalItems
         }
     }
 };
