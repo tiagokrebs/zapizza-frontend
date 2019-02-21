@@ -1,24 +1,24 @@
 import axios from '../../shared/axios-auth';
 
-import { PIZZA } from './actionsTypes';
+import { TAMANHO } from './actionsTypes';
 
 // Lista
 export const getTamanhosStart = () => {
     return {
-        type: PIZZA.GET_TAMANHO_LIST_START
+        type: TAMANHO.GET_TAMANHO_LIST_START
     };
 };
 
 export const getTamanhosError = (error) => {
     return {
-        type: PIZZA.GET_TAMANHO_LIST_ERROR,
+        type: TAMANHO.GET_TAMANHO_LIST_ERROR,
         error: error
     };
 };
 
 export const getTamanhosSuccess = (data) => {
     return {
-        type: PIZZA.GET_TAMANHO_LIST_SUCCESS,
+        type: TAMANHO.GET_TAMANHO_LIST_SUCCESS,
         tamanhos: data.tamanhos,
         totalItems: data.totalItems
     };
@@ -58,20 +58,20 @@ export const getTamanhos = (start, pageSize, sortField, sortOrder) => {
 // Inserção
 export const postTamanhoStart = () => {
     return {
-        type: PIZZA.POST_TAMANHO_START
+        type: TAMANHO.POST_TAMANHO_START
     };
 };
 
 export const postTamanhoError = (error) => {
     return {
-        type: PIZZA.POST_TAMANHO_ERROR,
+        type: TAMANHO.POST_TAMANHO_ERROR,
         error: error
     };
 };
 
 export const postTamanhoSuccess = (data) => {
     return {
-        type: PIZZA.POST_TAMANHO_SUCCESS,
+        type: TAMANHO.POST_TAMANHO_SUCCESS,
         tamanho: data.tamanho
     };
 };
@@ -103,20 +103,20 @@ export const postTamanho = (tamanhoData) => {
 // Alteração
 export const putTamanhoStart = () => {
     return {
-        type: PIZZA.PUT_TAMANHO_START
+        type: TAMANHO.PUT_TAMANHO_START
     };
 };
 
 export const putTamanhoError = (error) => {
     return {
-        type: PIZZA.PUT_TAMANHO_ERROR,
+        type: TAMANHO.PUT_TAMANHO_ERROR,
         error: error
     };
 };
 
 export const putTamanhoSuccess = (data) => {
     return {
-        type: PIZZA.PUT_TAMANHO_SUCCESS,
+        type: TAMANHO.PUT_TAMANHO_SUCCESS,
         tamanho: data.tamanho
     };
 };
@@ -148,20 +148,20 @@ export const putTamanho = (tamanhoId, tamanhoData) => {
 // Ativar/Desativar
 export const putTamanhoEnableStart = () => {
     return {
-        type: PIZZA.PUT_TAMANHO_ENABLE_START
+        type: TAMANHO.PUT_TAMANHO_ENABLE_START
     };
 };
 
 export const putTamanhoEnableError = (error) => {
     return {
-        type: PIZZA.PUT_TAMANHO_ENABLE_ERROR,
+        type: TAMANHO.PUT_TAMANHO_ENABLE_ERROR,
         error: error
     };
 };
 
 export const putTamanhoEnableSuccess = (data) => {
     return {
-        type: PIZZA.PUT_TAMANHO_ENABLE_SUCCESS,
+        type: TAMANHO.PUT_TAMANHO_ENABLE_SUCCESS,
         tamanho: data.tamanho
     };
 };
@@ -192,20 +192,20 @@ export const putTamanhoEnable = (tamanhoId, tamanhoData) => {
 // Deletar
 export const deleteTamanhoStart = () => {
     return {
-        type: PIZZA.DELETE_TAMANHO_START
+        type: TAMANHO.DELETE_TAMANHO_START
     };
 };
 
 export const deleteTamanhoError = (error) => {
     return {
-        type: PIZZA.DELETE_TAMANHO_ERROR,
+        type: TAMANHO.DELETE_TAMANHO_ERROR,
         error: error
     };
 };
 
 export const deleteTamanhoSuccess = (tamanhoId) => {
     return {
-        type: PIZZA.DELETE_TAMANHO_SUCCESS,
+        type: TAMANHO.DELETE_TAMANHO_SUCCESS,
         tamanhoId: tamanhoId
     };
 };

@@ -11,7 +11,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import authReducer from './store/reducers/auth';
 import userReducer from './store/reducers/user';
-import pizzaReducer from './store/reducers/pizza';
+import tamanhoReducer from './store/reducers/tamanho';
+import saborReducer from './store/reducers/sabor';
 import { loginCheck } from './store/actions';
 
 const history = createBrowserHistory();
@@ -22,7 +23,8 @@ const rootReducer = (history) => combineReducers({
     auth: authReducer,
     router: connectRouter(history),
     user: userReducer,
-    pizza: pizzaReducer
+    tamanho: tamanhoReducer,
+    sabor: saborReducer
   })
 
 const store = createStore(

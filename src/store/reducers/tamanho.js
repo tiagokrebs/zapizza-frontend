@@ -1,4 +1,4 @@
-import { PIZZA } from '../actions/actionsTypes';
+import { TAMANHO } from '../actions/actionsTypes';
 // import updateObject from '../../shared/updateObject';
 
 const initialState = {
@@ -273,21 +273,21 @@ const deleteTamanhoSuccess = (state, action) => {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case PIZZA.GET_TAMANHO_LIST_START: return getTamanhosStart(state, action);
-        case PIZZA.GET_TAMANHO_LIST_ERROR: return getTamanhosError(state, action);
-        case PIZZA.GET_TAMANHO_LIST_SUCCESS: return getTamanhosSuccess(state, action);
-        case PIZZA.POST_TAMANHO_START: return postTamanhoStart(state, action);
-        case PIZZA.POST_TAMANHO_ERROR: return postTamanhoError(state, action);
-        case PIZZA.POST_TAMANHO_SUCCESS: return postTamanhoSuccess(state, action);
-        case PIZZA.PUT_TAMANHO_START: return putTamanhoStart(state, action);
-        case PIZZA.PUT_TAMANHO_ERROR: return putTamanhoError(state, action);
-        case PIZZA.PUT_TAMANHO_SUCCESS: return putTamanhoSuccess(state, action);
-        case PIZZA.PUT_TAMANHO_ENABLE_START: return putTamanhoEnableStart(state, action);
-        case PIZZA.PUT_TAMANHO_ENABLE_ERROR: return putTamanhoEnableError(state, action);
-        case PIZZA.PUT_TAMANHO_ENABLE_SUCCESS: return putTamanhoEnableSuccess(state, action);
-        case PIZZA.DELETE_TAMANHO_START: return deleteTamanhoStart(state, action);
-        case PIZZA.DELETE_TAMANHO_ERROR: return deleteTamanhoError(state, action);
-        case PIZZA.DELETE_TAMANHO_SUCCESS: return deleteTamanhoSuccess(state, action);
+        case TAMANHO.GET_TAMANHO_LIST_START: return getTamanhosStart(state, action);
+        case TAMANHO.GET_TAMANHO_LIST_ERROR: return getTamanhosError(state, action);
+        case TAMANHO.GET_TAMANHO_LIST_SUCCESS: return getTamanhosSuccess(state, action);
+        case TAMANHO.POST_TAMANHO_START: return postTamanhoStart(state, action);
+        case TAMANHO.POST_TAMANHO_ERROR: return postTamanhoError(state, action);
+        case TAMANHO.POST_TAMANHO_SUCCESS: return postTamanhoSuccess(state, action);
+        case TAMANHO.PUT_TAMANHO_START: return putTamanhoStart(state, action);
+        case TAMANHO.PUT_TAMANHO_ERROR: return putTamanhoError(state, action);
+        case TAMANHO.PUT_TAMANHO_SUCCESS: return putTamanhoSuccess(state, action);
+        case TAMANHO.PUT_TAMANHO_ENABLE_START: return putTamanhoEnableStart(state, action);
+        case TAMANHO.PUT_TAMANHO_ENABLE_ERROR: return putTamanhoEnableError(state, action);
+        case TAMANHO.PUT_TAMANHO_ENABLE_SUCCESS: return putTamanhoEnableSuccess(state, action);
+        case TAMANHO.DELETE_TAMANHO_START: return deleteTamanhoStart(state, action);
+        case TAMANHO.DELETE_TAMANHO_ERROR: return deleteTamanhoError(state, action);
+        case TAMANHO.DELETE_TAMANHO_SUCCESS: return deleteTamanhoSuccess(state, action);
         default: return state;
     }
 };

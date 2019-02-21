@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import classes from './Profile.module.css';
 import { Form, FormControl, Button, Alert} from 'react-bootstrap';
 import { Link, Redirect } from 'react-router-dom';
-import ZappSpinner from '../../components/UI/ZappSpinner/ZappSpinner';
+import ZappSpinner from '../../components/ZappSpinner/ZappSpinner';
 import PageTitle from '../../components/Page/PageTitle/PageTitle';
 import * as yup from 'yup';
 import * as actions from '../../store/actions';

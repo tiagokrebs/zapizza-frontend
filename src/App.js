@@ -6,9 +6,9 @@ import Layout from './hoc/Layout/Layout';
 import Home from './containers/Home/Home';
 import Auth from './containers/Auth/Auth';
 import AuthRoute from './components/AuthRoute/AuthRoute';
-import NotFound from './components/HttpExceptions/NotFound/NotFound';
-import Forbidden from './components/HttpExceptions/Forbidden/Forbidden';
-import BadError from './components/HttpExceptions/BadError/BadError';
+import NotFound from './components/Page/HttpExceptions/NotFound/NotFound';
+import Forbidden from './components/Page/HttpExceptions/Forbidden/Forbidden';
+import BadError from './components/Page/HttpExceptions/BadError/BadError';
 import Logout from './containers/Auth/Logout/Logout';
 import Register from './containers/Auth/Register/Register';
 import Confirm from './containers/Auth/Register/Confirm/Confirm';
@@ -16,6 +16,7 @@ import Forgot from './containers/Auth/Forgot/Forgot';
 import Reset from './containers/Auth/Forgot/Reset/Reset';
 import Profile from './containers/Profile/Profile';
 import Tamanho from './containers/Pizza/Tamanho/Tamanho';
+import Sabor from './containers/Pizza/Sabor/Sabor';
 import * as actions from './store/actions/auth';
 
 // const asyncRegister = asyncComponent(() => {
@@ -38,6 +39,7 @@ class App extends Component {
         <Route path="/forgot" exact component={Forgot} />
         <Route path="/reset/:token" exact component={Reset} />
         <AuthRoute path="/tamanhos" component={Tamanho} isAuthenticated={this.props.isAuthenticated} />
+        <AuthRoute path="/sabores" component={Sabor} isAuthenticated={this.props.isAuthenticated} />
         <Route component={NotFound}/>        
       </Switch>
     );

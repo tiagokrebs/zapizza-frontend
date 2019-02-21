@@ -21,4 +21,12 @@ export {
     putTamanho,
     putTamanhoEnable,
     deleteTamanho
-} from './pizza';
+} from './tamanho';
+
+export {
+    getSabores,
+    postSabor,
+    putSabor,
+    putSaborEnable,
+    deleteSabor
+} from './sabor';

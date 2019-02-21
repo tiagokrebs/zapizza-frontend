@@ -5,7 +5,7 @@ import Aux from '../Aux/Aux';
 import classes from './Layout.module.css';
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer';
-import Footer from '../../components/Footer/Footer';
+import Footer from '../../components/Page/Footer/Footer';
 
 class Layout extends Component {
     state = {

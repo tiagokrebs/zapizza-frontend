@@ -1,0 +1,34 @@
+.SaborForm label {
+    color: #594336;
+}
+
+.SaborForm input {
+    border: 1px solid #594336;
+    background-color: transparent;
+    color: #594336;
+}
+
+.SaborForm input:focus {
+    border-color: #594336;
+    box-shadow: 0 0 0 0.2rem rgba(133, 82, 82, 0.5);
+}
+
+/* Transformações via CSS não são reproduzidas para state */
+/* .SaborForm input[name=sigla] {
+    text-transform: uppercase;
+}
+
+.SaborForm input[name=descricao] {
+    text-transform: capitalize;
+} */
+
+.SaborFormFooter {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.SaborFormFooter button {
+    margin-right: .50rem;
+}

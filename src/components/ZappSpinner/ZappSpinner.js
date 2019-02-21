@@ -1,8 +1,8 @@
 import React from 'react';
 
-import logo from '../../../assets/images/logo.png';
+import logo from '../../assets/images/logo.png';
 import classes from './ZappSpinner.module.css';
-import Spinner from '../Spinner/Spinner';
+import Spinner from '../UI/Spinner/Spinner';
 
 const zappSpinner = () => (
     <div className={classes.ZappSpinner}>

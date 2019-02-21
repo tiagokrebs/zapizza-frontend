@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 
 import { Button, Form, FormControl } from 'react-bootstrap';
 import ZapSpinner from '../../../../components/ZappSpinner/ZappSpinner';
-import classes from './TamanhoForm.module.css';
+import classes from './SaborForm.module.css';
 import * as yup from 'yup';
 import * as actions from '../../../../store/actions';
 import updateObject from '../../../../shared/updateObject';
+import MaskedInput from 'react-text-mask';
+import * as masks from '../../../../shared/inputMasks';
 
-class TamanhoForm extends Component {
+class SaborForm extends Component {
     state = {
         loading: false,
         inputs: {
@@ -24,54 +26,73 @@ class TamanhoForm extends Component {
                 error: '',
                 touched: true
             },
-            sigla: {
-                value: '',
-                invalid: false,
-                error: '',
-                touched: true
-            },
-            quantSabores: {
-                value: '0',
-                invalid: false,
-                error: '',
-                touched: true
-            },
-            quantBordas: {
-                value: '0',
-                invalid: false,
-                error: '',
-                touched: true
-            },
-            quantFatias: {
-                value: '0',
-                invalid: false,
-                error: '',
-                touched: true
-            }
+            // novos inputs são inseridos em componentDidMount de acordo com cadastro de Tamanhos
         },
         formIsValid: false,
         formSubmitSuceed: false
     }
 
     componentDidMount () {
+        // obtem lista de tamanhos e transforma em state para montagem do form
+        let updatedInputs = {...this.state.inputs}
+        this.props.tamanhos.forEach(tamanho => {
+            if (tamanho.ativo) {
+                // const key = [tamanho.descricao].toString().toLowerCase().replace(/[^a-z]/g, "");
+                const key = [tamanho.hash_id];
+                updatedInputs = updateObject(updatedInputs, {
+                    [key]: {
+                        value: '',
+                        invalid: false,
+                        error: '',
+                        touched: true,
+                        dynamic: true,
+                        label: tamanho.descricao
+                    }
+                });
+            }
+        })
+
         if (this.props.formAction === 'update') {
             // percorre lista de objetos a procura do selecionado
-            this.props.tamanhos.forEach(item => {
-                if (item.hash_id === this.props.elementId) {
-                    // Reinicia validade dos inputs do formulario
-                    let updatedInputs = this.state.inputs;
-                    for (let key in this.state.inputs) {
-                        const updatedFormElement = updateObject(this.state.inputs[key], {
-                            value: item[key]
-                        });
+            this.props.sabores.forEach(sabor => {
+                if (sabor.hash_id === this.props.elementId) {
+                    // Define valores dos inputs do formulario
+                    for (let key in updatedInputs) {
+                        let updatedFormElement;
+                        if (updatedInputs[key].dynamic) {
+                            // Define valores dos inputs dinamicos do formulário
+                            // eslint-disable-line no-loop-func
+                            sabor.tamanhos.forEach(tamanho => {
+                                // Percorre lista de tamanhos do sabor
+                                if (tamanho.hash_id === key) {
+                                    updatedFormElement = updateObject(updatedInputs[key], {
+                                        value: tamanho.valor
+                                    });
+                                    
+                                    updatedInputs = updateObject(updatedInputs, {
+                                        [key]: updatedFormElement
+                                    });
+                                }
+                            })
+                        } else {
+                            // Define valores dos iputs fixos do formulário
+                            updatedFormElement = updateObject(updatedInputs[key], {
+                                value: sabor[key]
+                            });
 
-                        updatedInputs = updateObject(updatedInputs, {
-                            [key]: updatedFormElement
-                        });
+                            updatedInputs = updateObject(updatedInputs, {
+                                [key]: updatedFormElement
+                            });
+                        }
+
+                        
                     }
                     this.setState({inputs: updatedInputs});
                 }
             });
+        } else {
+            // quando não é update apenas retorna novo state com inputs dinamicos adicionados
+            this.setState({inputs: updatedInputs});
         }
     }
 
@@ -110,43 +131,19 @@ class TamanhoForm extends Component {
                     default: 'Campo inválido',
                     required: 'Campo obrigatório',
                     notType: 'Campo inválido'
-                },
-                number: {
-                    integer: 'Informe um número',
-                    positive: 'Informe um número positivo',
-                    min: 'Quantidade mínima 1'
                 }
             });
 
-            // Cria schema de validacao
-            const schema = yup.object().shape({
-                // hash_ip: yup
-                //     .string()
-                //     .required(),
-                descricao: yup
-                    .string()
-                    .required(),
-                sigla: yup
-                    .string()
-                    .required(),
-                quantSabores: yup
-                    .number()
-                    .required()
-                    .integer()
-                    .positive()
-                    .min(1),
-                quantBordas: yup
-                    .number()
-                    .required()
-                    .integer()
-                    .positive(),
-                quantFatias: yup
-                    .number()
-                    .required()
-                    .integer()
-                    .positive()
-                    .min(1)
-            });
+            // Cria schema de validacao fixo
+            let schemaObject = {
+                descricao: yup.string().required()
+            };
+            for (let key in this.state.inputs) {
+                if (this.state.inputs[key].dynamic) {
+                    schemaObject[key] = yup.string().required();
+                }
+            }
+            const schema = yup.object().shape(schemaObject);
 
             // Cria objeto com base em state para validacao
             let formValues = {};
@@ -170,7 +167,8 @@ class TamanhoForm extends Component {
             this.setState({inputs: updatedInputs});
 
             // Valida e define retorno dos erros em state
-            schema.validate(formValues, {abortEarly: false})
+            // schema.validate(formValues, {abortEarly: false})
+            schema.validate(formValues, {abortEarly: false, strict: true })
             .catch(error => {
                 error.inner.forEach(formElement => {
                     const updatedFormElement = updateObject(this.state.inputs[formElement.path], {
@@ -205,16 +203,30 @@ class TamanhoForm extends Component {
         this.setState({ loading: true });
         this.checkFormIsValid()
             .then(() => {
-                let tamanhoData = {
+
+
+                // todo: ajustar json do PUT para API de acordo com exemplo Postman
+
+
+                // define o atributos do formulário de post/put
+                let saborData = {
                     descricao: this.state.inputs.descricao.value,
-                    sigla: this.state.inputs.sigla.value,
-                    quantSabores: this.state.inputs.quantSabores.value,
-                    quantFatias: this.state.inputs.quantFatias.value,
-                    quantBordas: this.state.inputs.quantBordas.value
-                }
+                    tamanhos: []
+                };
+                let dinamicInputs = [];
+                for (let key in this.state.inputs) {
+                    if (this.state.inputs[key].dynamic) {
+                        // saborData[key] = masks.valorP6S2Unmask(this.state.inputs[key].value)
+                        dinamicInputs.push({
+                            hash_id: key, 
+                            valor: masks.valorP6S2Unmask(this.state.inputs[key].value)
+                        })
+                    }
+                };
+                saborData = updateObject(saborData, {tamanhos: dinamicInputs});
 
                 if (this.props.formAction === 'insert') {
-                    this.props.onPostTamanho(tamanhoData)
+                    this.props.onPostSabor(saborData)
                     .then((response) => {
                         this.setState({formSubmitSuceed: true});
                         this.props.modalClose();
@@ -238,7 +250,7 @@ class TamanhoForm extends Component {
                         this.setState({ loading: false });
                     });
                 } else if (this.props.formAction === 'update'){
-                    this.props.onPutTamanho(this.state.inputs.hash_id.value, tamanhoData)
+                    this.props.onPutSabor(this.state.inputs.hash_id.value, saborData)
                     .then((response) => {
                         this.setState({formSubmitSuceed: true});
                         this.props.modalClose();
@@ -270,9 +282,9 @@ class TamanhoForm extends Component {
             <Form noValidate onSubmit={this.submitHandler}>
                     <div className="row justify-content-center">
                         <div className="col-md-10">
-                            <div className={classes.TamanhoForm}>
+                            <div className={classes.SaborForm}>
                                 <Form.Group className="row">
-                                    <div className="col-lg-9 col-md-9">
+                                    <div className="col-lg-12 col-md-12">
                                         <Form.Label>Descrição</Form.Label>
                                         <Form.Control
                                             type="text"
@@ -287,70 +299,41 @@ class TamanhoForm extends Component {
                                             {this.state.inputs.descricao.error}
                                         </FormControl.Feedback>
                                     </div>
-                                    <div className="col-lg-3 col-md-3">
-                                        <Form.Label>Sigla</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                name="sigla"
-                                                maxLength="3"
-                                                value={this.state.inputs.sigla.value}
-                                                onChange={this.inputChangeHandler}
-                                                onBlur={this.inputBlurHandler}
-                                                isInvalid={this.state.inputs.sigla.touched && this.state.inputs.sigla.invalid}
-                                            />
-                                            <FormControl.Feedback type="invalid">
-                                                {this.state.inputs.sigla.error}
-                                            </FormControl.Feedback>
-                                    </div>
                                 </Form.Group>
                                 <Form.Group className="row">
-                                    <div className="col-lg-4 col-md-4">
-                                        <Form.Label>Sabores</Form.Label>
-                                            <Form.Control
-                                                type="number"
-                                                name="quantSabores"
-                                                value={this.state.inputs.quantSabores.value}
-                                                onChange={this.inputChangeHandler}
-                                                onBlur={this.inputBlurHandler}
-                                                isInvalid={this.state.inputs.quantSabores.touched && this.state.inputs.quantSabores.invalid}
-                                            />
-                                            <FormControl.Feedback type="invalid">
-                                                {this.state.inputs.quantSabores.error}
-                                            </FormControl.Feedback>
-                                    </div>
-                                    <div className="col-lg-4 col-md-4">
-                                        <Form.Label>Fatias</Form.Label>
-                                            <Form.Control
-                                                type="number"
-                                                name="quantFatias"
-                                                value={this.state.inputs.quantFatias.value}
-                                                onChange={this.inputChangeHandler}
-                                                onBlur={this.inputBlurHandler}
-                                                isInvalid={this.state.inputs.quantFatias.touched && this.state.inputs.quantFatias.invalid}
-                                            />
-                                            <FormControl.Feedback type="invalid">
-                                                {this.state.inputs.quantFatias.error}
-                                            </FormControl.Feedback>    
-                                    </div>
-                                    <div className="col-lg-4 col-md-4">
-                                        <Form.Label>Bordas</Form.Label>
-                                            <Form.Control
-                                                type="number"
-                                                name="quantBordas"
-                                                value={this.state.inputs.quantBordas.value}
-                                                onChange={this.inputChangeHandler}
-                                                onBlur={this.inputBlurHandler}
-                                                isInvalid={this.state.inputs.quantBordas.touched && this.state.inputs.quantBordas.invalid}
-                                            />
-                                            <FormControl.Feedback type="invalid">
-                                                {this.state.inputs.quantBordas.error}
-                                            </FormControl.Feedback>    
-                                    </div>
+                                    {
+                                        Object.keys(this.state.inputs).map((item, index) => {
+                                            if (this.state.inputs[item].dynamic) {
+                                                return (
+                                                    <div key={[item]} className="col-lg-4 col-md-4">
+                                                        <Form.Label>{`Valor ${this.state.inputs[item].label}`}</Form.Label>
+                                                        <MaskedInput
+                                                            mask={masks.valorP6S2}
+                                                            guide={false}
+                                                            type="text"
+                                                            name={[item]}
+                                                            value={this.state.inputs[item].value}
+                                                            onChange={this.inputChangeHandler}
+                                                            onBlur={this.inputBlurHandler}
+                                                            isInvalid={this.state.inputs[item].touched && this.state.inputs[item].invalid}
+                                                            render={(ref, props) => (
+                                                                <Form.Control ref={ref} {...props} />
+                                                            )}
+                                                            />
+                                                        <FormControl.Feedback type="invalid">
+                                                            {this.state.inputs[item].error}
+                                                        </FormControl.Feedback>
+                                                    </div>
+                                                );
+                                            }
+                                            return null;
+                                        })
+                                    }
                                 </Form.Group>
                             </div>
                         </div>
                     </div>
-                    <div className={classes.TamanhoFormFooter}>
+                    <div className={classes.SaborFormFooter}>
                         <Button variant="secondary" onClick={this.props.modalClose}>
                             Cancelar
                         </Button>
@@ -387,17 +370,18 @@ class TamanhoForm extends Component {
 
 const mapStateToProps = state => {
     return {
-        pending: state.tamanho.tamanho.api.pending,
-        error: state.tamanho.tamanho.api.error,
+        pending: state.sabor.sabor.api.pending,
+        error: state.sabor.sabor.api.error,
+        sabores: state.sabor.sabor.sabores,
         tamanhos: state.tamanho.tamanho.tamanhos
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onPostTamanho: (tamanhoData) => dispatch(actions.postTamanho(tamanhoData)),
-        onPutTamanho: (tamanhoId, tamanhoData) => dispatch(actions.putTamanho(tamanhoId, tamanhoData))
+        onPostSabor: (saborData) => dispatch(actions.postSabor(saborData)),
+        onPutSabor: (saborId, saborData) => dispatch(actions.putSabor(saborId, saborData))
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TamanhoForm);
+export default connect(mapStateToProps, mapDispatchToProps)(SaborForm);

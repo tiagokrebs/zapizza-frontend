@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import classes from './Forgot.module.css';
 import { Form, FormControl, Button, Alert } from 'react-bootstrap';
-import ZappSpinner from '../../../components/UI/ZappSpinner/ZappSpinner';
+import ZappSpinner from '../../../components/ZappSpinner/ZappSpinner';
 import * as yup from 'yup';
 import * as actions from '../../../store/actions';
 import updateObject from '../../../shared/updateObject';
