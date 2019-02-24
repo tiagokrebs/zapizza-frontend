@@ -1,0 +1,34 @@
+.BordaForm label {
+    color: #594336;
+}
+
+.BordaForm input {
+    border: 1px solid #594336;
+    background-color: transparent;
+    color: #594336;
+}
+
+.BordaForm input:focus {
+    border-color: #594336;
+    box-shadow: 0 0 0 0.2rem rgba(133, 82, 82, 0.5);
+}
+
+/* Transformações via CSS não são reproduzidas para state */
+/* .BordaForm input[name=sigla] {
+    text-transform: uppercase;
+}
+
+.BordaForm input[name=descricao] {
+    text-transform: capitalize;
+} */
+
+.BordaFormFooter {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.BordaFormFooter button {
+    margin-right: .50rem;
+}

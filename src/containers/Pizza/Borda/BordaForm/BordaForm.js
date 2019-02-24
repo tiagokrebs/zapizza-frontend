@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 
 import { Button, Form, FormControl } from 'react-bootstrap';
 import ZapSpinner from '../../../../components/ZappSpinner/ZappSpinner';
-import classes from './SaborForm.module.css';
+import classes from './BordaForm.module.css';
 import * as yup from 'yup';
 import * as actions from '../../../../store/actions';
 import updateObject from '../../../../shared/updateObject';
 import MaskedInput, { conformToMask } from 'react-text-mask';
 import * as masks from '../../../../shared/inputMasks';
 
-class SaborForm extends Component {
+class BordaForm extends Component {
     state = {
         loading: false,
         inputs: {
@@ -26,92 +26,46 @@ class SaborForm extends Component {
                 error: '',
                 touched: true
             },
-            // novos inputs são inseridos em componentDidMount de acordo com cadastro de Tamanhos
+            valor: {
+                value: '',
+                invalid: false,
+                error: '',
+                touched: true
+            }
         },
         formIsValid: false,
         formSubmitSuceed: false
     }
 
     componentDidMount () {
-        // obtem lista de tamanhos e transforma em state para montagem do form
-        let updatedInputs = {...this.state.inputs}
-        this.props.tamanhos.forEach(tamanho => {
-            if (tamanho.ativo) {
-                // const key = [tamanho.descricao].toString().toLowerCase().replace(/[^a-z]/g, "");
-                const key = [tamanho.hash_id];
-                updatedInputs = updateObject(updatedInputs, {
-                    [key]: {
-                        value: '',
-                        invalid: false,
-                        error: '',
-                        touched: true,
-                        dynamic: true,
-                        label: tamanho.descricao
-                    }
-                });
-            }
-        })
-
         if (this.props.formAction === 'update') {
             // percorre lista de objetos a procura do selecionado
-            this.props.sabores.forEach(sabor => {
-                if (sabor.hash_id === this.props.elementId) {
+            this.props.bordas.forEach(item => {
+                if (item.hash_id === this.props.elementId) {
                     // Define valores dos inputs do formulario
-                    for (let key in updatedInputs) {
-                        let updatedFormElement;
-                        if (updatedInputs[key].dynamic) {
-                            // Define valores dos inputs dinamicos do formulário
-                            sabor.tamanhos.forEach(tamanho => { // eslint-disable-line no-loop-func
-                                // Percorre lista de tamanhos do sabor
-                                if (tamanho.hash_id === key) {
-                                    let v;
-                                    if (typeof(tamanho.valor) === 'number') {
-                                        // v = tamanho.valor.toString().replace(/\./g, ',');
-                                        const valorStr = tamanho.valor.toString().replace(/\./g, ',');
-                                        const conformMask = conformToMask(valorStr.toString(), masks.valorP6S2, {guide: false});
-                                        v = conformMask.conformedValue;
-                                    } else {
-                                        v = tamanho.valor;
-                                    }
-
-                                    updatedFormElement = updateObject(updatedInputs[key], {
-                                        value: v
-                                    });
-                                    
-                                    updatedInputs = updateObject(updatedInputs, {
-                                        [key]: updatedFormElement
-                                    });
-                                }
-                            })
+                    let updatedInputs = this.state.inputs;
+                    for (let key in this.state.inputs) {
+                        let v;
+                        if (typeof(item[key]) === 'number') {
+                            // v = item[key].toString().replace(/\./g, ',');
+                            const valorStr = item[key].toString().replace(/\./g, ',');
+                            const conformMask = conformToMask(valorStr.toString(), masks.valorP6S2, {guide: false});
+                            v = conformMask.conformedValue;
                         } else {
-                            // Define valores dos iputs fixos do formulário
-                            let v;
-                            if (typeof(sabor[key]) === 'number') {
-                                // v = sabor[key].toString().replace(/\./g, ',');
-                                const valorStr = sabor[key].toString().replace(/\./g, ',');
-                                const conformMask = conformToMask(valorStr.toString(), masks.valorP6S2, {guide: false});
-                                v = conformMask.conformedValue;
-                            } else {
-                                v = sabor[key];
-                            }
-
-                            updatedFormElement = updateObject(updatedInputs[key], {
-                                value: v
-                            });
-
-                            updatedInputs = updateObject(updatedInputs, {
-                                [key]: updatedFormElement
-                            });
+                            v = item[key];
                         }
-
                         
+                        const updatedFormElement = updateObject(this.state.inputs[key], {
+                            value: v
+                        });
+
+                        updatedInputs = updateObject(updatedInputs, {
+                            [key]: updatedFormElement
+                        });
                     }
                     this.setState({inputs: updatedInputs});
                 }
             });
-        } else {
-            // quando não é update apenas retorna novo state com inputs dinamicos adicionados
-            this.setState({inputs: updatedInputs});
         }
     }
 
@@ -153,23 +107,23 @@ class SaborForm extends Component {
                 }
             });
 
-            // Cria schema de validacao fixo
-            let schemaObject = {
-                descricao: yup.string().required()
-            };
-            for (let key in this.state.inputs) {
-                if (this.state.inputs[key].dynamic) {
-                    schemaObject[key] = yup.string().required();
-                }
-            }
-            const schema = yup.object().shape(schemaObject);
+            // Cria schema de validacao
+            const schema = yup.object().shape({
+                // hash_ip: yup
+                //     .string()
+                //     .required(),
+                descricao: yup
+                    .string()
+                    .required(),
+                valor: yup
+                    .string()
+                    .required()
+            });
 
             // Cria objeto com base em state para validacao
             let formValues = {};
             for (let key in this.state.inputs) {
-                if (key !== 'hash_id') {
-                    formValues[key] = this.state.inputs[key].value.toString();
-                }
+                formValues[key] = this.state.inputs[key].value.toString();
             }
 
             // Reinicia validade dos inputs do formulario
@@ -188,8 +142,7 @@ class SaborForm extends Component {
             this.setState({inputs: updatedInputs});
 
             // Valida e define retorno dos erros em state
-            // schema.validate(formValues, {abortEarly: false})
-            schema.validate(formValues, {abortEarly: false, strict: true })
+            schema.validate(formValues, {abortEarly: false})
             .catch(error => {
                 error.inner.forEach(formElement => {
                     const updatedFormElement = updateObject(this.state.inputs[formElement.path], {
@@ -217,32 +170,20 @@ class SaborForm extends Component {
                 }
             });
         });
-    };
+    }
 
     submitHandler = (event) => {
         event.preventDefault();
         this.setState({ loading: true });
         this.checkFormIsValid()
             .then(() => {
-                // define o atributos do formulário de post/put
-                let saborData = {
+                let bordaData = {
                     descricao: this.state.inputs.descricao.value,
-                    tamanhos: []
-                };
-                let dinamicInputs = [];
-                for (let key in this.state.inputs) {
-                    if (this.state.inputs[key].dynamic) {
-                        // saborData[key] = masks.valorP6S2Unmask(this.state.inputs[key].value)
-                        dinamicInputs.push({
-                            hash_id: key, 
-                            valor: masks.valorP6S2Unmask(this.state.inputs[key].value)
-                        })
-                    }
-                };
-                saborData = updateObject(saborData, {tamanhos: dinamicInputs});
+                    valor: masks.valorP6S2Unmask(this.state.inputs.valor.value)
+                }
 
                 if (this.props.formAction === 'insert') {
-                    this.props.onPostSabor(saborData)
+                    this.props.onPostBorda(bordaData)
                     .then((response) => {
                         this.setState({formSubmitSuceed: true});
                         this.props.modalClose();
@@ -266,7 +207,7 @@ class SaborForm extends Component {
                         this.setState({ loading: false });
                     });
                 } else if (this.props.formAction === 'update'){
-                    this.props.onPutSabor(this.state.inputs.hash_id.value, saborData)
+                    this.props.onPutBorda(this.state.inputs.hash_id.value, bordaData)
                     .then((response) => {
                         this.setState({formSubmitSuceed: true});
                         this.props.modalClose();
@@ -298,9 +239,9 @@ class SaborForm extends Component {
             <Form noValidate onSubmit={this.submitHandler}>
                     <div className="row justify-content-center">
                         <div className="col-md-10">
-                            <div className={classes.SaborForm}>
+                            <div className={classes.BordaForm}>
                                 <Form.Group className="row">
-                                    <div className="col-lg-12 col-md-12">
+                                    <div className="col-lg-9 col-md-9">
                                         <Form.Label>Descrição</Form.Label>
                                         <Form.Control
                                             type="text"
@@ -315,41 +256,30 @@ class SaborForm extends Component {
                                             {this.state.inputs.descricao.error}
                                         </FormControl.Feedback>
                                     </div>
-                                </Form.Group>
-                                <Form.Group className="row">
-                                    {
-                                        Object.keys(this.state.inputs).map((item, index) => {
-                                            if (this.state.inputs[item].dynamic) {
-                                                return (
-                                                    <div key={[item]} className="col-lg-4 col-md-4">
-                                                        <Form.Label>{`Valor ${this.state.inputs[item].label}`}</Form.Label>
-                                                        <MaskedInput
-                                                            mask={masks.valorP6S2}
-                                                            guide={false}
-                                                            type="text"
-                                                            name={[item]}
-                                                            value={this.state.inputs[item].value}
-                                                            onChange={this.inputChangeHandler}
-                                                            onBlur={this.inputBlurHandler}
-                                                            isInvalid={this.state.inputs[item].touched && this.state.inputs[item].invalid}
-                                                            render={(ref, props) => (
-                                                                <Form.Control ref={ref} {...props} />
-                                                            )}
-                                                            />
-                                                        <FormControl.Feedback type="invalid">
-                                                            {this.state.inputs[item].error}
-                                                        </FormControl.Feedback>
-                                                    </div>
-                                                );
-                                            }
-                                            return null;
-                                        })
-                                    }
+                                    <div className="col-lg-3 col-md-3">
+                                        <Form.Label>Valor</Form.Label>
+                                            <MaskedInput
+                                                mask={masks.valorP6S2}
+                                                guide={false}
+                                                type="text"
+                                                name="valor"
+                                                value={this.state.inputs.valor.value}
+                                                onChange={this.inputChangeHandler}
+                                                onBlur={this.inputBlurHandler}
+                                                isInvalid={this.state.inputs.valor.touched && this.state.inputs.valor.invalid}
+                                                render={(ref, props) => (
+                                                    <Form.Control ref={ref} {...props} />
+                                                )}
+                                                />
+                                            <FormControl.Feedback type="invalid">
+                                                {this.state.inputs.valor.error}
+                                            </FormControl.Feedback>
+                                    </div>
                                 </Form.Group>
                             </div>
                         </div>
                     </div>
-                    <div className={classes.SaborFormFooter}>
+                    <div className={classes.BordaFormFooter}>
                         <Button variant="secondary" onClick={this.props.modalClose}>
                             Cancelar
                         </Button>
@@ -382,22 +312,25 @@ class SaborForm extends Component {
             </div>
         );
     }
+
+
+
+
 }
 
 const mapStateToProps = state => {
     return {
-        pending: state.sabor.sabor.api.pending,
-        error: state.sabor.sabor.api.error,
-        sabores: state.sabor.sabor.sabores,
-        tamanhos: state.tamanho.tamanho.tamanhos
+        pending: state.borda.borda.api.pending,
+        error: state.borda.borda.api.error,
+        bordas: state.borda.borda.bordas
     };
-}
+};
 
 const mapDispatchToProps = dispatch => {
     return {
-        onPostSabor: (saborData) => dispatch(actions.postSabor(saborData)),
-        onPutSabor: (saborId, saborData) => dispatch(actions.putSabor(saborId, saborData))
+        onPostBorda: (bordaData) => dispatch(actions.postBorda(bordaData)),
+        onPutBorda: (bordaId, bordaData) => dispatch(actions.putBorda(bordaId, bordaData))
     };
-}
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(SaborForm);
+export default connect(mapStateToProps, mapDispatchToProps)(BordaForm);

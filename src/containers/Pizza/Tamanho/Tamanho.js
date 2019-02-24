@@ -4,7 +4,7 @@ import classes from './Tamanho.module.css';
 import PageTitle from '../../../components/Page/PageTitle/PageTitle';
 import { connect } from 'react-redux';
 import DataTableB from '../../../components/UI/DataTableB/DataTableB';
-import { Badge, Nav, Button, Alert } from 'react-bootstrap';
+import { Badge, Nav, Button } from 'react-bootstrap';
 import ZappSpinner from '../../../components/ZappSpinner/ZappSpinner';
 import ModalB from '../../../components/UI/ModalB/ModalB';
 import Aux from '../../../hoc/Aux/Aux';
@@ -178,16 +178,16 @@ class Tamanho extends Component {
 
         let pageTitle = <PageTitle title={'Tamanhos'} subtitle='Informe os seus tamanhos'/>
 
-        let message;
-        if (this.props.error && this.props.error.message) {
-            message = <Alert variant="danger">{this.props.error.message}</Alert>
-        }
+        // let message;
+        // if (this.props.error && this.props.error.message) {
+        //     message = <Alert variant="danger">{this.props.error.message}</Alert>
+        // }
 
         let pageContent = (
             <div className="row">
                 <div className="col-sm-12">
                     <div className={`card ${classes.Card}`}>
-                        {message}
+                        {/* {message} */}
                         {grid}
                     </div>
                 </div>

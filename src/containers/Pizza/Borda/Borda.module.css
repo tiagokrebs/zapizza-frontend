@@ -1,0 +1,49 @@
+.Card {
+    margin: 15px auto 15px auto;
+    background: #392b23;
+}
+
+.CardHeader {
+    background: transparent;
+    border-bottom: 1px solid #594336;
+    display: flex;
+    justify-content: space-between;
+}
+
+.CardTitle {
+    font-size: 18px;
+    margin: 0;
+    line-height: 30px;
+    font-weight: 300;
+    color: white;
+    vertical-align: middle;
+}
+
+.CardBlock {
+    flex: 1 1 auto;
+    padding: 1.25rem;
+}
+
+.CardFooter {
+    background: #423229;
+    border-top: 1px solid #594336;
+}
+
+.CardFooter button {
+    box-shadow: inset 0 1px 1px 0px rgba(255, 255, 255, 0.5);
+    border: 0;
+}
+
+.CardFooter button[type="submit"] {
+    float: right;
+}
+
+.ProfileForm input {
+    border: 1px solid #594336;
+    background-color: transparent;
+    color: white;
+}
+
+.Modal h4 {
+    color: #594336;
+}

@@ -30,3 +30,11 @@ export {
     putSaborEnable,
     deleteSabor
 } from './sabor';
+
+export {
+    getBordas,
+    postBorda,
+    putBorda,
+    putBordaEnable,
+    deleteBorda
+} from './borda';

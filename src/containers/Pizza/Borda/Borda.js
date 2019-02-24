@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import classes from './Sabor.module.css';
+import classes from './Borda.module.css';
 import PageTitle from '../../../components/Page/PageTitle/PageTitle';
 import { connect } from 'react-redux';
 import DataTableB from '../../../components/UI/DataTableB/DataTableB';
@@ -8,12 +8,12 @@ import { Badge, Nav, Button } from 'react-bootstrap';
 import ZappSpinner from '../../../components/ZappSpinner/ZappSpinner';
 import ModalB from '../../../components/UI/ModalB/ModalB';
 import Aux from '../../../hoc/Aux/Aux';
-import SaborForm from './SaborForm/SaborForm';
+import BordaForm from './BordaForm/BordaForm';
 import DeleteForm from '../../../components/DeleteForm/DeleteForm';
 import * as actions from '../../../store/actions';
 import RowActions from '../../../components/DataTable/RowActions/RowActions';
 
-class Sabor extends Component {
+class Borda extends Component {
     state = {
         loading: false,
         modalShow: false,
@@ -25,8 +25,7 @@ class Sabor extends Component {
     }
 
     componentDidMount () {
-        this.props.onGetSabores();
-        this.props.onGetTamanhos();
+        this.props.onGetBordas();
     }
 
     modalFormInsert = () => {
@@ -47,15 +46,15 @@ class Sabor extends Component {
 
     modalHandleDelete = (event) => {
         event.preventDefault()
-        this.props.onDeleteSabor(this.state.formElementId);
+        this.props.onDeleteBorda(this.state.formElementId);
         this.setState({ modalShow: false });
     }
 
     submitEnableHandler = (row) => {
-        const saborData = {
+        const bordaData = {
             ativo: !row.ativo
         }
-        this.props.onPutSaborEnable(row.hash_id, saborData);
+        this.props.onPutBordaEnable(row.hash_id, bordaData);
     }
 
     render () {
@@ -73,6 +72,11 @@ class Sabor extends Component {
             {
                 dataField: 'descricao',
                 text: 'Descrição',
+                sort: true,
+            },
+            {
+                dataField: 'valor',
+                text: 'Valor',
                 sort: true,
             },
             {
@@ -101,12 +105,12 @@ class Sabor extends Component {
                     return <Badge variant="danger">Inativo</Badge>
                 }
             }
-        ]
+        ];
 
         let grid = (
             <div>
                 <div className={`card-header ${classes.CardHeader}`}>
-                    <h6 className={`card-title ${classes.CardTitle}`}>Lista de sabores</h6>
+                    <h6 className={`card-title ${classes.CardTitle}`}>Lista de bordas</h6>
                     <Nav className="pull-right">
                         <Nav.Item>
                             <Button variant="outline-light" size="sm" onClick={this.modalFormInsert}>
@@ -121,7 +125,7 @@ class Sabor extends Component {
                         <div className="col-md-12">
                             <DataTableB
                                 keyField='hash_id'
-                                data={this.props.sabores}
+                                data={this.props.bordas}
                                 columns={colunas}
                                 page={this.state.page}
                                 sizePerPage={this.state.pageSize}
@@ -134,12 +138,7 @@ class Sabor extends Component {
             </div>
         );
 
-        let pageTitle = <PageTitle title={'Sabores'} subtitle='Informe os seus sabores'/>
-
-        // let message;
-        // if (this.props.error && this.props.error.message) {
-        //     message = <Alert variant="danger">{this.props.error.message}</Alert>
-        // }
+        let pageTitle = <PageTitle title={'Bordas'} subtitle='Informe as suas bordas'/>
 
         let pageContent = (
             <div className="row">
@@ -156,10 +155,10 @@ class Sabor extends Component {
             <ModalB className={classes.Modal}
                 size='lg'
                 show={this.state.modalShow && this.state.formActionType !== 'delete'}
-                title="Sabor"
+                title="Borda"
                 handleClose={this.modalHandleClose}
             >
-                <SaborForm 
+                <BordaForm 
                     modalClose={this.modalHandleClose}
                     formAction={this.state.formActionType}
                     elementId={this.state.formElementId}
@@ -195,20 +194,19 @@ class Sabor extends Component {
 const mapStateToProps = state => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        pending: state.sabor.sabor.api.pending,
-        error: state.sabor.sabor.api.error,
-        sabores: state.sabor.sabor.sabores,
-        totalItems: state.sabor.sabor.totalItems
+        pending: state.borda.borda.api.pending,
+        error: state.borda.borda.api.error,
+        bordas: state.borda.borda.bordas,
+        totalItems: state.borda.borda.totalItems
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onGetSabores: () => dispatch(actions.getSabores()),
-        onPutSaborEnable: (saborId, saborData) => dispatch(actions.putSaborEnable(saborId, saborData)),
-        onDeleteSabor: (saborId) => dispatch(actions.deleteSabor(saborId)),
-        onGetTamanhos: () => dispatch(actions.getTamanhos(0, 50, 'descricao', 'asc'))
+        onGetBordas: () => dispatch(actions.getBordas()),
+        onPutBordaEnable: (bordaId, bordaData) => dispatch(actions.putBordaEnable(bordaId, bordaData)),
+        onDeleteBorda: (bordaId) => dispatch(actions.deleteBorda(bordaId)),
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sabor);
+export default connect(mapStateToProps, mapDispatchToProps)(Borda);
