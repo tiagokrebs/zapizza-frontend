@@ -38,3 +38,11 @@ export {
     putBordaEnable,
     deleteBorda
 } from './borda';
+
+export {
+    getBebidas,
+    postBebida,
+    putBebida,
+    putBebidaEnable,
+    deleteBebida
+} from './bebida';

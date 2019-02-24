@@ -18,6 +18,7 @@ import Profile from './containers/Profile/Profile';
 import Tamanho from './containers/Pizza/Tamanho/Tamanho';
 import Sabor from './containers/Pizza/Sabor/Sabor';
 import Borda from './containers/Pizza/Borda/Borda';
+import Bebida from './containers/Bebida/Bebida';
 import * as actions from './store/actions/auth';
 
 // const asyncRegister = asyncComponent(() => {
@@ -42,6 +43,7 @@ class App extends Component {
         <AuthRoute path="/tamanhos" component={Tamanho} isAuthenticated={this.props.isAuthenticated} />
         <AuthRoute path="/sabores" component={Sabor} isAuthenticated={this.props.isAuthenticated} />
         <AuthRoute path="/bordas" component={Borda} isAuthenticated={this.props.isAuthenticated} />
+        <AuthRoute path="/bebidas" component={Bebida} isAuthenticated={this.props.isAuthenticated} />
         <Route component={NotFound}/>        
       </Switch>
     );
