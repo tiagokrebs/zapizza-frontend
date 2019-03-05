@@ -15,6 +15,7 @@ import tamanhoReducer from './store/reducers/tamanho';
 import saborReducer from './store/reducers/sabor';
 import bordaReducer from './store/reducers/borda';
 import bebidaReducer from './store/reducers/bebida';
+import clienteReducer from './store/reducers/cliente';
 import { loginCheck } from './store/actions';
 
 const history = createBrowserHistory();
@@ -28,7 +29,8 @@ const rootReducer = (history) => combineReducers({
     tamanho: tamanhoReducer,
     sabor: saborReducer,
     borda: bordaReducer,
-    bebida: bebidaReducer
+    bebida: bebidaReducer,
+    cliente: clienteReducer
   })
 
 const store = createStore(

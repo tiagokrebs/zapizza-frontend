@@ -46,3 +46,11 @@ export {
     putBebidaEnable,
     deleteBebida
 } from './bebida';
+
+export {
+    getClientes,
+    postCliente,
+    putCliente,
+    putClienteEnable,
+    deleteCliente
+} from './cliente';
