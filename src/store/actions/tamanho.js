@@ -27,13 +27,7 @@ export const getTamanhosSuccess = (data) => {
 export const getTamanhos = (start, pageSize, sortField, sortOrder) => {
     return dispatch => {
         dispatch(getTamanhosStart());
-        axios.get('/tamanhos', { 
-            params: {
-                start: start,
-                size: pageSize,
-                sort: sortField,
-                order: sortOrder
-            },
+        axios.get('/tamanhos', {
             withCredentials: true 
         })
         .then(response => {

@@ -24,7 +24,7 @@ export const getClientesSuccess = (data) => {
     };
 };
 
-export const getClientes = (start, pageSize, sortField, sortOrder) => {
+export const getClientes = (start, pageSize, sortField, sortOrder, filterFields) => {
     return dispatch => {
         dispatch(getClientesStart());
         axios.get('/clientes', { 
@@ -32,7 +32,8 @@ export const getClientes = (start, pageSize, sortField, sortOrder) => {
                 start: start,
                 size: pageSize,
                 sort: sortField,
-                order: sortOrder
+                order: sortOrder,
+                ...filterFields
             },
             withCredentials: true 
         })

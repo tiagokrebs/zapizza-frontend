@@ -21,13 +21,11 @@ class Tamanho extends Component {
         formElementId: null,
         formElementDescricao: null,
         page: 1,
-        pageSize: 10,
-        sortField: 'descricao',
-        sortOrder: 'asc'
+        pageSize: 10
     }
 
     componentDidMount () {
-        this.props.onGetTamanhos(this.state.page-1, this.state.pageSize, this.state.sortField, this.state.sortOrder);
+        this.props.onGetTamanhos();
     }
 
     modalFormInsert = () => {
@@ -58,27 +56,6 @@ class Tamanho extends Component {
         }
         this.props.onPutTamanhoEnable(row.hash_id, tamanhoData);
     }
-
-    handleTableChange = (type, { page, sizePerPage, sortField, sortOrder }) => {
-        const currentIndex = (page - 1) * sizePerPage;
-        // handle paginação
-        if (type === 'pagination') {
-            this.props.onGetTamanhos(currentIndex, sizePerPage, sortField, sortOrder);
-            this.setState(() => ({
-                page: page,
-                pageSize: sizePerPage
-            }));
-        }
-
-        // handle ordenação
-        if (type === 'sort') {
-            this.props.onGetTamanhos(currentIndex, sizePerPage, sortField, sortOrder);
-            this.setState(() => ({
-                sortField: sortField,
-                sortOrder: sortOrder
-            }));
-        }
-      }
 
     render () {
         let spinner;
@@ -160,14 +137,12 @@ class Tamanho extends Component {
                     <div className="row justify-content-center">
                         <div className="col-md-12">
                             <DataTableB
-                                remote
                                 keyField='hash_id'
                                 data={this.props.tamanhos}
                                 columns={colunas}
                                 page={this.state.page}
                                 sizePerPage={this.state.pageSize}
                                 totalSize={this.props.totalItems}
-                                onTableChange={this.handleTableChange}
                             />
                         </div>
                     </div>
@@ -246,7 +221,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onGetTamanhos: (start, pageSize, sortField, sortOrder) => dispatch(actions.getTamanhos(start, pageSize, sortField, sortOrder)),
+        onGetTamanhos: () => dispatch(actions.getTamanhos()),
         onPutTamanhoEnable: (tamanhoId, TamanhoData) => dispatch(actions.putTamanhoEnable(tamanhoId, TamanhoData)),
         onDeleteTamanho: (tamanhoId) => dispatch(actions.deleteTamanho(tamanhoId))
     };

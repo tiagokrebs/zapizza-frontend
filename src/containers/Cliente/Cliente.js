@@ -11,8 +11,12 @@ import PageTitle from '../../components/Page/PageTitle/PageTitle';
 import ModalB from '../../components/UI/ModalB/ModalB';
 import DeleteForm from '../../components/DeleteForm/DeleteForm';
 import Aux from '../../hoc/Aux/Aux';
+import { textFilter, selectFilter } from 'react-bootstrap-table2-filter';
 
 class Cliente extends Component {
+    static nomeFilter;
+    static ativoFilter;
+
     state = {
         loading: false,
         modalShow: false,
@@ -26,7 +30,7 @@ class Cliente extends Component {
     }
 
     componentDidMount () {
-        this.props.onGetClientes(this.state.page-1, this.state.pageSize, this.state.sortField, this.state.sortOrder);
+        this.props.onGetClientes(this.state.page-1, this.state.pageSize, this.state.sortField, this.state.sortOrder, {ativo: true});
     }
 
     modalFormInsert = () => {
@@ -58,12 +62,29 @@ class Cliente extends Component {
         this.props.onPutClienteEnable(row.hash_id, clienteData);
     }
 
-
-    handleTableChange = (type, { page, sizePerPage, sortField, sortOrder }) => {
+    handleTableChange = (type, { page, sizePerPage, sortField, sortOrder, filters }) => {
         const currentIndex = (page - 1) * sizePerPage;
+      
+        let filterFields = {};
+        for (const dataField in filters) {
+            const { filterVal, filterType, comparator } = filters[dataField];
+            filterFields = {
+                ...filterFields,
+                [dataField]: filterVal
+            }
+        }
+        
+        // handle filtros
+        if (type === 'filter') {
+            this.props.onGetClientes(0, sizePerPage, sortField, sortOrder, filterFields);
+            this.setState(() => ({
+                page: 1
+            }));
+        }
+
         // handle paginação
         if (type === 'pagination') {
-            this.props.onGetClientes(currentIndex, sizePerPage, sortField, sortOrder);
+            this.props.onGetClientes(currentIndex, sizePerPage, sortField, sortOrder, filterFields);
             this.setState(() => ({
                 page: page,
                 pageSize: sizePerPage
@@ -72,13 +93,18 @@ class Cliente extends Component {
 
         // handle ordenação
         if (type === 'sort') {
-            this.props.onGetClientes(currentIndex, sizePerPage, sortField, sortOrder);
+            this.props.onGetClientes(currentIndex, sizePerPage, sortField, sortOrder, filterFields);
             this.setState(() => ({
                 sortField: sortField,
                 sortOrder: sortOrder
             }));
         }
       }
+    
+    handleFilterClear = () => {
+        this.nomeFilter('');
+        this.ativoFilter('');
+    }
 
     render () {
         let spinner;
@@ -96,6 +122,13 @@ class Cliente extends Component {
                 dataField: 'nome',
                 text: 'Nome',
                 sort: true,
+                filter: textFilter({
+                    placeholder: 'Informe o nome',
+                    delay: 1000,
+                    getFilter: (filter) => {
+                        this.nomeFilter = filter;
+                    }
+                })
             },
             {
                 dataField: 'botoes',
@@ -112,10 +145,21 @@ class Cliente extends Component {
                 }
             },
             {
-                dataField: 'enable',
+                dataField: 'ativo',
                 isDummyField: true,
-                text: '',
+                text: 'Status',
                 align: 'center',
+                filter: selectFilter({
+                    placeholder: 'Selecione',
+                    options: {
+                        true: 'Ativo',
+                        false: 'Inativo'
+                    },
+                    getFilter: (filter) => {
+                        this.ativoFilter = filter;
+                    },
+                    defaultValue: 'true'
+                }),
                 formatter: (cellContent, row) => {
                     if (row.ativo) {
                         return <Badge variant="success">Ativo</Badge>
@@ -129,14 +173,14 @@ class Cliente extends Component {
             <div>
                 <div className={`card-header ${classes.CardHeader}`}>
                     <h6 className={`card-title ${classes.CardTitle}`}>Lista de clientes</h6>
-                    {/* <Nav className="pull-right">
+                    <Nav className="pull-right">
                         <Nav.Item>
-                            <Button variant="outline-light" size="sm" onClick={this.modalFormInsert}>
-                                <i className="fa fa-plus"></i> 
-                                <span> Novo</span>
+                            <Button variant="outline-light" size="sm" onClick={this.handleFilterClear}>
+                                <i className="fas fa-filter"></i> 
+                                <span> Limpar Filtros</span>
                             </Button>
                         </Nav.Item>
-                    </Nav> */}
+                    </Nav>
                 </div>
                 <div className={`card-block ${classes.CardBlock}`}>
                     <div className="row justify-content-center">
@@ -158,7 +202,7 @@ class Cliente extends Component {
             </div>
         );
 
-        let pageTitle = <PageTitle title={'Tamanhos'} subtitle='Informe os seus clientes'/>
+        let pageTitle = <PageTitle title={'Clientes'} subtitle='Informe os seus clientes'/>
 
         let pageContent = (
             <div className="row">
@@ -224,7 +268,7 @@ const mapStateToProps = state => {
 
 const mapDisptachToProps = dispatch => {
     return {
-        onGetClientes: (start, pageSize, sortField, sortOrder) => dispatch(actions.getClientes(start, pageSize, sortField, sortOrder)),
+        onGetClientes: (start, pageSize, sortField, sortOrder, filterFields) => dispatch(actions.getClientes(start, pageSize, sortField, sortOrder, filterFields)),
         onPutClienteEnable: (clienteId, ClienteData) => dispatch(actions.putClienteEnable(clienteId, ClienteData)),
         onDeleteCliente: (clienteId) => dispatch(actions.deleteCliente(clienteId))
     };
