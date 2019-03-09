@@ -14,7 +14,7 @@ import userReducer from './store/reducers/user';
 import tamanhoReducer from './store/reducers/tamanho';
 import saborReducer from './store/reducers/sabor';
 import bordaReducer from './store/reducers/borda';
-import bebidaReducer from './store/reducers/bebida';
+import adicionalReducer from './store/reducers/adicional';
 import clienteReducer from './store/reducers/cliente';
 import { loginCheck } from './store/actions';
 
@@ -29,7 +29,7 @@ const rootReducer = (history) => combineReducers({
     tamanho: tamanhoReducer,
     sabor: saborReducer,
     borda: bordaReducer,
-    bebida: bebidaReducer,
+    adicional: adicionalReducer,
     cliente: clienteReducer
   })
 

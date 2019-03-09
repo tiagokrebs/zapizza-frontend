@@ -13,7 +13,7 @@ class Pedido extends Component {
         this.props.onGetTamanhos();
         this.props.onGetSabores();
         this.props.onGetBordas();
-        this.props.onGetBebidas();        
+        this.props.onGetAdicionais();        
     }
 
     render () {
@@ -69,7 +69,7 @@ const mapDispatchToProps = dispatch => {
         onGetTamanhos: () => dispatch(actions.getTamanhos()),
         onGetSabores: () => dispatch(actions.getSabores()),
         onGetBordas: () => dispatch(actions.getBordas()),
-        onGetBebidas: () => dispatch(actions.getBebidas())
+        onGetAdicionais: () => dispatch(actions.getAdicionais())
     };
 }
 

@@ -138,7 +138,7 @@ class Borda extends Component {
             </div>
         );
 
-        let pageTitle = <PageTitle title={'Bordas'} subtitle='Informe as suas bordas'/>
+        let pageTitle = <PageTitle title={'Bordas'} subtitle='Informe as suas bordas' icon='far fa-circle fa-2x'/>
 
         let pageContent = (
             <div className="row">

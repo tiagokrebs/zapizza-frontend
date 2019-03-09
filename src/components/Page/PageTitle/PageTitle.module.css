@@ -3,9 +3,19 @@
     padding-bottom: 30px;
 }
 
+.Title span {
+    display: flex;
+    align-items: center;
+}
+
+.Title i {
+    margin-bottom: 8px;
+}
+
 .Title h3 {
     color: white;
     font-weight: 300;
+    margin-left: 10px;
 }
 
 .Title p {

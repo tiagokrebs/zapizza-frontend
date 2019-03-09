@@ -151,7 +151,7 @@ class Tamanho extends Component {
             </div>
         );
 
-        let pageTitle = <PageTitle title={'Tamanhos'} subtitle='Informe os seus tamanhos'/>
+        let pageTitle = <PageTitle title={'Tamanhos'} subtitle='Informe os seus tamanhos' icon='fas fa-chart-pie fa-2x'/>
 
         // let message;
         // if (this.props.error && this.props.error.message) {

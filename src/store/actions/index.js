@@ -40,12 +40,12 @@ export {
 } from './borda';
 
 export {
-    getBebidas,
-    postBebida,
-    putBebida,
-    putBebidaEnable,
-    deleteBebida
-} from './bebida';
+    getAdicionais,
+    postAdicional,
+    putAdicional,
+    putAdicionalEnable,
+    deleteAdicional
+} from './adicional';
 
 export {
     getClientes,

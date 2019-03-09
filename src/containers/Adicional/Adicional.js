@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import classes from './Bebida.module.css';
+import classes from './Adicional.module.css';
 import PageTitle from '../../components/Page/PageTitle/PageTitle';
 import { connect } from 'react-redux';
 import DataTableB from '../../components/UI/DataTableB/DataTableB';
@@ -8,12 +8,12 @@ import { Badge, Nav, Button } from 'react-bootstrap';
 import ZappSpinner from '../../components/ZappSpinner/ZappSpinner';
 import ModalB from '../../components/UI/ModalB/ModalB';
 import Aux from '../../hoc/Aux/Aux';
-import BebidaForm from './BebidaForm/BebidaForm';
+import AdicionalForm from './AdicionalForm/AdicionalForm';
 import DeleteForm from '../../components/DeleteForm/DeleteForm';
 import * as actions from '../../store/actions';
 import RowActions from '../../components/DataTable/RowActions/RowActions';
 
-class Bebida extends Component {
+class Adicional extends Component {
     state = {
         loading: false,
         modalShow: false,
@@ -25,7 +25,7 @@ class Bebida extends Component {
     }
 
     componentDidMount () {
-        this.props.onGetBebidas();
+        this.props.onGetAdicionais();
     }
 
     modalFormInsert = () => {
@@ -46,15 +46,15 @@ class Bebida extends Component {
 
     modalHandleDelete = (event) => {
         event.preventDefault()
-        this.props.onDeleteBebida(this.state.formElementId);
+        this.props.onDeleteAdicional(this.state.formElementId);
         this.setState({ modalShow: false });
     }
 
     submitEnableHandler = (row) => {
-        const bebidaData = {
+        const adicionalData = {
             ativo: !row.ativo
         }
-        this.props.onPutBebidaEnable(row.hash_id, bebidaData);
+        this.props.onPutAdicionalEnable(row.hash_id, adicionalData);
     }
 
     render () {
@@ -110,7 +110,7 @@ class Bebida extends Component {
         let grid = (
             <div>
                 <div className={`card-header ${classes.CardHeader}`}>
-                    <h6 className={`card-title ${classes.CardTitle}`}>Lista de bebidas</h6>
+                    <h6 className={`card-title ${classes.CardTitle}`}>Lista de adicionais</h6>
                     <Nav className="pull-right">
                         <Nav.Item>
                             <Button variant="outline-light" size="sm" onClick={this.modalFormInsert}>
@@ -125,7 +125,7 @@ class Bebida extends Component {
                         <div className="col-md-12">
                             <DataTableB
                                 keyField='hash_id'
-                                data={this.props.bebidas}
+                                data={this.props.adicionais}
                                 columns={colunas}
                                 page={this.state.page}
                                 sizePerPage={this.state.pageSize}
@@ -138,7 +138,7 @@ class Bebida extends Component {
             </div>
         );
 
-        let pageTitle = <PageTitle title={'Bebidas'} subtitle='Informe as suas bebidas'/>
+        let pageTitle = <PageTitle title={'Adicionais'} subtitle='Informe as suas adicionais' icon='fas fa-plus fa-2x'/>
 
         let pageContent = (
             <div className="row">
@@ -155,10 +155,10 @@ class Bebida extends Component {
             <ModalB className={classes.Modal}
                 size='lg'
                 show={this.state.modalShow && this.state.formActionType !== 'delete'}
-                title="Bebida"
+                title="Adicional"
                 handleClose={this.modalHandleClose}
             >
-                <BebidaForm 
+                <AdicionalForm 
                     modalClose={this.modalHandleClose}
                     formAction={this.state.formActionType}
                     elementId={this.state.formElementId}
@@ -194,19 +194,19 @@ class Bebida extends Component {
 const mapStateToProps = state => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        pending: state.bebida.bebida.api.pending,
-        error: state.bebida.bebida.api.error,
-        bebidas: state.bebida.bebida.bebidas,
-        totalItems: state.bebida.bebida.totalItems
+        pending: state.adicional.adicional.api.pending,
+        error: state.adicional.adicional.api.error,
+        adicionais: state.adicional.adicional.adicionais,
+        totalItems: state.adicional.adicional.totalItems
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onGetBebidas: () => dispatch(actions.getBebidas()),
-        onPutBebidaEnable: (bebidaId, bebidaData) => dispatch(actions.putBebidaEnable(bebidaId, bebidaData)),
-        onDeleteBebida: (bebidaId) => dispatch(actions.deleteBebida(bebidaId)),
+        onGetAdicionais: () => dispatch(actions.getAdicionais()),
+        onPutAdicionalEnable: (adicionalId, adicionalData) => dispatch(actions.putAdicionalEnable(adicionalId, adicionalData)),
+        onDeleteAdicional: (adicionalId) => dispatch(actions.deleteAdicional(adicionalId)),
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Bebida);
+export default connect(mapStateToProps, mapDispatchToProps)(Adicional);

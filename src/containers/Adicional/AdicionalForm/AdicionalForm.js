@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 
 import { Button, Form, FormControl } from 'react-bootstrap';
 import ZapSpinner from '../../../components/ZappSpinner/ZappSpinner';
-import classes from './BebidaForm.module.css';
+import classes from './AdicionalForm.module.css';
 import * as yup from 'yup';
 import * as actions from '../../../store/actions';
 import updateObject from '../../../shared/updateObject';
 import MaskedInput, { conformToMask } from 'react-text-mask';
 import * as masks from '../../../shared/inputMasks';
 
-class BebidaForm extends Component {
+class AdicionalForm extends Component {
     state = {
         loading: false,
         inputs: {
@@ -40,7 +40,7 @@ class BebidaForm extends Component {
     componentDidMount () {
         if (this.props.formAction === 'update') {
             // percorre lista de objetos a procura do selecionado
-            this.props.bebidas.forEach(item => {
+            this.props.adicionais.forEach(item => {
                 if (item.hash_id === this.props.elementId) {
                     // Define valores dos inputs do formulario
                     let updatedInputs = this.state.inputs;
@@ -177,13 +177,13 @@ class BebidaForm extends Component {
         this.setState({ loading: true });
         this.checkFormIsValid()
             .then(() => {
-                let bebidaData = {
+                let adicionalData = {
                     descricao: this.state.inputs.descricao.value,
                     valor: masks.valorP6S2Unmask(this.state.inputs.valor.value)
                 }
 
                 if (this.props.formAction === 'insert') {
-                    this.props.onPostBebida(bebidaData)
+                    this.props.onPostAdicional(adicionalData)
                     .then((response) => {
                         this.setState({formSubmitSuceed: true});
                         this.props.modalClose();
@@ -207,7 +207,7 @@ class BebidaForm extends Component {
                         this.setState({ loading: false });
                     });
                 } else if (this.props.formAction === 'update'){
-                    this.props.onPutBebida(this.state.inputs.hash_id.value, bebidaData)
+                    this.props.onPutAdicional(this.state.inputs.hash_id.value, adicionalData)
                     .then((response) => {
                         this.setState({formSubmitSuceed: true});
                         this.props.modalClose();
@@ -239,7 +239,7 @@ class BebidaForm extends Component {
             <Form noValidate onSubmit={this.submitHandler}>
                     <div className="row justify-content-center">
                         <div className="col-md-10">
-                            <div className={classes.BebidaForm}>
+                            <div className={classes.AdicionalForm}>
                                 <Form.Group className="row">
                                     <div className="col-lg-9 col-md-9">
                                         <Form.Label>Descrição</Form.Label>
@@ -279,7 +279,7 @@ class BebidaForm extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className={classes.BebidaFormFooter}>
+                    <div className={classes.AdicionalFormFooter}>
                         <Button variant="secondary" onClick={this.props.modalClose}>
                             Cancelar
                         </Button>
@@ -320,17 +320,17 @@ class BebidaForm extends Component {
 
 const mapStateToProps = state => {
     return {
-        pending: state.bebida.bebida.api.pending,
-        error: state.bebida.bebida.api.error,
-        bebidas: state.bebida.bebida.bebidas
+        pending: state.adicional.adicional.api.pending,
+        error: state.adicional.adicional.api.error,
+        adicionais: state.adicional.adicional.adicionais
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onPostBebida: (bebidaData) => dispatch(actions.postBebida(bebidaData)),
-        onPutBebida: (bebidaId, bebidaData) => dispatch(actions.putBebida(bebidaId, bebidaData))
+        onPostAdicional: (adicionalData) => dispatch(actions.postAdicional(adicionalData)),
+        onPutAdicional: (adicionalId, adicionalData) => dispatch(actions.putAdicional(adicionalId, adicionalData))
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(BebidaForm);
+export default connect(mapStateToProps, mapDispatchToProps)(AdicionalForm);

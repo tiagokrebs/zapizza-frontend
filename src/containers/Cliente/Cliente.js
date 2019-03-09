@@ -67,7 +67,7 @@ class Cliente extends Component {
       
         let filterFields = {};
         for (const dataField in filters) {
-            const { filterVal, filterType, comparator } = filters[dataField];
+            const { filterVal } = filters[dataField];
             filterFields = {
                 ...filterFields,
                 [dataField]: filterVal
@@ -202,7 +202,7 @@ class Cliente extends Component {
             </div>
         );
 
-        let pageTitle = <PageTitle title={'Clientes'} subtitle='Informe os seus clientes'/>
+        let pageTitle = <PageTitle title={'Clientes'} subtitle='Informe os seus clientes' icon='fas fa-users fa-2x'/>
 
         let pageContent = (
             <div className="row">

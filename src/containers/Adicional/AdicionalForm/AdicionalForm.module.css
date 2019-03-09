@@ -1,34 +1,34 @@
-.BebidaForm label {
+.AdicionalForm label {
     color: #594336;
 }
 
-.BebidaForm input {
+.AdicionalForm input {
     border: 1px solid #594336;
     background-color: transparent;
     color: #594336;
 }
 
-.BebidaForm input:focus {
+.AdicionalForm input:focus {
     border-color: #594336;
     box-shadow: 0 0 0 0.2rem rgba(133, 82, 82, 0.5);
 }
 
 /* Transformações via CSS não são reproduzidas para state */
-/* .BebidaForm input[name=sigla] {
+/* .AdicionalForm input[name=sigla] {
     text-transform: uppercase;
 }
 
-.BebidaForm input[name=descricao] {
+.AdicionalForm input[name=descricao] {
     text-transform: capitalize;
 } */
 
-.BebidaFormFooter {
+.AdicionalFormFooter {
     display: flex;
     justify-content: flex-end;
     padding: 1rem;
     border-top: 1px solid #e9ecef;
 }
 
-.BebidaFormFooter button {
+.AdicionalFormFooter button {
     margin-right: .50rem;
 }

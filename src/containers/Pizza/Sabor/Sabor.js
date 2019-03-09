@@ -134,7 +134,7 @@ class Sabor extends Component {
             </div>
         );
 
-        let pageTitle = <PageTitle title={'Sabores'} subtitle='Informe os seus sabores'/>
+        let pageTitle = <PageTitle title={'Sabores'} subtitle='Informe os seus sabores' icon='fas fa-pizza-slice fa-2x'/>
 
         // let message;
         // if (this.props.error && this.props.error.message) {

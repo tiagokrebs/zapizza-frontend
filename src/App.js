@@ -18,7 +18,7 @@ import Profile from './containers/Profile/Profile';
 import Tamanho from './containers/Pizza/Tamanho/Tamanho';
 import Sabor from './containers/Pizza/Sabor/Sabor';
 import Borda from './containers/Pizza/Borda/Borda';
-import Bebida from './containers/Bebida/Bebida';
+import Adicional from './containers/Adicional/Adicional';
 import Pedido from './containers/Pedido/Pedido';
 import Cliente from './containers/Cliente/Cliente';
 import * as actions from './store/actions/auth';
@@ -45,7 +45,7 @@ class App extends Component {
         <AuthRoute path="/tamanhos" component={Tamanho} isAuthenticated={this.props.isAuthenticated} />
         <AuthRoute path="/sabores" component={Sabor} isAuthenticated={this.props.isAuthenticated} />
         <AuthRoute path="/bordas" component={Borda} isAuthenticated={this.props.isAuthenticated} />
-        <AuthRoute path="/bebidas" component={Bebida} isAuthenticated={this.props.isAuthenticated} />
+        <AuthRoute path="/adicionais" component={Adicional} isAuthenticated={this.props.isAuthenticated} />
         <AuthRoute path="/pedidos" component={Pedido} isAuthenticated={this.props.isAuthenticated} />
         <AuthRoute path="/clientes" component={Cliente} isAuthenticated={this.props.isAuthenticated} />
         <Route component={NotFound}/>        

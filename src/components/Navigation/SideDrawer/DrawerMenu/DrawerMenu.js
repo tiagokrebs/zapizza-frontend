@@ -23,9 +23,9 @@ class DrawerMenu extends Component {
                     <Item label="Clientes" value="/clientes" icon="fas fa-users"></Item>
                     <Item label="Pedidos" value="/pedidos" icon="fas fa-cash-register"></Item>
                     <Item label="Produtos">
-                        <Item label="Bebidas" value="/bebidas" icon="fas fa-beer"/>
+                        <Item label="Adicionais" value="/adicionais" icon="fas fa-plus"/>
                         <Item label="Bordas" value="/bordas" icon="far fa-circle"/>
-                        <Item label="Sabores" value="/sabores" icon="fas fa-utensils"/>
+                        <Item label="Sabores" value="/sabores" icon="fas fa-pizza-slice"/>
                         <Item label="Tamanhos" value="/tamanhos" icon="fas fa-chart-pie"/>
                     </Item>
                 </SideMenu>
