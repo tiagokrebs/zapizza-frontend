@@ -12,6 +12,7 @@ import ModalB from '../../components/UI/ModalB/ModalB';
 import DeleteForm from '../../components/DeleteForm/DeleteForm';
 import Aux from '../../hoc/Aux/Aux';
 import { textFilter, selectFilter } from 'react-bootstrap-table2-filter';
+import ClienteForm from './ClienteForm/ClienteForm';
 
 class Cliente extends Component {
     static nomeFilter;
@@ -180,6 +181,12 @@ class Cliente extends Component {
                                 <span> Limpar Filtros</span>
                             </Button>
                         </Nav.Item>
+                        <Nav.Item>
+                            <Button variant="outline-light" size="sm" onClick={this.modalFormInsert}>
+                                <i className="fa fa-plus"></i> 
+                                <span> Novo</span>
+                            </Button>
+                        </Nav.Item>
                     </Nav>
                 </div>
                 <div className={`card-block ${classes.CardBlock}`}>
@@ -222,12 +229,11 @@ class Cliente extends Component {
                 title="Cliente"
                 handleClose={this.modalHandleClose}
             >
-                {/* <TamanhoForm 
+                <ClienteForm 
                     modalClose={this.modalHandleClose}
                     formAction={this.state.formActionType}
                     elementId={this.state.formElementId}
-                /> */}
-                <h2>Modal do cliente</h2>
+                />
             </ModalB>
         );
 

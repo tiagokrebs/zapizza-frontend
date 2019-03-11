@@ -10,6 +10,10 @@
     justify-content: space-between;
 }
 
+.CardHeader button {
+    margin-left: 10px;
+}
+
 .CardTitle {
     font-size: 18px;
     margin: 0;
