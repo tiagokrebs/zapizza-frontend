@@ -46,4 +46,24 @@ export const valorP6S2Unmask = (value) => {
 // ele não é preenchido até que as 4 casas do lado inteiro tenham sido informadas
 export const valorP6S2DEP = (rawValue) => {
     return [/\d/, /\d/, /\d/, /\d/, ',', /\d/, /\d/]
-  };
+};
+
+// Telefone
+export const telefone = (rawValue) => {
+    // é necessário retirar a máscara quando rawVaue vem mascarado
+    const value = rawValue.toString().replace(/[^0-9]/g, '');
+    if (value.length < 11) {
+        return ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]    
+    }
+    return ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]
+};
+
+export const unmaskOnlyNumbers = (value) => {
+    let newValue = value.toString().replace(/[^0-9]/g, '');
+    return newValue;
+};
+
+// CEP
+export const cep = (rawValue) => {
+    return [/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]
+};

@@ -52,5 +52,6 @@ export {
     postCliente,
     putCliente,
     putClienteEnable,
-    deleteCliente
+    deleteCliente,
+    pesquisaCep
 } from './cliente';

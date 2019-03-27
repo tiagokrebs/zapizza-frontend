@@ -1,14 +1,29 @@
-.ClienteForm label {
+.ClienteForm {
     color: #594336;
 }
+
+/* .ClienteForm label {
+    color: #594336;
+} */
 
 .ClienteForm input {
     border: 1px solid #594336;
     background-color: transparent;
-    color: #594336;
+    /* color: #594336; */
 }
 
 .ClienteForm input:focus {
+    border-color: #594336;
+    box-shadow: 0 0 0 0.2rem rgba(133, 82, 82, 0.5);
+}
+
+.ClienteForm select {
+    border: 1px solid #594336;
+    background-color: transparent;
+    /* color: #594336; */
+}
+
+.ClienteForm select:focus {
     border-color: #594336;
     box-shadow: 0 0 0 0.2rem rgba(133, 82, 82, 0.5);
 }

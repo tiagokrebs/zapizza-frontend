@@ -1,4 +1,5 @@
 import axios from '../../shared/axios-auth';
+import axiosApis from '../../shared/axios';
 
 import { CLIENTE } from './actionsTypes';
 
@@ -230,6 +231,47 @@ export const deleteCliente = (clienteId) => {
                 // Algo aconteceu na criacao do request e gerou um erro
                 dispatch(deleteClienteError({ code: null, message: error.message }));
               }
+        });
+    };
+};
+
+// Pesquisa CEP
+export const pesquisaCepStart = () => {
+    return {
+        type: CLIENTE.PESQUISA_CEP_START
+    };
+};
+
+export const pesquisaCepError = () => {
+    return {
+        type: CLIENTE.PESQUISA_CEP_ERROR
+    };
+};
+
+export const pesquisaCepSuccess = () => {
+    return {
+        type: CLIENTE.PESQUISA_CEP_SUCCESS
+    };
+};
+
+export const pesquisaCep = (targetId, cep) => {
+    return dispatch => {
+        dispatch(pesquisaCepStart());
+        return axiosApis.get('https://viacep.com.br/ws/' + cep + '/json/', {
+            params: {
+                cep: cep
+            }
+        })
+        .then(response => {
+            dispatch(pesquisaCepSuccess());
+            return {
+                targetId: targetId,
+                ...response.data
+            }
+        })
+        .catch(error => {
+            dispatch(pesquisaCepError());
+            throw error
         });
     };
 };
