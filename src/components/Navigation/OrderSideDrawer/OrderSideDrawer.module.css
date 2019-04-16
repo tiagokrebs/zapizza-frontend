@@ -1,3 +1,28 @@
+.OrderSideDrawer {
+    width: 450px;
+    top: 0;
+    display: block;
+    min-height: 100%;
+    height: 100%;
+    z-index: 9;
+    transition: 0.5s ease all;
+    padding-top: 65px;
+    background: #291f19;
+    /* background: #ffffff; */
+    position: fixed;
+    overflow-y: auto;
+    right: 0;
+    box-shadow: 2px 0px 5px 0px rgba(0, 0, 0, 0.1);
+}
+
+.Open {
+    transform: translateX(0);
+}
+
+.Close {
+    transform: translateX(100%);
+}
+
 .Card {
     margin: 15px auto 15px auto;
     background: #392b23;
@@ -36,14 +61,4 @@
 
 .CardFooter button[type="submit"] {
     float: right;
-}
-
-.ProfileForm input {
-    border: 1px solid #594336;
-    background-color: transparent;
-    color: white;
-}
-
-.Modal h4 {
-    color: #594336;
 }

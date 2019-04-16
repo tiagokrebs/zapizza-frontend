@@ -6,6 +6,7 @@ import NavigationItems from '../NavigationItems/NavigationItems';
 import DrawerToggle from '../SideDrawer/DrawerToggle/DrawerToggle';
 import { Button } from 'react-bootstrap';
 import classes from './Toolbar.module.css';
+import NewOrderButton from '../OrderSideDrawer/NewOrderButton/NewOrderButton';
 
 // todo: trocar <nav> por React-Bootstrap <NavBar/>
 
@@ -29,12 +30,15 @@ const toolbar = (props) => {
 
     let drawerToggle = props.isAuthenticated ? <DrawerToggle clicked={props.drawerToggleClicked}/> : null;
 
+    let newOrder = props.isAuthenticated ? <NewOrderButton clicked={props.newOrderClicked}/> : null;
+
     return (
         <header className={props.isAuthenticated ? classes.AuthToolbar : classes.Toolbar}>
             <nav>
                 <Logo />
                 {drawerToggle}
                 <div className="d-flex mr-auto"></div>
+                {newOrder}
                 {navButtons}
                 {navItems}
             </nav>

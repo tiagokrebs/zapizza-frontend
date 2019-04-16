@@ -31,7 +31,9 @@ class Cliente extends Component {
     }
 
     componentDidMount () {
-        this.props.onGetClientes(this.state.page-1, this.state.pageSize, this.state.sortField, this.state.sortOrder, {ativo: true});
+        // Chamada abaixo não é necessária porque ao criar grade handleTableChange é chamado
+        // Retirado para evitar consulta dupla a API no carregamento de /clientes
+        // this.props.onGetClientes(this.state.page-1, this.state.pageSize, this.state.sortField, this.state.sortOrder, {ativo: true});
     }
 
     modalFormInsert = () => {

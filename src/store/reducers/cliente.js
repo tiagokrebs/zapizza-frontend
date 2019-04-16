@@ -271,6 +271,138 @@ const deleteClienteSuccess = (state, action) => {
     }
 };
 
+// Pesquisa CEP
+const pesquisaCepStart = (state, action) => {
+    // utiliziando operador ...
+    return {
+        ...state,
+        cliente: {
+            ...state.cliente,
+            api: {
+                ...state.cliente.api,
+                pending: true,
+                error: null
+            }
+        }
+    };
+};
+
+const pesquisaCepError = (state, action) => {
+    return {
+        ...state,
+        cliente: {
+            ...state.cliente,
+            api: {
+                ...state.cliente.api,
+                pending: false,
+                error: action.error
+            }
+        }
+    }
+};
+
+const pesquisaCepSuccess = (state, action) => {
+    return {
+        ...state,
+        cliente: {
+            ...state.cliente,
+            api: {
+                ...state.cliente.api,
+                pending: false,
+                error: null
+            }
+        }
+    }
+};
+
+// Lista para select
+const selectClientesStart = (state, action) => {
+    // utiliziando operador ...
+    return {
+        ...state,
+        cliente: {
+            ...state.cliente,
+            api: {
+                ...state.cliente.api,
+                pending: true,
+                error: null
+            }
+        }
+    };
+};
+
+const selectClientesError = (state, action) => {
+    return {
+        ...state,
+        cliente: {
+            ...state.cliente,
+            api: {
+                ...state.cliente.api,
+                pending: false,
+                error: action.error
+            }
+        }
+    }
+};
+
+const selectClientesSuccess = (state, action) => {
+    return {
+        ...state,
+        cliente: {
+            ...state.cliente,
+            api: {
+                ...state.cliente.api,
+                pending: false,
+                error: null
+            }
+        }
+    }
+};
+
+// dados do cliente
+const getClienteStart = (state, action) => {
+    // utiliziando operador ...
+    return {
+        ...state,
+        cliente: {
+            ...state.cliente,
+            api: {
+                ...state.cliente.api,
+                pending: true,
+                error: null
+            }
+        }
+    };
+};
+
+const getClienteError = (state, action) => {
+    return {
+        ...state,
+        cliente: {
+            ...state.cliente,
+            api: {
+                ...state.cliente.api,
+                pending: false,
+                error: action.error
+            }
+        }
+    }
+};
+
+const getClienteSuccess = (state, action) => {
+    return {
+        ...state,
+        cliente: {
+            ...state.cliente,
+            api: {
+                ...state.cliente.api,
+                pending: false,
+                error: null
+            }
+        }
+    }
+};
+
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case CLIENTE.GET_CLIENTE_LIST_START: return getClientesStart(state, action);
@@ -288,6 +420,15 @@ const reducer = (state = initialState, action) => {
         case CLIENTE.DELETE_CLIENTE_START: return deleteClienteStart(state, action);
         case CLIENTE.DELETE_CLIENTE_ERROR: return deleteClienteError(state, action);
         case CLIENTE.DELETE_CLIENTE_SUCCESS: return deleteClienteSuccess(state, action);
+        case CLIENTE.PESQUISA_CEP_START: return pesquisaCepStart(state, action);
+        case CLIENTE.PESQUISA_CEP_ERROR: return pesquisaCepError(state, action);
+        case CLIENTE.PESQUISA_CEP_SUCCESS: return pesquisaCepSuccess(state.action);
+        case CLIENTE.SELECT_CLIENTE_START: return selectClientesStart(state, action);
+        case CLIENTE.SELECT_CLIENTE_ERROR: return selectClientesError(state, action);
+        case CLIENTE.SELECT_CLIENTE_SUCCESS: return selectClientesSuccess(state, action);
+        case CLIENTE.GET_CLIENTE_START: return getClienteStart(state, action);
+        case CLIENTE.GET_CLIENTE_ERROR: return getClienteError(state, action);
+        case CLIENTE.GET_CLIENTE_SUCCESS: return getClienteSuccess(state, action);
         default: return state;
     }
 };

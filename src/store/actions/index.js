@@ -53,5 +53,15 @@ export {
     putCliente,
     putClienteEnable,
     deleteCliente,
-    pesquisaCep
+    pesquisaCep,
+    selectCliente,
+    getCliente
 } from './cliente';
+
+export {
+    getPedidos,
+    postPedido,
+    putPedido,
+    putPedidoEnable,
+    deletePedido
+} from './pedido';

@@ -30,6 +30,7 @@ export const getClientes = (start, pageSize, sortField, sortOrder, filterFields)
         dispatch(getClientesStart());
         axios.get('/clientes', { 
             params: {
+                q: 'list',
                 start: start,
                 size: pageSize,
                 sort: sortField,
@@ -52,6 +53,51 @@ export const getClientes = (start, pageSize, sortField, sortOrder, filterFields)
               } else {
                 // Algo aconteceu na criacao do request e gerou um erro
                 dispatch(getClientesError({ code: null, message: error.message }));
+              }
+        });
+    };
+};
+
+// Obtem dados do cliente
+export const getClienteStart = () => {
+    return {
+        type: CLIENTE.GET_CLIENTE_START
+    };
+};
+
+export const getClienteError = (error) => {
+    return {
+        type: CLIENTE.GET_CLIENTE_ERROR,
+        error: error
+    };
+};
+
+export const getClienteSuccess = () => {
+    return {
+        type: CLIENTE.GET_CLIENTE_SUCCESS
+    };
+};
+
+export const getCliente = (hashId) => {
+    return dispatch => {
+        dispatch(getClienteStart());
+        return axios.get('/clientes/' + hashId, {
+            withCredentials: true 
+        })
+        .then(response => {
+            dispatch(getClienteSuccess());
+            return response;
+        })
+        .catch(error => {
+            if (error.response) {
+                // Request enviado e resposta do servidor com status erro
+                dispatch(getClienteError(error.response.data.error));
+              } else if (error.request && !error.status) {
+                // Request enviado sem resposta do servidor
+                dispatch(getClienteError({ code: null, message: error.message }));
+              } else {
+                // Algo aconteceu na criacao do request e gerou um erro
+                dispatch(getClienteError({ code: null, message: error.message }));
               }
         });
     };
@@ -272,6 +318,59 @@ export const pesquisaCep = (targetId, cep) => {
         .catch(error => {
             dispatch(pesquisaCepError());
             throw error
+        });
+    };
+};
+
+/* Pesquisa cliente em componentes AsyncSelect (react-select)
+requer o retorno de uma promisse
+*/
+export const selectClienteStart = () => {
+    return {
+        type: CLIENTE.SELECT_CLIENTE_START
+    };
+};
+
+export const selectClienteError = (error) => {
+    return {
+        type: CLIENTE.SELECT_CLIENTE_ERROR,
+        error: error
+    };
+};
+
+export const selectClienteSuccess = () => {
+    return {
+        type: CLIENTE.SELECT_CLIENTE_SUCCESS,
+    };
+};
+
+export const selectCliente = (nome, telefone) => {
+    return dispatch => {
+        dispatch(selectClienteStart());
+        return axios.get('/clientes', { 
+            params: {
+                q: 'select',
+                size: 20,
+                nome: nome,
+                telefone: telefone
+            },
+            withCredentials: true 
+        })
+        .then(response => {
+            dispatch(selectClienteSuccess());
+            return response.data.data.clientes;
+        })
+        .catch(error => {
+            if (error.response) {
+                // Request enviado e resposta do servidor com status erro
+                dispatch(selectClienteError(error.response.data.error));
+              } else if (error.request && !error.status) {
+                // Request enviado sem resposta do servidor
+                dispatch(selectClienteError({ code: null, message: error.message }));
+              } else {
+                // Algo aconteceu na criacao do request e gerou um erro
+                dispatch(selectClienteError({ code: null, message: error.message }));
+              }
         });
     };
 };
