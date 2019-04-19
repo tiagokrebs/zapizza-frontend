@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Form } from 'react-bootstrap';
 
 // import classes from './PedidoForm.module.css';
 import VerticalStepper from '../../../components/UI/VerticalStepper/VerticalStepper';
 import PesquisaCliente from './PesquisaCliente/PesquisaCliente';
 import updateObject from '../../../shared/updateObject';
 import * as actions from '../../../store/actions/';
+import { conformToMask } from 'react-text-mask';
+import * as masks from '../../../shared/inputMasks';
 
 class PedidoForm extends Component {
-    steps = ['Cliente', 'Pizzas', 'Adicionais', 'Entrega', 'Pagamento'];
-
     state = {
         loading: false,
         inputs: {
@@ -19,6 +20,11 @@ class PedidoForm extends Component {
                 error: '',
                 touched: false
             }
+        },
+        selectedClienteData: {
+            nome: '',
+            telefone: '',
+            endereco: ''
         },
         formIsValid: false,
         formSubmitSuceed: false
@@ -92,25 +98,100 @@ class PedidoForm extends Component {
         }
     }
 
+    getClienteData = (hashId) => {
+        this.props.onGetCliente(hashId)
+            .then(response => {
+                const cliente = response.data.data.cliente;
+                let telefone = 'Não informado';
+                if (cliente.telefones.length > 0) {
+                    let conformMask = conformToMask(cliente.telefones[0].telefone, masks.telefone, {guide: false});
+                    telefone = conformMask.conformedValue;
+                }
+
+                let endereco = 'Não informado';
+                if (cliente.enderecos.length > 0) {
+                    const end = cliente.enderecos[0];
+                    endereco = end.logradouro + 
+                        (end.numero ? ', ' + end.numero : '') +
+                        (end.complemento ? ', ' + end.complemento : '') +
+                        (end.bairro ? ', ' + end.bairro : '') +
+                        (end.cidade ? ', ' + end.cidade : '')
+                }
+
+                this.setState({
+                    inputs: {
+                        ...this.state.inputs,
+                        cliente: {
+                            ...this.state.inputs.cliente,
+                            invalid: false,
+                            error: ''
+                        }
+                    },
+                    selectedClienteData: {
+                        nome: cliente.nome,
+                        telefone: telefone,
+                        endereco: endereco
+                    },
+                });
+            })
+    }
+
+    checkFormClienteIsValid = () => {
+        if (this.state.inputs.cliente.value) {
+            return true
+        }
+        this.setState({
+            inputs: {
+                ...this.state.inputs,
+                cliente: {
+                    ...this.state.inputs.cliente,
+                    invalid: true,
+                    error: 'Campo obrigatório'
+                }
+            }
+        });
+        return false;
+    }
+
     render () {
+        /**
+         * Hmm... as variaveis criadas para o stepper precisam seguir a mesma orderm em todos os arrays
+         * todo: criar um array de objetos contendo as propriedades a seguir
+         * todo: ajustar componente VerticalStepper para receber o novo array de objetos
+         */
+        const steps = ['Cliente', 'Pizzas', 'Adicionais', 'Entrega', 'Pagamento'];
         const stepsContent = [
             <PesquisaCliente 
                 cliente={this.state.inputs.cliente}
                 inputChangeHandler={this.inputChangeHandler}
                 inputBlurHandler={this.inputBlurHandler}
                 asyncSelectClientes={this.props.onSelectClientes}
-                getClienteData={this.props.onGetCliente}
+                getClienteData={this.getClienteData}
+                selectedClienteData={this.state.selectedClienteData}
+                formIsValid={this.checkFormClienteIsValid}
             />,
             'Adição de Pizza',
             'Escolha dos adicionais',
             'Opção de entrega ou retira',
             'Forma de pagamento'
         ];
+        const stepsValidation = [
+            this.checkFormClienteIsValid,
+            () => {console.log('Função de validação passo 1'); return true;},
+            () => {console.log('Função de validação passo 2'); return true;},
+            () => {console.log('Função de validação passo 3'); return true;},
+            () => {console.log('Função de validação passo 4'); return true;},
+        ];
+        const optionalSteps = [2];
 
         return (
-            <VerticalStepper
-                steps={this.steps}
-                stepsContent={stepsContent} />
+            <Form noValidate>
+                <VerticalStepper
+                    steps={steps}
+                    stepsContent={stepsContent}
+                    stepsValidation={stepsValidation}
+                    optionalSteps={optionalSteps}/>
+            </Form>
         );
     }
 }

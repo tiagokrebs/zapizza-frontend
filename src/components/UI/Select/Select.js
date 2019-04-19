@@ -3,24 +3,24 @@ import Select from 'react-select';
 import AsyncSelect from 'react-select/lib/Async';
 import debounce from 'debounce-promise';
 import Highlighter from 'react-highlight-words';
-
-// https://react-select.com/
-
 // import classes from './Select.module.css';
+
+/**
+ * https://react-select.com/
+ */
 
 // propriedades CSS simulam estilo Zapizza
 const colourStyles = {
     control: (styles, state) => {
         return {
             ...styles,
-            borderRadius: '.25rem',
-            minHeight: 38,
+            borderRadius: '.25rem'
         };
     }
 };
 
 // tema simula estilo Zapizza
-const theme = theme => ({
+const defaultTheme = theme => ({
     ...theme,
     borderRadius: 0,
     colors: {
@@ -30,6 +30,22 @@ const theme = theme => ({
         primary50: '#bcb3ae',
         primary25: '#eeecea',
         neutral20: '#594336',
+        neutral30: '#594336',
+    }
+});
+
+// tema simula estilo Zapizza com erro no input
+const defaultDangerTheme = theme => ({
+    ...theme,
+    borderRadius: 0,
+    colors: {
+        ...theme.colors,
+        primary: '#dc3545',
+        primary75: '#8a7b72',
+        primary50: '#bcb3ae',
+        primary25: '#eeecea',
+        neutral20: '#dc3545',
+        neutral30: '#dc3545',
     }
 });
 
@@ -45,8 +61,7 @@ const formatOptionLabel = ({label}, {inputValue}) => {
   }
 
 const keyDownHandler = (refName, e) => {
-    console.log('refname', refName.key, refName.keyCode, refName.type);
-    // prints either LoginInput or PwdInput
+    // console.log('refname', refName.key, refName.keyCode, refName.type);
 }
   
 
@@ -59,36 +74,55 @@ const select = (props) => {
         loadOptions = debounce((inputValue) => props.loadOptions(inputValue), props.wait, {leading: true});
     }
 
+    // alerta inferior ao input no estilo bootstrap
+    let inputError;
+    if (props.isInvalid) {
+        inputError = (
+            <div style={{display: 'block', marginTop: '.25rem', fontSize: '80%', color: '#dc3545'}}>
+                {props.invalidFeedback}
+            </div>
+        )
+    }
+
     return (
         !props.async ? (
-            <Select 
-                styles={colourStyles}
-                theme={theme}
-                options={props.options}
-                isClearable={props.isClearable}
-                isSearchable={props.isSearchable}
-                placeholder={props.placeholder}
-                isMulti={props.isMulti}
-                onInputChange={props.handleInputChange}
-                onChange={props.onChange}
-                formatOptionLabel={formatOptionLabel}/> 
+            <div>
+                <Select 
+                    autoFocus={props.autoFocus}
+                    styles={colourStyles}
+                    theme={props.isInvalid ? defaultDangerTheme : defaultTheme}
+                    options={props.options}
+                    isClearable={props.isClearable}
+                    isSearchable={props.isSearchable}
+                    placeholder={props.placeholder}
+                    isMulti={props.isMulti}
+                    onInputChange={props.handleInputChange}
+                    onChange={props.onChange}
+                    formatOptionLabel={formatOptionLabel}/>
+                {inputError}
+            </div>
         ) : (
-            <AsyncSelect 
-                styles={colourStyles}
-                theme={theme}
-                isClearable={props.isClearable}
-                isSearchable={props.isSearchable}
-                placeholder={props.placeholder}
-                noOptionsMessage={props.noOptionsMessage}
-                loadingMessage={props.loadingMessage}
-                cacheOptions={props.cacheOptions}
-                defaultOptions={props.defaultOptions}
-                loadOptions={inputValue => loadOptions(inputValue)}
-                isMulti={props.isMulti}
-                onInputChange={props.onInputChange}
-                onChange={props.onChange}
-                onKeyDown={keyDownHandler}
-                formatOptionLabel={formatOptionLabel}/>)
+            <div>
+                <AsyncSelect 
+                    autoFocus={props.autoFocus}
+                    styles={colourStyles}
+                    theme={props.isInvalid ? defaultDangerTheme : defaultTheme}
+                    isClearable={props.isClearable}
+                    isSearchable={props.isSearchable}
+                    placeholder={props.placeholder}
+                    noOptionsMessage={props.noOptionsMessage}
+                    loadingMessage={props.loadingMessage}
+                    cacheOptions={props.cacheOptions}
+                    defaultOptions={props.defaultOptions}
+                    loadOptions={inputValue => loadOptions(inputValue)}
+                    isMulti={props.isMulti}
+                    onInputChange={props.onInputChange}
+                    onChange={props.onChange}
+                    onKeyDown={props.onKeyDown ? props.onKeyDown : keyDownHandler}
+                    formatOptionLabel={formatOptionLabel}/>
+                {inputError}
+            </div>
+        )
     );
 }
 

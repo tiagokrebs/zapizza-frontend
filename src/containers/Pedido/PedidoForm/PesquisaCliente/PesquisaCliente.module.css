@@ -15,7 +15,7 @@
 .PesquisaCliente input:focus {
     border: 2px solid #594336;
     border-color: #594336;
-    box-shadow: 0 0 0 0.0rem rgba(133, 82, 82, 0.5);
+    box-shadow: 0 0 0 0.0rem rgba(133, 82, 82, 0.5) !important;
 }
 
 .PesquisaCliente select {

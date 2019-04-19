@@ -9,7 +9,7 @@ import StepButton from '@material-ui/core/StepButton';
 
 import { Button } from 'react-bootstrap';
   
-class OrderStepper extends Component {
+class VerticalStepper extends Component {
     state = {
         activeStep: 0,
         completed: new Set(),
@@ -21,7 +21,7 @@ class OrderStepper extends Component {
     };
 
     isStepOptional = (step) => {
-      return step === 2
+      return this.props.optionalSteps.includes(step);
     };
 
     handleSkip = () => {
@@ -65,25 +65,35 @@ class OrderStepper extends Component {
     // };
 
     handleStep = step => () => {
-      this.setState({
-        activeStep: step,
-      });
+      const isValid = this.props.stepsValidation[this.state.activeStep];
+      if (isValid()) {
+        this.setState({
+          activeStep: step,
+        });
+      }
     }
 
     handleComplete = () => {
-      const completed = new Set(this.state.completed);
-      completed.add(this.state.activeStep);
-      this.setState({
-        completed,
-      });
+      // se passo validação do paso corrente ok prossegue
+      const isValid = this.props.stepsValidation[this.state.activeStep];
+      if (isValid()) {
+        const completed = new Set(this.state.completed);
+        const skipped = new Set(this.state.skipped);
+        completed.add(this.state.activeStep);
+        skipped.delete(this.state.activeStep);
+        this.setState({
+          completed,
+          skipped
+        });
 
-      /**
-       * Sigh... it would be much nicer to replace the following if conditional with
-       * `if (!this.allStepsComplete())` however state is not set when we do this,
-       * thus we have to resort to not being very DRY.
-       */
-      if (completed.size !== this.totalSteps() - this.skippedSteps()) {
-        this.handleNext();
+        /**
+         * Sigh... it would be much nicer to replace the following if conditional with
+         * `if (!this.allStepsComplete())` however state is not set when we do this,
+         * thus we have to resort to not being very DRY.
+         */
+        if (completed.size !== this.totalSteps() - this.skippedSteps()) {
+          this.handleNext();
+        }
       }
     };
 
@@ -110,7 +120,7 @@ class OrderStepper extends Component {
     completedSteps() {
       return this.state.completed.size;
     }
-  
+
     allStepsCompleted() {
       return this.completedSteps() === this.totalSteps() - this.skippedSteps();
     }
@@ -149,25 +159,30 @@ class OrderStepper extends Component {
                           {label}
                         </StepButton>
                         <StepContent>
-                          {stepsContent[index]}
+                          {
+                            // Componente recebido em lista precisa ser clonado para passagem de props do parent
+                            React.isValidElement(stepsContent[index]) ? 
+                              React.cloneElement(stepsContent[index], {handleComplete: this.handleComplete}) : 
+                              stepsContent[index]
+                          }
                           <div className={classes.ActionsContainer}>
-                            <div>
+                            <div className="col-lg-12 col-md-12">
                             {this.isStepOptional(activeStep) &&
                               !this.state.completed.has(this.state.activeStep) && (
                                 <Button
-                                  variant="contained"
-                                  color="primary"
+                                  variant="outline-secondary"
                                   onClick={this.handleSkip}
                                   className={classes.Button}
                                   size="sm"
+                                  style={{float: 'right'}}
                                 >
                                   Pular
                                 </Button>
                               )}
                               {activeStep !== steps.length &&
                                 (
-                                  <Button variant="contained" color="primary" onClick={this.handleComplete} className={classes.Button} size="sm">
-                                    Passo OK
+                                  <Button style={{float: 'right'}} variant="outline-secondary" onClick={this.handleComplete} className={classes.Button} size="sm">
+                                    Próximo
                                   </Button>
                                 )}
                             </div>
@@ -193,4 +208,4 @@ class OrderStepper extends Component {
     }
 }
 
-export default (OrderStepper);
+export default VerticalStepper;
