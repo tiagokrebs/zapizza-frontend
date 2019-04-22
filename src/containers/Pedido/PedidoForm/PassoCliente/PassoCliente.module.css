@@ -1,51 +1,51 @@
-.PesquisaCliente {
+.PassoCliente {
     color: #594336;
 }
 
-/* .PesquisaCliente label {
+/* .PassoCliente label {
     color: #594336;
 } */
 
-.PesquisaCliente input {
+.PassoCliente input {
     border: 1px solid #594336;
     background-color: transparent;
     /* color: #594336; */
 }
 
-.PesquisaCliente input:focus {
+.PassoCliente input:focus {
     border: 2px solid #594336;
     border-color: #594336;
     box-shadow: 0 0 0 0.0rem rgba(133, 82, 82, 0.5) !important;
 }
 
-.PesquisaCliente select {
+.PassoCliente select {
     border: 1px solid #594336;
     background-color: transparent;
     /* color: #594336; */
 }
 
-.PesquisaCliente select:focus {
+.PassoCliente select:focus {
     border-color: #594336;
     box-shadow: 0 0 0 0.2rem rgba(133, 82, 82, 0.5);
 }
 
 /* Transformações via CSS não são reproduzidas para state */
-/* .PesquisaCliente input[name=sigla] {
+/* .PassoCliente input[name=sigla] {
     text-transform: uppercase;
 }
 
-.PesquisaCliente input[name=descricao] {
+.PassoCliente input[name=descricao] {
     text-transform: capitalize;
 } */
 
-.PesquisaClienteFooter {
+.PassoClienteFooter {
     display: flex;
     justify-content: flex-end;
     padding: 1rem;
     border-top: 1px solid #e9ecef;
 }
 
-.PesquisaClienteFooter button {
+.PassoClienteFooter button {
     margin-right: .50rem;
 }
 

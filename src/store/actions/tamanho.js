@@ -24,12 +24,10 @@ export const getTamanhosSuccess = (data) => {
     };
 };
 
-export const getTamanhos = (start, pageSize, sortField, sortOrder) => {
+export const getTamanhos = () => {
     return dispatch => {
         dispatch(getTamanhosStart());
-        axios.get('/tamanhos', {
-            withCredentials: true 
-        })
+        axios.get('/tamanhos', { withCredentials: true })
         .then(response => {
             dispatch(getTamanhosSuccess(response.data.data));
             return response;

@@ -292,7 +292,7 @@ class TamanhoForm extends Component {
                                             <Form.Control
                                                 type="text"
                                                 name="sigla"
-                                                maxLength="3"
+                                                maxLength="1"
                                                 value={this.state.inputs.sigla.value}
                                                 onChange={this.inputChangeHandler}
                                                 onBlur={this.inputBlurHandler}

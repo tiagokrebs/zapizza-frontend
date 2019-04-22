@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-import classes from './PesquisaCliente.module.css';
+import classes from './PassoCliente.module.css';
 import { Form } from 'react-bootstrap';
 import Select from '../../../../components/UI/Select/Select';
 
-class PesquisaCliente extends Component {
+class PassoCliente extends Component {
     getAsyncOptions = (inputValue) => {
         if (/^[0-9]+$/.test(inputValue)) {
             // quando input possui apenas números pesquisa por telefone é disparada
@@ -26,20 +26,26 @@ class PesquisaCliente extends Component {
             };
             this.props.inputBlurHandler(event);
         }
+        /**
+         * Controle do valor da label e value via state do select foi ignorado,
+         * função precisa de melhoras como deleção completa nas teclas backspace e delete,
+         * garantia de exibição da label após seleção, ...
+        */ 
+        // else if (action.action === 'input-change') {
+        //     const event = {
+        //         target: {
+        //             name: 'cliente',
+        //             label: value ? value : ''
+        //         }
+        //     };
+        //     this.props.inputChangeHandler(event);
+        // }
     }
 
     onChange = (value, action) => {
         if (action.action === "select-option") {
             this.props.getClienteData(value.value);
         }
-
-        const event = {
-            target: {
-                name: 'cliente',
-                value: value ? value.value : ''
-            }
-        };
-        this.props.inputChangeHandler(event);
     }
 
     selectOnKeyDown = (refName) => {
@@ -56,13 +62,13 @@ class PesquisaCliente extends Component {
 
     render () {
         return (
-            <div className={`col-sm-12 ${classes.PesquisaCliente}`}>
+            <div className={`col-sm-12 ${classes.PassoCliente}`}>
                 <Form.Group className="row">
                     <div className="col-lg-12 col-md-12">
                         <Select
                             autoFocus
-                            value={this.props.cliente.value}
-                            inputValue={this.props.selectedClienteData.nome}
+                            // value={this.props.cliente.value} // uso de value via state ignorado
+                            // inputValue={this.props.cliente.label} // uso de label via state ignorado
                             defaultValue={{ label: this.props.selectedClienteData.nome, value: this.props.cliente.value }}
                             isClearable
                             isSearchable
@@ -109,4 +115,4 @@ class PesquisaCliente extends Component {
     }
 }
 
-export default PesquisaCliente;
+export default PassoCliente;

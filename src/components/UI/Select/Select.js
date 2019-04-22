@@ -54,7 +54,7 @@ const formatOptionLabel = ({label}, {inputValue}) => {
     return (
       <Highlighter
         searchWords={[inputValue]}
-        textToHighlight={label}
+        textToHighlight={label ? label : ''}
         highlightStyle={{fontWeight: 'bold', backgroundColor: '#eeecea', color: '#392b23'}}
       />
     );
@@ -94,11 +94,15 @@ const select = (props) => {
                     options={props.options}
                     isClearable={props.isClearable}
                     isSearchable={props.isSearchable}
+                    isDisabled={props.isDisabled}
                     placeholder={props.placeholder}
                     isMulti={props.isMulti}
                     onInputChange={props.handleInputChange}
                     onChange={props.onChange}
-                    formatOptionLabel={formatOptionLabel}/>
+                    formatOptionLabel={formatOptionLabel}
+                    getOptionValue ={(option)=>option.label}
+                    value={props.value}
+                    inputValue={props.inputValue}/>
                 {inputError}
             </div>
         ) : (
@@ -109,6 +113,7 @@ const select = (props) => {
                     theme={props.isInvalid ? defaultDangerTheme : defaultTheme}
                     isClearable={props.isClearable}
                     isSearchable={props.isSearchable}
+                    isDisabled={props.isDisabled}
                     placeholder={props.placeholder}
                     noOptionsMessage={props.noOptionsMessage}
                     loadingMessage={props.loadingMessage}
@@ -119,7 +124,10 @@ const select = (props) => {
                     onInputChange={props.onInputChange}
                     onChange={props.onChange}
                     onKeyDown={props.onKeyDown ? props.onKeyDown : keyDownHandler}
-                    formatOptionLabel={formatOptionLabel}/>
+                    formatOptionLabel={formatOptionLabel}
+                    value={props.value}
+                    inputValue={props.inputValue}
+                    />
                 {inputError}
             </div>
         )

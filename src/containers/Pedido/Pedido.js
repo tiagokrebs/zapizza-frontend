@@ -2,18 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import classes from './Pedido.module.css';
-import * as actions from '../../store/actions';
 import Aux from '../../hoc/Aux/Aux';
 // import { Nav, Button } from 'react-bootstrap';
 
 
 class Pedido extends Component {
 
-    componentDidMount () {
-        this.props.onGetTamanhos();
-        this.props.onGetSabores();
-        this.props.onGetBordas();
-        this.props.onGetAdicionais();        
+    componentDidMount () {       
     }
 
     render () {
@@ -65,12 +60,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-    return {
-        onGetTamanhos: () => dispatch(actions.getTamanhos()),
-        onGetSabores: () => dispatch(actions.getSabores()),
-        onGetBordas: () => dispatch(actions.getBordas()),
-        onGetAdicionais: () => dispatch(actions.getAdicionais())
-    };
+    return {};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Pedido);
