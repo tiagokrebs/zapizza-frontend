@@ -2,7 +2,7 @@ import React from 'react';
 
 import classes from './OrderSideDrawer.module.css';
 import Backdrop from '../../UI/Backdrop/Backdrop';
-import Aux from '../../../hoc/Aux/Aux';
+import HocAux from '../../../hoc/HocAux/HocAux';
 import PedidoForm from '../../../containers/Pedido/PedidoForm/PedidoForm';
 
 /**
@@ -17,7 +17,7 @@ const orderSideDrawer = ( props ) => {
     }
     return (
         props.isAuthenticated ? (
-            <Aux>
+            <HocAux>
                 <Backdrop show={props.open} clicked={props.closed}/>
                 <div className={attachedClasses.join(' ')}>
                     <div className="container">
@@ -30,7 +30,7 @@ const orderSideDrawer = ( props ) => {
                         </div>
                     </div>
                 </div>
-            </Aux>
+            </HocAux>
         ) : null
     );
 };

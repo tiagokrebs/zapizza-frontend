@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import classes from './PassoCliente.module.css';
 import { Form } from 'react-bootstrap';
 import Select from '../../../../components/UI/Select/Select';
+import debounce from 'debounce-promise';
 
 class PassoCliente extends Component {
     getAsyncOptions = (inputValue) => {
@@ -30,7 +31,7 @@ class PassoCliente extends Component {
          * Controle do valor da label e value via state do select foi ignorado,
          * função precisa de melhoras como deleção completa nas teclas backspace e delete,
          * garantia de exibição da label após seleção, ...
-        */ 
+        */
         // else if (action.action === 'input-change') {
         //     const event = {
         //         target: {
@@ -51,12 +52,10 @@ class PassoCliente extends Component {
     selectOnKeyDown = (refName) => {
         /**
          * Tab no último componente faz tentativa de ativar o próximo passo
-         * para isso função de validação dos dados atuais é chamado
+         * para isso função de validação dos dados atuais é chamada
          */
         if (refName.keyCode === 9) {
-            if (this.props.formIsValid()) {
-                this.props.handleComplete();
-            }
+            this.props.handleComplete();
         }
     }
 
@@ -67,9 +66,6 @@ class PassoCliente extends Component {
                     <div className="col-lg-12 col-md-12">
                         <Select
                             autoFocus
-                            // value={this.props.cliente.value} // uso de value via state ignorado
-                            // inputValue={this.props.cliente.label} // uso de label via state ignorado
-                            defaultValue={{ label: this.props.selectedClienteData.nome, value: this.props.cliente.value }}
                             isClearable
                             isSearchable
                             placeholder="Nome ou telefone"
@@ -84,9 +80,10 @@ class PassoCliente extends Component {
                             onKeyDown={this.selectOnKeyDown}
                             async
                             debouncedLoad
-                            wait={1000}
+                            wait={2000}
                             isInvalid={this.props.cliente.touched && this.props.cliente.invalid}
-                            invalidFeedback={this.props.cliente.error}/>
+                            invalidFeedback={this.props.cliente.error}
+                            />
                     </div>
                     {
                         this.props.selectedClienteData.nome && this.props.selectedClienteData.telefone && this.props.selectedClienteData.endereco ?
@@ -108,7 +105,6 @@ class PassoCliente extends Component {
                             </div>
                         </div>) : null
                     }
-                    {/* <Button size="sm" onClick={this.props.handleComplete}>Passo OK (Child)</Button> */}
                 </Form.Group>
             </div>
         );

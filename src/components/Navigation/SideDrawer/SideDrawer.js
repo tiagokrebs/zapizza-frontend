@@ -2,7 +2,7 @@ import React from 'react';
 
 import classes from './SideDrawer.module.css';
 import Backdrop from '../../UI/Backdrop/Backdrop';
-import Aux from '../../../hoc/Aux/Aux';
+import HocAux from '../../../hoc/HocAux/HocAux';
 import DrawerUser from './DrawerUser/DrawerUser';
 import DrawerMenu from './DrawerMenu/DrawerMenu';
 
@@ -18,14 +18,14 @@ const sideDrawer = ( props ) => {
     }
     return (
         props.isAuthenticated ? (
-            <Aux>
+            <HocAux>
                 <Backdrop show={props.open} clicked={props.closed}/>
                 <div className={attachedClasses.join(' ')}>
                     <DrawerUser userName={props.userName}/>
                     <DrawerMenu clicked={props.closed}/>
                     <hr/>
                 </div>
-            </Aux>
+            </HocAux>
         ) : null
     );
 };

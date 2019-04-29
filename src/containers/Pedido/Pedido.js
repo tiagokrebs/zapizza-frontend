@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import classes from './Pedido.module.css';
-import Aux from '../../hoc/Aux/Aux';
+import HocAux from '../../hoc/HocAux/HocAux';
 // import { Nav, Button } from 'react-bootstrap';
 
 
@@ -46,9 +46,9 @@ class Pedido extends Component {
         );
 
         return (
-            <Aux>
+            <HocAux>
                 {pageContent}
-            </Aux>
+            </HocAux>
         );
     }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Aux from '../Aux/Aux';
+import HocAux from '../HocAux/HocAux';
 import classes from './Layout.module.css';
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer';
@@ -34,7 +34,7 @@ class Layout extends Component {
 
     render () {
         return (
-            <Aux>
+            <HocAux>
                 <Toolbar 
                     isAuthenticated={this.props.isAuthenticated} 
                     userName={this.props.userName}
@@ -55,7 +55,7 @@ class Layout extends Component {
                     </div>
                     <Footer/>
                 </main>
-            </Aux>
+            </HocAux>
         )
     }
 }

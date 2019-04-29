@@ -60,18 +60,19 @@ const formatOptionLabel = ({label}, {inputValue}) => {
     );
   }
 
-const keyDownHandler = (refName, e) => {
-    // console.log('refname', refName.key, refName.keyCode, refName.type);
-}
-  
-
 const select = (props) => {
     // decisão por método debounce-promisse
     let loadOptions;
     if (!props.debouncedLoad) {
         loadOptions = props.loadOptions
     } else {
-        loadOptions = debounce((inputValue) => props.loadOptions(inputValue), props.wait, {leading: true});
+      /* Leading não tem compoentamento esperado em componentes controlados,
+      *  como o componente está dentro de um wrapper a cada renderização uma
+      *  nova função é instancidada e todo novo caracter inserido acaba sendo
+      *  o "primeiro" (o que dispara a função leading).
+      *  Acumulate precisa de ajuste pois retorna array.
+      */
+      loadOptions = debounce((inputValue) => props.loadOptions(inputValue), props.wait, {leading: false, accumulate: false});
     }
 
     // alerta inferior ao input no estilo bootstrap
@@ -87,7 +88,7 @@ const select = (props) => {
     return (
         !props.async ? (
             <div>
-                <Select 
+                <Select
                     autoFocus={props.autoFocus}
                     styles={colourStyles}
                     theme={props.isInvalid ? defaultDangerTheme : defaultTheme}
@@ -97,17 +98,23 @@ const select = (props) => {
                     isDisabled={props.isDisabled}
                     placeholder={props.placeholder}
                     isMulti={props.isMulti}
-                    onInputChange={props.handleInputChange}
+                    onInputChange={props.onInputChange}
                     onChange={props.onChange}
+                    onKeyDown={props.onKeyDown}
                     formatOptionLabel={formatOptionLabel}
                     getOptionValue ={(option)=>option.label}
                     value={props.value}
-                    inputValue={props.inputValue}/>
+                    inputValue={props.inputValue}
+                    ref={props.innerRef}
+                    hideSelectedOptions={props.hideSelectedOptions}
+                    tabSelectsValue={false}
+                    isOptionSelected={props.isOptionSelected}
+                  />
                 {inputError}
             </div>
         ) : (
             <div>
-                <AsyncSelect 
+                <AsyncSelect
                     autoFocus={props.autoFocus}
                     styles={colourStyles}
                     theme={props.isInvalid ? defaultDangerTheme : defaultTheme}
@@ -123,11 +130,15 @@ const select = (props) => {
                     isMulti={props.isMulti}
                     onInputChange={props.onInputChange}
                     onChange={props.onChange}
-                    onKeyDown={props.onKeyDown ? props.onKeyDown : keyDownHandler}
+                    onKeyDown={props.onKeyDown}
                     formatOptionLabel={formatOptionLabel}
                     value={props.value}
                     inputValue={props.inputValue}
-                    />
+                    ref={props.innerRef}
+                    hideSelectedOptions={props.hideSelectedOptions}
+                    tabSelectsValue={false}
+                    isOptionSelected={props.isOptionSelected}
+                  />
                 {inputError}
             </div>
         )

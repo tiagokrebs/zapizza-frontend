@@ -10,7 +10,7 @@ import DataTableB from '../../components/UI/DataTableB/DataTableB';
 import PageTitle from '../../components/Page/PageTitle/PageTitle';
 import ModalB from '../../components/UI/ModalB/ModalB';
 import DeleteForm from '../../components/DeleteForm/DeleteForm';
-import Aux from '../../hoc/Aux/Aux';
+import HocAux from '../../hoc/HocAux/HocAux';
 import { textFilter, selectFilter } from 'react-bootstrap-table2-filter';
 import ClienteForm from './ClienteForm/ClienteForm';
 
@@ -254,12 +254,12 @@ class Cliente extends Component {
         );
 
         return (
-            <Aux>
+            <HocAux>
                 {modalForm}
                 {modalFormDelete}
                 {pageTitle}
                 {pageContent}
-            </Aux>
+            </HocAux>
         );
     }
 }

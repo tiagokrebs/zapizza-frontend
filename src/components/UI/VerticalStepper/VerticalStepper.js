@@ -8,7 +8,19 @@ import classes from './VerticalStepper.module.css';
 import StepButton from '@material-ui/core/StepButton';
 
 import { Button } from 'react-bootstrap';
-  
+
+/*
+* todo: criar componente próprio para vertical stepper usando componentes puros
+*
+* Componentes Material-UI apresentam desempenho ruim de rederização em comparação
+* a componentes puros ou a componentes react-bootstrap.
+* O componente Stepper (Material-UI) foi a primeira escolha mas apresenta uma
+* pequena lentidão perceptível na mudança entre passos e renderização dos
+* componentes internos.
+* O uso do componente withStyles (Material-UI) piora ainda mais o tempo de
+* renderização.
+*/
+
 class VerticalStepper extends Component {
     state = {
         activeStep: 0,
@@ -31,7 +43,7 @@ class VerticalStepper extends Component {
         // Somente vai acontecer quando ocorrer tentativa ativa para quebrar algo no fonte
         throw new Error("You can't skip a step that isn't optional.");
       }
-  
+
       this.setState(state => {
         const skipped = new Set(state.skipped.values());
         skipped.add(activeStep);
@@ -65,36 +77,34 @@ class VerticalStepper extends Component {
     // };
 
     handleStep = step => () => {
-      const isValid = this.props.stepsValidation[this.state.activeStep];
-      if (isValid()) {
-        this.setState({
-          activeStep: step,
-        });
-      }
+      this.setState({
+        activeStep: step,
+      });
     }
 
     handleComplete = () => {
       // se passo validação do paso corrente ok prossegue
       const isValid = this.props.stepsValidation[this.state.activeStep];
-      if (isValid()) {
-        const completed = new Set(this.state.completed);
-        const skipped = new Set(this.state.skipped);
-        completed.add(this.state.activeStep);
-        skipped.delete(this.state.activeStep);
-        this.setState({
-          completed,
-          skipped
-        });
+      isValid(this.state.activeStep)
+        .then(() => {
+          const completed = new Set(this.state.completed);
+          const skipped = new Set(this.state.skipped);
+          completed.add(this.state.activeStep);
+          skipped.delete(this.state.activeStep);
+          this.setState({
+            completed,
+            skipped
+          });
 
-        /**
-         * Sigh... it would be much nicer to replace the following if conditional with
-         * `if (!this.allStepsComplete())` however state is not set when we do this,
-         * thus we have to resort to not being very DRY.
-         */
-        if (completed.size !== this.totalSteps() - this.skippedSteps()) {
-          this.handleNext();
-        }
-      }
+          /**
+           * Sigh... it would be much nicer to replace the following if conditional with
+           * `if (!this.allStepsComplete())` however state is not set when we do this,
+           * thus we have to resort to not being very DRY.
+           */
+          if (completed.size !== this.totalSteps() - this.skippedSteps()) {
+              this.handleNext();
+          }
+        });
     };
 
     handleReset = () => {
@@ -108,15 +118,15 @@ class VerticalStepper extends Component {
     skippedSteps() {
       return this.state.skipped.size;
     }
-  
+
     isStepSkipped(step) {
       return this.state.skipped.has(step);
     }
-  
+
     isStepComplete(step) {
       return this.state.completed.has(step);
     }
-  
+
     completedSteps() {
       return this.state.completed.size;
     }
@@ -124,7 +134,7 @@ class VerticalStepper extends Component {
     allStepsCompleted() {
       return this.completedSteps() === this.totalSteps() - this.skippedSteps();
     }
-  
+
     isLastStep() {
       return this.state.activeStep === this.totalSteps() - 1;
     }
@@ -161,8 +171,8 @@ class VerticalStepper extends Component {
                         <StepContent>
                           {
                             // Componente recebido em lista precisa ser clonado para passagem de props do parent
-                            React.isValidElement(stepsContent[index]) ? 
-                              React.cloneElement(stepsContent[index], {handleComplete: this.handleComplete}) : 
+                            React.isValidElement(stepsContent[index]) ?
+                              React.cloneElement(stepsContent[index], {handleComplete: this.handleComplete}) :
                               stepsContent[index]
                           }
                           <div className={classes.ActionsContainer}>
@@ -181,7 +191,13 @@ class VerticalStepper extends Component {
                               )}
                               {activeStep !== steps.length &&
                                 (
-                                  <Button style={{float: 'right'}} variant="outline-secondary" onClick={this.handleComplete} className={classes.Button} size="sm">
+                                  <Button
+                                    style={{float: 'right'}}
+                                    variant="outline-secondary"
+                                    onClick={this.handleComplete}
+                                    className={classes.Button}
+                                    size="sm"
+                                  >
                                     Próximo
                                   </Button>
                                 )}

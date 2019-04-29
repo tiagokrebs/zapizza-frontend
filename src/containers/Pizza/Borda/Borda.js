@@ -7,7 +7,7 @@ import DataTableB from '../../../components/UI/DataTableB/DataTableB';
 import { Badge, Nav, Button } from 'react-bootstrap';
 import ZappSpinner from '../../../components/ZappSpinner/ZappSpinner';
 import ModalB from '../../../components/UI/ModalB/ModalB';
-import Aux from '../../../hoc/Aux/Aux';
+import HocAux from '../../../hoc/HocAux/HocAux';
 import BordaForm from './BordaForm/BordaForm';
 import DeleteForm from '../../../components/DeleteForm/DeleteForm';
 import * as actions from '../../../store/actions';
@@ -181,12 +181,12 @@ class Borda extends Component {
         );
 
         return (
-            <Aux>
+            <HocAux>
                 {modalForm}
                 {modalFormDelete}
                 {pageTitle}
                 {pageContent}
-            </Aux>
+            </HocAux>
         );
     }
 }

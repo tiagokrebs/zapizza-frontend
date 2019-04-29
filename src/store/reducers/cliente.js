@@ -272,48 +272,48 @@ const deleteClienteSuccess = (state, action) => {
 };
 
 // Pesquisa CEP
-const pesquisaCepStart = (state, action) => {
-    // utiliziando operador ...
-    return {
-        ...state,
-        cliente: {
-            ...state.cliente,
-            api: {
-                ...state.cliente.api,
-                pending: true,
-                error: null
-            }
-        }
-    };
-};
+// const pesquisaCepStart = (state, action) => {
+//     // utiliziando operador ...
+//     return {
+//         ...state,
+//         cliente: {
+//             ...state.cliente,
+//             api: {
+//                 ...state.cliente.api,
+//                 pending: true,
+//                 error: null
+//             }
+//         }
+//     };
+// };
 
-const pesquisaCepError = (state, action) => {
-    return {
-        ...state,
-        cliente: {
-            ...state.cliente,
-            api: {
-                ...state.cliente.api,
-                pending: false,
-                error: action.error
-            }
-        }
-    }
-};
+// const pesquisaCepError = (state, action) => {
+//     return {
+//         ...state,
+//         cliente: {
+//             ...state.cliente,
+//             api: {
+//                 ...state.cliente.api,
+//                 pending: false,
+//                 error: action.error
+//             }
+//         }
+//     }
+// };
 
-const pesquisaCepSuccess = (state, action) => {
-    return {
-        ...state,
-        cliente: {
-            ...state.cliente,
-            api: {
-                ...state.cliente.api,
-                pending: false,
-                error: null
-            }
-        }
-    }
-};
+// const pesquisaCepSuccess = (state, action) => {
+//     return {
+//         ...state,
+//         cliente: {
+//             ...state.cliente,
+//             api: {
+//                 ...state.cliente.api,
+//                 pending: false,
+//                 error: null
+//             }
+//         }
+//     }
+// };
 
 // Lista para select
 const selectClientesStart = (state, action) => {
@@ -420,9 +420,10 @@ const reducer = (state = initialState, action) => {
         case CLIENTE.DELETE_CLIENTE_START: return deleteClienteStart(state, action);
         case CLIENTE.DELETE_CLIENTE_ERROR: return deleteClienteError(state, action);
         case CLIENTE.DELETE_CLIENTE_SUCCESS: return deleteClienteSuccess(state, action);
-        case CLIENTE.PESQUISA_CEP_START: return pesquisaCepStart(state, action);
-        case CLIENTE.PESQUISA_CEP_ERROR: return pesquisaCepError(state, action);
-        case CLIENTE.PESQUISA_CEP_SUCCESS: return pesquisaCepSuccess(state.action);
+        // Pesquisa CEP não tem payload
+        // case CLIENTE.PESQUISA_CEP_START: return pesquisaCepStart(state, action);
+        // case CLIENTE.PESQUISA_CEP_ERROR: return pesquisaCepError(state, action);
+        // case CLIENTE.PESQUISA_CEP_SUCCESS: return pesquisaCepSuccess(state, action);
         case CLIENTE.SELECT_CLIENTE_START: return selectClientesStart(state, action);
         case CLIENTE.SELECT_CLIENTE_ERROR: return selectClientesError(state, action);
         case CLIENTE.SELECT_CLIENTE_SUCCESS: return selectClientesSuccess(state, action);
