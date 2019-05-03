@@ -11,6 +11,7 @@ import VerticalStepper from '../../../components/UI/VerticalStepper/VerticalStep
 import PassoCliente from './PassoCliente/PassoCliente';
 import PassoPizzas from './PassoPizzas/PassoPizzas';
 import PassoAdicionais from './PassoAdicionais/PassoAdicionais';
+import PassoEntrega from './PassoEntrega/PassoEntrega';
 import * as yup from 'yup';
 import { yupLocale, inputsToValidation, inputsRestartValidity, inputsDefineErrors } from '../../../shared/yupHelpers';
 
@@ -51,12 +52,31 @@ class PedidoForm extends Component {
                 invalid: false,
                 error: '',
                 touched: false
+            },
+            tipoEntrega: {
+              value: 'E',
+              invalid: false,
+              error: '',
+              touched: false
+            },
+            obsEntrega: {
+              value: '',
+              invalid: false,
+              error: '',
+              touched: false
+            },
+            valorEntrega: {
+              value: '',
+              invalid: false,
+              error: '',
+              touched: false
             }
         },
         selectedClienteData: {
             nome: '',
             telefone: '',
-            endereco: ''
+            endereco: '', // endereço primário para exibição no card de seleção
+            enderecos: [] // outros endereços para escolha no PassoEntrega
         },
         formIsValid: false,
         formSubmitSuceed: false
@@ -133,7 +153,7 @@ class PedidoForm extends Component {
     }
 
     inputChangeHandler = (event) => {
-        if (["adicionais"].includes(event.target.name)) {
+        if (["adicionais", "tipoEntrega", "obsEntrega", "valorEntrega"].includes(event.target.name)) {
             // handler para inputs fixos
             const updatedFormElement = updateObject(this.state.inputs[event.target.name], {
                 value: event.target.value,
@@ -166,7 +186,7 @@ class PedidoForm extends Component {
     }
 
     inputBlurHandler = (event) => {
-        if (["cliente", "adicionais"].includes(event.target.name)) {
+        if (["cliente", "adicionais", "tipoEntrega", "obsEntrega", "valorEntrega"].includes(event.target.name)) {
             // handler para inputs fixos
             const updatedFormElement = updateObject(this.state.inputs[event.target.name], {
                 touched: true
@@ -226,13 +246,13 @@ class PedidoForm extends Component {
                             value: cliente.hash_id,
                             invalid: false,
                             error: '',
-                            label: cliente.nome
                         }
                     },
                     selectedClienteData: {
                         nome: cliente.nome,
                         telefone: telefone,
-                        endereco: endereco
+                        endereco: endereco,
+                        enderecos: cliente.enderecos
                     },
                 });
             })
@@ -253,12 +273,8 @@ class PedidoForm extends Component {
 
             // schema genérico para componetes select
             const selectSchema = yup.object().shape({
-                label: yup
-                    .string()
-                    .required(),
-                value: yup
-                    .string()
-                    .required()
+                label: yup.string().required(),
+                value: yup.string().required()
             });
 
             // cria schema com base em passo
@@ -266,18 +282,16 @@ class PedidoForm extends Component {
             if (passo === 0) {
               // PassoCliente
                 schema = yup.object().shape({
-                    cliente: yup
-                        .string()
-                        .required()
+                    cliente: yup.string().required()
                 });
             } else if (passo === 1) {
               // PassoPizzas
                 const schemaPizza = yup.object().shape({
-                    tamanho: yup
-                        .string()
-                        .required(),
-                    sabores: yup.array().of(selectSchema).required(),
-                    bordas: yup.array().of(selectSchema)
+                    tamanho: yup.string().required(),
+                    sabores: yup
+                      .array().of(selectSchema).required(),
+                    bordas: yup
+                      .array().of(selectSchema)
                 });
 
                 schema = yup.object().shape({
@@ -287,6 +301,13 @@ class PedidoForm extends Component {
               // PassoAdicionais
               schema = yup.object().shape({
                   adicionais: yup.array().of(selectSchema)
+              });
+            } else if (passo === 3) {
+              // PassoEntrega
+              schema = yup.object().shape({
+                tipoEntrega: yup.string().oneOf(["E", "B"]).required(),
+                obsEntrega: yup.string(),
+                valorEntrega: yup.string()
               });
             }
 
@@ -361,7 +382,15 @@ class PedidoForm extends Component {
               addAdicional={this.addAdicional}
               remAdicional={this.remAdicional}
               />,
-            'Opção de entrega ou retira',
+            <PassoEntrega
+              tipoEntrega={this.state.inputs.tipoEntrega}
+              obsEntrega={this.state.inputs.obsEntrega}
+              valorEntrega={this.state.inputs.valorEntrega}
+              selectedClienteData={this.state.selectedClienteData}
+              inputChangeHandler={this.inputChangeHandler}
+              inputBlurHandler={this.inputBlurHandler}
+              formIsValid={this.checkFormIsValid}
+            />,
             'Forma de pagamento'
         ];
         const stepsValidation = [

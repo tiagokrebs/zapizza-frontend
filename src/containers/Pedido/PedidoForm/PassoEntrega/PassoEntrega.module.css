@@ -1,0 +1,98 @@
+.PassoEntrega {
+    color: #594336;
+}
+
+/* .PassoEntrega label {
+    color: #594336;
+} */
+
+.PassoEntrega input {
+    border: 1px solid #594336;
+    background-color: transparent;
+    /* color: #594336; */
+}
+
+.PassoEntrega input:focus {
+    border: 2px solid #594336;
+    border-color: #594336;
+    box-shadow: 0 0 0 0.0rem rgba(133, 82, 82, 0.5) !important;
+}
+
+.PassoEntrega select {
+    border: 1px solid #594336;
+    background-color: transparent;
+    /* color: #594336; */
+}
+
+.PassoEntrega select:focus {
+    border-color: #594336;
+    box-shadow: 0 0 0 0.2rem rgba(133, 82, 82, 0.5);
+}
+
+.PassoEntrega div:focus {
+    outline-style: none;
+}
+
+.PassoEntrega textarea {
+    border: 1px solid #594336;
+    background-color: transparent;
+    /* color: #594336; */
+}
+
+.PassoEntrega textarea:focus {
+    border: 2px solid #594336;
+    border-color: #594336;
+    box-shadow: 0 0 0 0.0rem rgba(133, 82, 82, 0.5) !important;
+}
+
+/* Transformações via CSS não são reproduzidas para state */
+/* .PassoEntrega input[name=sigla] {
+    text-transform: uppercase;
+}
+
+.PassoEntrega input[name=descricao] {
+    text-transform: capitalize;
+} */
+
+.PassoEntregaFooter {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.PassoEntregaFooter button {
+    margin-right: .50rem;
+}
+
+.Card {
+    margin: 15px auto 15px auto;
+    background: #eaf1f8;
+    border-color: #eaf1f8;
+}
+
+.CardHeader {
+    background: transparent;
+    border-bottom: 1px solid #594336;
+    display: flex;
+    /* justify-content: space-between; */
+}
+
+.CardTitle {
+    font-size: 18px;
+    margin: 0;
+    line-height: 30px;
+    font-weight: 300;
+    color: white;
+    vertical-align: middle;
+}
+
+.CardBlock {
+    flex: 1 1 auto;
+    padding: 0.75rem;
+}
+
+.CardFooter {
+    background: #423229;
+    border-top: 1px solid #594336;
+}

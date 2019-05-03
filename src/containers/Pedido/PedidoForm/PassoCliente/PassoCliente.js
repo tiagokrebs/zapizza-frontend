@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import classes from './PassoCliente.module.css';
 import { Form } from 'react-bootstrap';
 import Select from '../../../../components/UI/Select/Select';
-import debounce from 'debounce-promise';
 
 class PassoCliente extends Component {
     getAsyncOptions = (inputValue) => {
@@ -80,7 +79,7 @@ class PassoCliente extends Component {
                             onKeyDown={this.selectOnKeyDown}
                             async
                             debouncedLoad
-                            wait={2000}
+                            wait={1000}
                             isInvalid={this.props.cliente.touched && this.props.cliente.invalid}
                             invalidFeedback={this.props.cliente.error}
                             />

@@ -186,14 +186,14 @@ class PassoPizzas extends Component {
                                 return null;
                             })
                         }
+                        {
+                            this.props.pizza.tamanho.touched && this.props.pizza.tamanho.invalid && (
+                                <div style={{display: 'block', marginTop: '.25rem', fontSize: '80%', color: '#dc3545'}}>
+                                    {this.props.pizza.tamanho.error}
+                                </div>
+                            )
+                        }
                     </div>
-                    {
-                        this.props.pizza.tamanho.touched && this.props.pizza.tamanho.invalid && (
-                            <div style={{display: 'block', marginTop: '.25rem', fontSize: '80%', color: '#dc3545'}}>
-                                {this.props.pizza.tamanho.error}
-                            </div>
-                        )
-                    }
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Sabores</Form.Label>

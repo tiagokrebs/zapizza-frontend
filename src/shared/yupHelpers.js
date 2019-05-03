@@ -14,9 +14,10 @@ export const yupLocale = {
 /**
  * Função cria objeto para validação Yup com base em modelo
  * de inputs Zapizza armazenados em state de formulários
- * 
+ *
  * todo: tornar método recursivo para objetos com N níveis
- * @param {*} inputs 
+ * todo: arrays em atributo value (select) não tem tratamento específico
+ * @param {*} inputs
  */
 export const inputsToValidation = (inputs) => {
     let values = {};
@@ -55,7 +56,7 @@ export const inputsToValidation = (inputs) => {
 /**
  * Função para reset das propriedades dos inputs para validação
  * atributos touched, invalid e error são alterados
- * 
+ *
  * todo: remover função updateObject, alterar para spread operator
  */
 export const inputsRestartValidity = (inputs) => {
