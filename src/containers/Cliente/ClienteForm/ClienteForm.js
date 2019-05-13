@@ -34,21 +34,21 @@ class ClienteForm extends Component {
         formIsValid: false,
         formSubmitSuceed: false
     }
-    
+
     addTelefone = () => {
         const novoTelefone = {
             hash_id: {value: '', invalid: false, error: '', touched: true},
             telefone: {value: '', invalid: false, error: '', touched: true},
             tipo: {value: '', invalid: false, error: '', touched: true}
         }
-        this.setState({...this.state, 
+        this.setState({...this.state,
             inputs: {
                 ...this.state.inputs,
                 telefones: [
                     ...this.state.inputs.telefones,
                     novoTelefone
                 ]
-        }});        
+        }});
     }
 
     remTelefone = (event) => {
@@ -75,7 +75,7 @@ class ClienteForm extends Component {
             cidade: {value: '', invalid: false, error: '', touched: true},
             estado: {value: '', invalid: false, error: '', touched: true}
         };
-        this.setState({...this.state, 
+        this.setState({...this.state,
             inputs: {
                 ...this.state.inputs,
                 enderecos: [
@@ -105,7 +105,7 @@ class ClienteForm extends Component {
                 if (item.hash_id === this.props.elementId) {
                     let updatedInputs;
                     let arrayObjects;
-                    
+
                     for (let key in this.state.inputs) {
 
                         if (Array.isArray(this.state.inputs[key])) {
@@ -161,7 +161,7 @@ class ClienteForm extends Component {
                             updatedInputs = updateObject(updatedInputs, {
                                 [key]: arrayObjects
                             });
-    
+
                         } else {
                             // Define valores dos inputs do formulario na raiz de state
                             let v;
@@ -172,7 +172,7 @@ class ClienteForm extends Component {
                             } else {
                                 v = item[key];
                             }
-                            
+
                             const updatedFormElement = updateObject(this.state.inputs[key], {
                                 value: v
                             });
@@ -182,7 +182,7 @@ class ClienteForm extends Component {
                             });
                         }
                     }
-                    
+
                     this.setState({inputs: updatedInputs});
                 }
             });
@@ -223,13 +223,13 @@ class ClienteForm extends Component {
             const updatedinputs = updateObject(this.state.inputs, {
                 [event.target.name]: updatedFormElement
             });
-        
+
             this.setState({inputs: updatedinputs});
         } else if (["telefone", "tipo"].includes(event.target.name)) {
             // handler para inputs dinamicos de telefone
             let telefones = [...this.state.inputs.telefones]
             telefones[event.target.id][event.target.name].value = event.target.value
-            this.setState({...this.state, 
+            this.setState({...this.state,
                 inputs: {
                     ...this.state.inputs,
                     telefones: telefones
@@ -238,7 +238,7 @@ class ClienteForm extends Component {
             // handler para inputs dinamicos de endereco
             let enderecos = [...this.state.inputs.enderecos]
             enderecos[event.target.id][event.target.name].value = event.target.value
-            this.setState({...this.state, 
+            this.setState({...this.state,
                 inputs: {
                     ...this.state.inputs,
                     enderecos: enderecos
@@ -258,7 +258,7 @@ class ClienteForm extends Component {
                         enderecos[data.targetId]['bairro'].value = data.bairro;
                         enderecos[data.targetId]['cidade'].value = data.localidade;
                         enderecos[data.targetId]['estado'].value = data.uf;
-                        this.setState({...this.state, 
+                        this.setState({...this.state,
                             inputs: {
                                 ...this.state.inputs,
                                 enderecos: enderecos
@@ -270,7 +270,7 @@ class ClienteForm extends Component {
                         enderecos[data.targetId]['bairro'].value = '';
                         enderecos[data.targetId]['cidade'].value = '';
                         enderecos[data.targetId]['estado'].value = '';
-                        this.setState({...this.state, 
+                        this.setState({...this.state,
                             inputs: {
                                 ...this.state.inputs,
                                 enderecos: enderecos
@@ -291,13 +291,13 @@ class ClienteForm extends Component {
             const updatedinputs = updateObject(this.state.inputs, {
                 [event.target.name]: updatedFormElement
             });
-        
+
             this.setState({inputs: updatedinputs});
         } else if (["telefone", "tipo"].includes(event.target.name)) {
             // handler para inputs dinamicos de telefone
             let telefones = [...this.state.inputs.telefones];
             telefones[event.target.id][event.target.name].touched = true;
-            this.setState({...this.state, 
+            this.setState({...this.state,
                 inputs: {
                     ...this.state.inputs,
                     telefones: telefones
@@ -306,7 +306,7 @@ class ClienteForm extends Component {
             // handler para inputs dinamicos de endereco
             let enderecos = [...this.state.inputs.enderecos];
             enderecos[event.target.id][event.target.name].touched = true;
-            this.setState({...this.state, 
+            this.setState({...this.state,
                 inputs: {
                     ...this.state.inputs,
                     enderecos: enderecos
@@ -412,7 +412,7 @@ class ClienteForm extends Component {
                         invalid: false,
                         error: null
                     });
-    
+
                     updatedInputs = updateObject(updatedInputs, {
                         [key]: updatedFormElement
                     });
@@ -451,7 +451,7 @@ class ClienteForm extends Component {
                         updatedinputs = updateObject(this.state.inputs, {
                             [key]: arrayObjects
                         });
-    
+
                     } else {
                         // define erros em atributos na raiz do state
                         updatedFormElement = updateObject(this.state.inputs[formElement.path], {
@@ -459,7 +459,7 @@ class ClienteForm extends Component {
                             invalid: true,
                             error: formElement.message
                         });
-    
+
                         updatedinputs = updateObject(this.state.inputs, {
                             [formElement.path]: updatedFormElement
                         });
@@ -549,7 +549,7 @@ class ClienteForm extends Component {
                                         arrayObject[msgIndex][key] = updatedFormElement;
                                         updatedInputs = updateObject(updatedInputs, {
                                             [error.field]: arrayObject
-                                        });     
+                                        });
                                     }
                                 }
                             }
@@ -594,7 +594,7 @@ class ClienteForm extends Component {
                                         arrayObject[msgIndex][key] = updatedFormElement;
                                         updatedInputs = updateObject(updatedInputs, {
                                             [error.field]: arrayObject
-                                        });     
+                                        });
                                     }
                                 }
                             }
@@ -603,7 +603,7 @@ class ClienteForm extends Component {
                         this.setState({ loading: false });
                     });
                 }
-            });        
+            });
     }
 
     render () {
@@ -632,19 +632,27 @@ class ClienteForm extends Component {
                                     </div>
                                 </Form.Group>
                                 <hr/>
-                                <TelefoneForm telefones={telefones} 
+                                <TelefoneForm telefones={telefones}
                                     inputChangeHandler={this.inputChangeHandler}
                                     inputBlurHandler={this.inputBlurHandler}
                                     addTelefone={this.addTelefone}
                                     remTelefone={this.remTelefone}
                                 />
                                 <hr/>
-                                <EnderecoForm enderecos={enderecos} 
-                                    inputChangeHandler={this.inputChangeHandler}
-                                    inputBlurHandler={this.inputBlurHandler}
-                                    addEndereco={this.addEndereco}
-                                    remEndereco={this.remEndereco}
-                                />
+                                {
+                                  enderecos.map((endereco, index) => {
+                                      return (
+                                        <EnderecoForm key={index}
+                                            endereco={endereco}
+                                            index={index}
+                                            inputChangeHandler={this.inputChangeHandler}
+                                            inputBlurHandler={this.inputBlurHandler}
+                                            addEndereco={this.addEndereco}
+                                            remEndereco={this.remEndereco}
+                                        />
+                                      )
+                                  })
+                                }
                             </div>
                         </div>
                     </div>
@@ -652,9 +660,9 @@ class ClienteForm extends Component {
                         <Button variant="secondary" onClick={this.props.modalClose}>
                             Cancelar
                         </Button>
-                        <Button 
-                            variant="success" 
-                            type="submit" 
+                        <Button
+                            variant="success"
+                            type="submit"
                             name="form.submitted"
                             className="pull-right">Gravar</Button>
                     </div>

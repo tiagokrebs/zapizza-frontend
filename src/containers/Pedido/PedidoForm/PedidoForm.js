@@ -57,7 +57,22 @@ class PedidoForm extends Component {
               value: 'E',
               invalid: false,
               error: '',
-              touched: false
+              touched: true
+            },
+            enderecoEntrega: {
+              value: '',
+              invalid: false,
+              error: '',
+              touched: true
+            },
+            novoEndereco: {
+              cep: {value: '', invalid: false, error: '', touched: true},
+              logradouro: {value: '', invalid: false, error: '', touched: true},
+              numero: {value: '', invalid: false, error: '', touched: true},
+              complemento: {value: '', invalid: false, error: '', touched: true},
+              bairro: {value: '', invalid: false, error: '', touched: true},
+              cidade: {value: '', invalid: false, error: '', touched: true},
+              estado: {value: '', invalid: false, error: '', touched: true}
             },
             obsEntrega: {
               value: '',
@@ -153,7 +168,7 @@ class PedidoForm extends Component {
     }
 
     inputChangeHandler = (event) => {
-        if (["adicionais", "tipoEntrega", "obsEntrega", "valorEntrega"].includes(event.target.name)) {
+        if (["adicionais", "tipoEntrega", "obsEntrega", "valorEntrega", "enderecoEntrega"].includes(event.target.name)) {
             // handler para inputs fixos
             const updatedFormElement = updateObject(this.state.inputs[event.target.name], {
                 value: event.target.value,
@@ -186,7 +201,7 @@ class PedidoForm extends Component {
     }
 
     inputBlurHandler = (event) => {
-        if (["cliente", "adicionais", "tipoEntrega", "obsEntrega", "valorEntrega"].includes(event.target.name)) {
+        if (["cliente", "adicionais", "tipoEntrega", "obsEntrega", "valorEntrega", "enderecoEntrega"].includes(event.target.name)) {
             // handler para inputs fixos
             const updatedFormElement = updateObject(this.state.inputs[event.target.name], {
                 touched: true
@@ -229,13 +244,15 @@ class PedidoForm extends Component {
                 }
 
                 let endereco = 'Não informado';
+                let endEntr = '';
                 if (cliente.enderecos.length > 0) {
                     const end = cliente.enderecos[0];
                     endereco = end.logradouro +
                         (end.numero ? ', ' + end.numero : '') +
                         (end.complemento ? ', ' + end.complemento : '') +
                         (end.bairro ? ', ' + end.bairro : '') +
-                        (end.cidade ? ', ' + end.cidade : '')
+                        (end.cidade ? ', ' + end.cidade : '');
+                    endEntr = end.hash_id;
                 }
 
                 this.setState({
@@ -246,6 +263,10 @@ class PedidoForm extends Component {
                             value: cliente.hash_id,
                             invalid: false,
                             error: '',
+                        },
+                        enderecoEntrega: {
+                          ...this.state.inputs.enderecoEntrega,
+                          value: endEntr
                         }
                     },
                     selectedClienteData: {
@@ -253,7 +274,7 @@ class PedidoForm extends Component {
                         telefone: telefone,
                         endereco: endereco,
                         enderecos: cliente.enderecos
-                    },
+                    }
                 });
             })
     }
@@ -306,9 +327,12 @@ class PedidoForm extends Component {
               // PassoEntrega
               schema = yup.object().shape({
                 tipoEntrega: yup.string().oneOf(["E", "B"]).required(),
+                enderecoEntrega: yup.string().required(),
                 obsEntrega: yup.string(),
                 valorEntrega: yup.string()
               });
+            } else if (passo === 4) {
+              // Passopagamento
             }
 
             // cria objeto com base em state para validação)
@@ -386,7 +410,9 @@ class PedidoForm extends Component {
               tipoEntrega={this.state.inputs.tipoEntrega}
               obsEntrega={this.state.inputs.obsEntrega}
               valorEntrega={this.state.inputs.valorEntrega}
+              enderecoEntrega={this.state.inputs.enderecoEntrega}
               selectedClienteData={this.state.selectedClienteData}
+              novoEndereco={this.state.inputs.novoEndereco}
               inputChangeHandler={this.inputChangeHandler}
               inputBlurHandler={this.inputBlurHandler}
               formIsValid={this.checkFormIsValid}
