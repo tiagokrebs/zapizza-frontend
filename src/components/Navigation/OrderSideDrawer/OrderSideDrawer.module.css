@@ -1,5 +1,6 @@
 .OrderSideDrawer {
-    width: 450px;
+    /* width: 450px; */
+    width: 900px;
     top: 0;
     display: block;
     min-height: 100%;
@@ -7,7 +8,7 @@
     z-index: 9;
     transition: 0.5s ease all;
     padding-top: 65px;
-    background: #291f19;
+    /* background: #291f19; */
     /* background: #ffffff; */
     position: fixed;
     overflow-y: auto;

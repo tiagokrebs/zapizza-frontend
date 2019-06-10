@@ -3,7 +3,7 @@ import React from 'react';
 import classes from './OrderSideDrawer.module.css';
 
 import Backdrop from '../../UI/Backdrop/Backdrop';
-import HocAux from '../../../hoc/HocAux/HocAux';
+import HocAux from '../../../hoc/hocAux/hocAux';
 import PedidoForm from '../../../containers/Pedido/PedidoForm/PedidoForm';
 import ScrollBar from '../../UI/ScrollBar/ScrollBar';
 
@@ -26,9 +26,7 @@ const orderSideDrawer = ( props ) => {
                       <div className="container">
                           <div className="row">
                               <div className="col-sm-12">
-                                  <div className={`card ${classes.Card}`}>
-                                        <PedidoForm />
-                                  </div>
+                                    {props.open ? <PedidoForm /> : null}
                               </div>
                           </div>
                       </div>

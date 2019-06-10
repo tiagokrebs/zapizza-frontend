@@ -1,0 +1,25 @@
+.Root {
+    width: 100%;
+}
+
+.Button {
+    margin-bottom: 20px;
+    margin-right: 8px;
+}
+
+button:focus {
+    outline: 0px;
+}
+
+.ActionContainer {
+      margin-bottom: 16px;
+}
+
+.ResetContainer {
+      padding: 24px;
+}
+
+.Instructions {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}

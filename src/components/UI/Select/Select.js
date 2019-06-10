@@ -66,7 +66,7 @@ const select = (props) => {
     if (!props.debouncedLoad) {
         loadOptions = props.loadOptions
     } else {
-      /* Leading não tem compoentamento esperado em componentes controlados,
+      /* Leading não tem comportamento esperado em componentes controlados,
       *  como o componente está dentro de um wrapper a cada renderização uma
       *  nova função é instancidada e todo novo caracter inserido acaba sendo
       *  o "primeiro" (o que dispara a função leading).
@@ -109,6 +109,8 @@ const select = (props) => {
                     hideSelectedOptions={props.hideSelectedOptions}
                     tabSelectsValue={false}
                     isOptionSelected={props.isOptionSelected}
+                    getOptionValue={props.getOptionValue} 
+                    getOptionLabel={props.getOptionLabel}
                   />
                 {inputError}
             </div>
@@ -138,6 +140,8 @@ const select = (props) => {
                     hideSelectedOptions={props.hideSelectedOptions}
                     tabSelectsValue={false}
                     isOptionSelected={props.isOptionSelected}
+                    getOptionValue={props.getOptionValue} 
+                    getOptionLabel={props.getOptionLabel}
                   />
                 {inputError}
             </div>

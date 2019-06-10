@@ -6,12 +6,7 @@ import * as masks from '../../../../shared/inputMasks';
 
 const enderecoForm = (props) => {
   return (
-      <div id={`Endereco${props.index}`}>
-          <div style={{textAlign: 'center', display: 'flex'}}>
-              <span>Endereço #{props.index+1}</span>
-              <span><i className="fas fa-plus-circle" style={{marginLeft: '10px'}} onClick={props.addEndereco}></i></span>
-              <span><i className="fas fa-trash-alt" style={{marginLeft: '10px'}} onClick={props.remEndereco} id={props.index}></i></span>
-          </div>
+      <div>
           <Form.Group className="row">
               <div className="col-lg-3 col-md-3">
                   <Form.Label>CEP</Form.Label>
@@ -20,11 +15,12 @@ const enderecoForm = (props) => {
                       guide={false}
                       type="text"
                       name="cep"
-                      id={props.index}
+                      id={[props.index]}
                       value={props.endereco.cep.value}
                       onChange={props.inputChangeHandler}
                       onBlur={props.inputBlurHandler}
                       isInvalid={props.endereco.cep.touched && props.endereco.cep.invalid}
+                      size={props.size}
                       render={(ref, props) => (
                           <Form.Control ref={ref} {...props} />
                       )}
@@ -38,11 +34,12 @@ const enderecoForm = (props) => {
                   <Form.Control
                       type="text"
                       name="logradouro"
-                      id={props.index}
+                      id={[props.index]}
                       value={props.endereco.logradouro.value}
                       onChange={props.inputChangeHandler}
                       onBlur={props.inputBlurHandler}
                       isInvalid={props.endereco.logradouro.touched && props.endereco.logradouro.invalid}
+                      size={props.size}
                   />
                   <FormControl.Feedback type="invalid">
                       {props.endereco.logradouro.error}
@@ -55,11 +52,12 @@ const enderecoForm = (props) => {
                   <Form.Control
                       type="text"
                       name="numero"
-                      id={props.index}
+                      id={[props.index]}
                       value={props.endereco.numero.value}
                       onChange={props.inputChangeHandler}
                       onBlur={props.inputBlurHandler}
                       isInvalid={props.endereco.numero.touched && props.endereco.numero.invalid}
+                      size={props.size}
                   />
                   <FormControl.Feedback type="invalid">
                       {props.endereco.numero.error}
@@ -70,11 +68,12 @@ const enderecoForm = (props) => {
                   <Form.Control
                       type="text"
                       name="complemento"
-                      id={props.index}
+                      id={[props.index]}
                       value={props.endereco.complemento.value}
                       onChange={props.inputChangeHandler}
                       onBlur={props.inputBlurHandler}
                       isInvalid={props.endereco.complemento.touched && props.endereco.complemento.invalid}
+                      size={props.size}
                   />
                   <FormControl.Feedback type="invalid">
                       {props.endereco.complemento.error}
@@ -85,11 +84,12 @@ const enderecoForm = (props) => {
                   <Form.Control
                       type="text"
                       name="bairro"
-                      id={props.index}
+                      id={[props.index]}
                       value={props.endereco.bairro.value}
                       onChange={props.inputChangeHandler}
                       onBlur={props.inputBlurHandler}
                       isInvalid={props.endereco.bairro.touched && props.endereco.bairro.invalid}
+                      size={props.size}
                   />
                   <FormControl.Feedback type="invalid">
                       {props.endereco.bairro.error}
@@ -102,11 +102,12 @@ const enderecoForm = (props) => {
                   <Form.Control
                       type="text"
                       name="cidade"
-                      id={props.index}
+                      id={[props.index]}
                       value={props.endereco.cidade.value}
                       onChange={props.inputChangeHandler}
                       onBlur={props.inputBlurHandler}
                       isInvalid={props.endereco.cidade.touched && props.endereco.cidade.invalid}
+                      size={props.size}
                   />
                   <FormControl.Feedback type="invalid">
                       {props.endereco.cidade.error}
@@ -117,11 +118,12 @@ const enderecoForm = (props) => {
                   <Form.Control
                       type="text"
                       name="estado"
-                      id={props.index}
+                      id={[props.index]}
                       value={props.endereco.estado.value}
                       onChange={props.inputChangeHandler}
                       onBlur={props.inputBlurHandler}
                       isInvalid={props.endereco.estado.touched && props.endereco.estado.invalid}
+                      size={props.size}
                   />
                   <FormControl.Feedback type="invalid">
                       {props.endereco.estado.error}

@@ -2,99 +2,150 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Form } from 'react-bootstrap';
-// import classes from './PedidoForm.module.css';
+import classes from './PedidoForm.module.css';
 import updateObject from '../../../shared/updateObject';
 import * as actions from '../../../store/actions/';
 import { conformToMask } from 'react-text-mask';
 import * as masks from '../../../shared/inputMasks';
-import VerticalStepper from '../../../components/UI/VerticalStepper/VerticalStepper';
+// import VerticalStepper from '../../../components/UI/VerticalStepper/VerticalStepper';
+import HorizontalStepper from '../../../components/UI/HorizontalStepper/HorizontalStepper';
 import PassoCliente from './PassoCliente/PassoCliente';
 import PassoPizzas from './PassoPizzas/PassoPizzas';
 import PassoAdicionais from './PassoAdicionais/PassoAdicionais';
 import PassoEntrega from './PassoEntrega/PassoEntrega';
+import PedidoResumo from './PedidoResumo/PedidoRemumo';
 import * as yup from 'yup';
 import { yupLocale, inputsToValidation, inputsRestartValidity, inputsDefineErrors } from '../../../shared/yupHelpers';
 
 class PedidoForm extends Component {
-    state = {
-        loading: false,
-        inputs: {
-            cliente: {
-                value: '',
-                invalid: false,
-                error: '',
-                touched: false
-            },
-            pizzas: [
-                {
-                    tamanho: {
-                        value: '',
-                        invalid: false,
-                        error: '',
-                        touched: false
-                    },
-                    sabores: {
-                        value: [],
-                        invalid: false,
-                        error: '',
-                        touched: false
-                    },
-                    bordas: {
-                        value: [],
-                        invalid: false,
-                        error: '',
-                        touched: false
+    getInitialState = () => {
+        const initialState = {
+            loading: false,
+            inputs: {
+                cliente: {
+                    value: '',
+                    invalid: false,
+                    error: '',
+                    touched: false
+                },
+                pizzas: [
+                    {
+                        tamanho: {
+                            value: '',
+                            invalid: false,
+                            error: '',
+                            touched: false
+                        },
+                        sabores: {
+                            value: [],
+                            invalid: false,
+                            error: '',
+                            touched: false
+                        },
+                        bordas: {
+                            value: [],
+                            invalid: false,
+                            error: '',
+                            touched: false
+                        }
                     }
+                ],
+                adicionais: {
+                    value: [],
+                    invalid: false,
+                    error: '',
+                    touched: false
+                },
+                tipoEntrega: {
+                  value: 'E',
+                  invalid: false,
+                  error: '',
+                  touched: true
+                },
+                enderecoEntrega: {
+                  value: '',
+                  invalid: false,
+                  error: '',
+                  touched: true
+                },
+                cep: {
+                    value: '', 
+                    invalid: false, 
+                    error: '', 
+                    touched: true
+                },
+                logradouro: {
+                    value: '', 
+                    invalid: false, 
+                    error: '', 
+                    touched: true
+                },
+                numero: {
+                    value: '', 
+                    invalid: false, 
+                    error: '', 
+                    touched: true
+                },
+                complemento: {
+                    value: '', 
+                    invalid: false, 
+                    error: '', 
+                    touched: true
+                },
+                bairro: {
+                    value: '', 
+                    invalid: false, 
+                    error: '', 
+                    touched: true
+                },
+                cidade: {
+                    value: '', 
+                    invalid: false, 
+                    error: '', 
+                    touched: true
+                },
+                estado: {
+                    value: '', 
+                    invalid: false, 
+                    error: '', 
+                    touched: true
+                },
+                obsEntrega: {
+                  value: '',
+                  invalid: false,
+                  error: '',
+                  touched: false
+                },
+                valorEntrega: {
+                  value: '',
+                  invalid: false,
+                  error: '',
+                  touched: false
                 }
-            ],
-            adicionais: {
-                value: [],
-                invalid: false,
-                error: '',
-                touched: false
             },
-            tipoEntrega: {
-              value: 'E',
-              invalid: false,
-              error: '',
-              touched: true
+            selectedClienteData: {
+                nome: '',
+                telefone: '',
+                endereco: '', // endereço primário para exibição no card de seleção
+                enderecos: [] // outros endereços para escolha no PassoEntrega
             },
-            enderecoEntrega: {
-              value: '',
-              invalid: false,
-              error: '',
-              touched: true
-            },
-            novoEndereco: {
-              cep: {value: '', invalid: false, error: '', touched: true},
-              logradouro: {value: '', invalid: false, error: '', touched: true},
-              numero: {value: '', invalid: false, error: '', touched: true},
-              complemento: {value: '', invalid: false, error: '', touched: true},
-              bairro: {value: '', invalid: false, error: '', touched: true},
-              cidade: {value: '', invalid: false, error: '', touched: true},
-              estado: {value: '', invalid: false, error: '', touched: true}
-            },
-            obsEntrega: {
-              value: '',
-              invalid: false,
-              error: '',
-              touched: false
-            },
-            valorEntrega: {
-              value: '',
-              invalid: false,
-              error: '',
-              touched: false
-            }
-        },
-        selectedClienteData: {
-            nome: '',
-            telefone: '',
-            endereco: '', // endereço primário para exibição no card de seleção
-            enderecos: [] // outros endereços para escolha no PassoEntrega
-        },
-        formIsValid: false,
-        formSubmitSuceed: false
+            allStepsCompleted: false,
+            formIsValid: false,
+            formSubmitSuceed: false
+        }
+
+        return initialState;
+    }
+
+    resetState = () => {
+        this.setState(this.getInitialState());
+    }
+
+    // state é definido e constante para utilizar função resetState
+    state = this.getInitialState();
+
+    completeSteps = () => {
+        this.setState({allStepsCompleted: true});
     }
 
     addPizza = () => {
@@ -279,6 +330,9 @@ class PedidoForm extends Component {
             })
     }
 
+    // todo: formas de revisar o pedido e totais durante e após finalização para confirmação final
+    // todo: scrool top 0 ao mudar de passo e ao finaizar
+
     checkFormIsValid = (passo) => {
         /**
          * Validação parcial ou total do formulário de acordo com parâmetro
@@ -298,41 +352,50 @@ class PedidoForm extends Component {
                 value: yup.string().required()
             });
 
-            // cria schema com base em passo
-            let schema;
-            if (passo === 0) {
-              // PassoCliente
-                schema = yup.object().shape({
-                    cliente: yup.string().required()
-                });
-            } else if (passo === 1) {
-              // PassoPizzas
-                const schemaPizza = yup.object().shape({
-                    tamanho: yup.string().required(),
-                    sabores: yup
-                      .array().of(selectSchema).required(),
-                    bordas: yup
-                      .array().of(selectSchema)
-                });
-
-                schema = yup.object().shape({
-                    pizzas: yup.array().of(schemaPizza)
-                });
-            } else if (passo === 2) {
-              // PassoAdicionais
-              schema = yup.object().shape({
-                  adicionais: yup.array().of(selectSchema)
-              });
-            } else if (passo === 3) {
-              // PassoEntrega
-              schema = yup.object().shape({
+            // schemas dos passos
+            const shapeCliente = {
+                cliente: yup.string().required()
+            }
+            const schemaPizza = yup.object().shape({
+                tamanho: yup.string().required(),
+                sabores: yup.array().of(selectSchema).required(),
+                bordas: yup.array().of(selectSchema)
+            });
+            const shapePizzas = {
+                pizzas: yup.array().of(schemaPizza)
+            };
+            const shapeAdicionais = {
+                adicionais: yup.array().of(selectSchema)
+            };
+            const shapeEntrega = {
                 tipoEntrega: yup.string().oneOf(["E", "B"]).required(),
                 enderecoEntrega: yup.string().required(),
                 obsEntrega: yup.string(),
                 valorEntrega: yup.string()
+            }
+
+            // cria schema com base em passo
+            let schema;
+            if (passo === 0) {
+                // PassoCliente
+                schema = yup.object().shape(shapeCliente);
+            } else if (passo === 1) {
+                // PassoPizzas
+                schema = yup.object().shape(shapePizzas);
+            } else if (passo === 2) {
+              // PassoAdicionais
+              schema = yup.object().shape(shapeAdicionais);
+            } else if (passo === 3) {
+              // PassoEntrega
+              schema = yup.object().shape(shapeEntrega);
+            } else {
+              // todos os passos
+              schema = yup.object().shape({
+                  ...shapeCliente,
+                  ...shapePizzas,
+                  ...shapeAdicionais,
+                  ...shapeEntrega
               });
-            } else if (passo === 4) {
-              // Passopagamento
             }
 
             // cria objeto com base em state para validação)
@@ -371,11 +434,11 @@ class PedidoForm extends Component {
 
     render () {
         /**
-         * Hmm... as variaveis criadas para o stepper precisam seguir a mesma orderm em todos os arrays
+         * Hmm... as variaveis criadas para o stepper precisam seguir a mesma ordem em todos os arrays
          * todo: criar um array de objetos contendo as propriedades a seguir
          * todo: ajustar componente VerticalStepper para receber o novo array de objetos
          */
-        const steps = ['Cliente', 'Pizzas', 'Adicionais', 'Entrega', 'Pagamento'];
+        const steps = ['Cliente', 'Pizzas', 'Adicionais', 'Entrega'];
         const stepsContent = [
             <PassoCliente
                 cliente={this.state.inputs.cliente}
@@ -407,34 +470,54 @@ class PedidoForm extends Component {
               remAdicional={this.remAdicional}
               />,
             <PassoEntrega
-              tipoEntrega={this.state.inputs.tipoEntrega}
-              obsEntrega={this.state.inputs.obsEntrega}
-              valorEntrega={this.state.inputs.valorEntrega}
-              enderecoEntrega={this.state.inputs.enderecoEntrega}
-              selectedClienteData={this.state.selectedClienteData}
-              novoEndereco={this.state.inputs.novoEndereco}
-              inputChangeHandler={this.inputChangeHandler}
-              inputBlurHandler={this.inputBlurHandler}
-              formIsValid={this.checkFormIsValid}
-            />,
-            'Forma de pagamento'
+                tipoEntrega={this.state.inputs.tipoEntrega}
+                obsEntrega={this.state.inputs.obsEntrega}
+                valorEntrega={this.state.inputs.valorEntrega}
+                enderecoEntrega={this.state.inputs.enderecoEntrega}
+                selectedClienteData={this.state.selectedClienteData}
+                inputChangeHandler={this.inputChangeHandler}
+                inputBlurHandler={this.inputBlurHandler}
+                formIsValid={this.checkFormIsValid}
+            />
         ];
         const stepsValidation = [
-            this.checkFormIsValid,
             this.checkFormIsValid,
             this.checkFormIsValid,
             this.checkFormIsValid,
             this.checkFormIsValid
         ];
         const optionalSteps = [2];
+        const allCompleteStep = <PedidoResumo />;
 
         return (
-            <Form noValidate onSubmit={this.submitHandler}>
-                <VerticalStepper
-                    steps={steps}
-                    stepsContent={stepsContent}
-                    stepsValidation={stepsValidation}
-                    optionalSteps={optionalSteps}/>
+            <Form noValidate onSubmit={this.submitHandler} className={classes.PedidoForm}>
+                <div className="row">
+                    <div className="col-sm-6">
+                        <div className={`card ${classes.Card}`}>
+                            <div className={`card-header ${classes.CardHeader}`}>
+                                <h6 className={`card-title ${classes.CardTitle}`}>Monte o pedido</h6>
+                                <small>Siga os passos</small>
+                            </div>
+                            <div className={`card-block ${classes.CardBlock}`}>
+                                <HorizontalStepper
+                                    steps={steps}
+                                    stepsContent={stepsContent}
+                                    stepsValidation={stepsValidation}
+                                    optionalSteps={optionalSteps}
+                                    parentCompleteSteps={this.completeSteps} />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-sm-6">
+                        <PedidoResumo />
+                    </div>
+                </div>
+                {/* {
+                    !this.state.allStepsCompleted ? null : (
+                        <PedidoResumo />
+                    )
+                } */}
+                {/* <PedidoResumo /> */}
             </Form>
         );
     }

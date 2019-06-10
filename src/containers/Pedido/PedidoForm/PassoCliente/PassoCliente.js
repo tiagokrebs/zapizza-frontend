@@ -105,6 +105,8 @@ class PassoCliente extends Component {
                         </div>) : null
                     }
                 </Form.Group>
+                <hr/>
+                {this.props.stepDefultButtons}
             </div>
         );
     }

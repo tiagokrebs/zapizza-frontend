@@ -642,14 +642,20 @@ class ClienteForm extends Component {
                                 {
                                   enderecos.map((endereco, index) => {
                                       return (
-                                        <EnderecoForm key={index}
-                                            endereco={endereco}
-                                            index={index}
-                                            inputChangeHandler={this.inputChangeHandler}
-                                            inputBlurHandler={this.inputBlurHandler}
-                                            addEndereco={this.addEndereco}
-                                            remEndereco={this.remEndereco}
-                                        />
+                                        <div key={index} id={`Endereco${index}`}>
+                                            <div style={{textAlign: 'center', display: 'flex'}}>
+                                                <span>Endereço #{index+1}</span>
+                                                <span><i className="fas fa-plus-circle" style={{marginLeft: '10px'}} onClick={this.addEndereco}></i></span>
+                                                <span><i className="fas fa-trash-alt" style={{marginLeft: '10px'}} onClick={this.remEndereco} id={index}></i></span>
+                                            </div>
+                                            <EnderecoForm
+                                                endereco={endereco}
+                                                index={index}
+                                                inputChangeHandler={this.inputChangeHandler}
+                                                inputBlurHandler={this.inputBlurHandler}
+                                                size="md"
+                                            />
+                                        </div>
                                       )
                                   })
                                 }

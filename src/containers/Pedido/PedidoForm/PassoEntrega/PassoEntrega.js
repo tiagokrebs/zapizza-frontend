@@ -46,84 +46,56 @@ class PassoEntrega extends Component {
   }
 
   render () {
-    let enderecos;
-    let outroEndereco;
-    if (this.props.tipoEntrega.value === "E") {
-      enderecos = this.props.selectedClienteData.enderecos.map((endereco, index) => {
-          return (
-            <FormCheck
-              key={index}
-              custom
+    const enderecos = this.props.selectedClienteData.enderecos.map((endereco, index) => {
+      return (
+        <FormCheck
+          key={index}
+          custom
+          type="radio"
+          label={`Endereço #${index}`}
+          name="enderecoEntrega"
+          id={`enderecoEntrega${index}`}
+        >
+          <span>
+            <FormCheck.Input
               type="radio"
-              label={`Endereço #${index}`}
               name="enderecoEntrega"
               id={`enderecoEntrega${index}`}
-            >
-              <span>
-                <FormCheck.Input
-                  type="radio"
-                  name="enderecoEntrega"
-                  id={`enderecoEntrega${index}`}
-                  checked={this.props.enderecoEntrega.value === endereco.hash_id}
-                  onChange={this.props.inputChangeHandler}
-                  value={endereco.hash_id}
-                  tabIndex="-1"
-                />
-                <FormCheck.Label><strong>{`Endereço #${index}`}</strong></FormCheck.Label>
-                {
-                  this.props.enderecoEntrega.value !== "outro" ?
-                  <div className={`card ${classes.Card}`}>
-                      <div className={`card-block ${classes.CardBlock}`}>
-                          <div style={{color: '#316293', textAlign: 'center'}}>
-                            <small>
-                              {
-                                endereco.logradouro +
-                                  (endereco.numero ? ', ' + endereco.numero : '') +
-                                  (endereco.complemento ? ', ' + endereco.complemento : '') +
-                                  (endereco.bairro ? ', ' + endereco.bairro : '') +
-                                  (endereco.cidade ? ', ' + endereco.cidade : '')
-                                }
-                            </small>
-                          </div>
+              checked={this.props.enderecoEntrega.value === endereco.hash_id}
+              onChange={this.props.inputChangeHandler}
+              value={endereco.hash_id}
+              tabIndex="-1"
+            />
+            <FormCheck.Label>
+              <div style={{textAlign: 'center', display: 'flex'}}>
+                  <span>Endereço #{index+1}</span>
+              </div>
+            </FormCheck.Label>
+            <span><i className="fas fa-plus-circle" style={{marginLeft: '10px'}} onClick={() => console.log('Click novo endereço')}></i></span>
+            <span><i className="fas fa-trash-alt" style={{marginLeft: '10px'}} onClick={() => console.log('Click remove endereço')} id={index}></i></span>
+            {
+              this.props.enderecoEntrega.value !== "outro" ?
+              <div className={`card ${classes.Card}`}>
+                  <div className={`card-block ${classes.CardBlock}`}>
+                      <div style={{color: '#316293', textAlign: 'center'}}>
+                        <small>
+                          {
+                            endereco.logradouro +
+                              (endereco.numero ? ', ' + endereco.numero : '') +
+                              (endereco.complemento ? ', ' + endereco.complemento : '') +
+                              (endereco.bairro ? ', ' + endereco.bairro : '') +
+                              (endereco.cidade ? ', ' + endereco.cidade : '')
+                            }
+                        </small>
                       </div>
-                  </div> : null
-                }
-              </span>
-            </FormCheck>
-          )
-        });
-
-        outroEndereco = (
-          <FormCheck
-            custom
-            type="radio"
-            label="Endereço #outro"
-            name="enderecoEntrega"
-            id="enderecoEntregaoutro"
-          >
-            <span>
-              <FormCheck.Input
-                type="radio"
-                name="enderecoEntrega"
-                id="enderecoEntregaoutro"
-                checked={this.props.enderecoEntrega.value === "outro"}
-                onChange={this.props.inputChangeHandler}
-                value="outro"
-                tabIndex="-1"
-              />
-            <FormCheck.Label><strong>Outro</strong></FormCheck.Label>
-                <EnderecoForm
-                  endereco={this.props.novoEndereco}
-                  index={0}
-                  inputChangeHandler={this.props.inputChangeHandler}
-                  inputBlurHandler={this.props.inputBlurHandler}
-                  addEndereco={() => console.log('add endereco')}
-                  remEndereco={() => console.log('rem endereco')}
-                />
-            </span>
-          </FormCheck>
-        );
-    }
+                  </div>
+              </div> 
+              : null
+            }
+          </span>
+        </FormCheck>
+      )
+    });
 
     return (
       <div className={`col-sm-12 ${classes.PassoEntrega}`}>
@@ -169,27 +141,27 @@ class PassoEntrega extends Component {
                 }
               </div>
           </Form.Group>
-          <Form.Group className="row">
-            <div
-              className="col-lg-12 col-md-12"
-              onBlur={this.props.inputBlurHandler}
-              name="enderecoEntrega"
-            >
-              {enderecos}
-              {outroEndereco}
-              {
-                this.props.enderecoEntrega.touched && this.props.enderecoEntrega.invalid && (
-                    <div style={{display: 'block', marginTop: '.25rem', fontSize: '80%', color: '#dc3545'}}>
-                        {this.props.enderecoEntrega.error}
-                    </div>
-                )
-              }
-            </div>
-
-// todo: ajustar bootstrap grid para enderecoForm dentro doside drawer do pedido
-
-
-        </Form.Group>
+          {/* lista de endereços quando entrega tipo E */}
+          {
+            this.props.tipoEntrega.value === "E" ? (
+              <Form.Group className="row">
+                <div
+                  className="col-lg-12 col-md-12"
+                  onBlur={this.props.inputBlurHandler}
+                  name="enderecoEntrega"
+                >
+                  {enderecos}
+                  {
+                    this.props.enderecoEntrega.touched && this.props.enderecoEntrega.invalid && (
+                        <div style={{display: 'block', marginTop: '.25rem', fontSize: '80%', color: '#dc3545'}}>
+                            {this.props.enderecoEntrega.error}
+                        </div>
+                    )
+                  }
+                </div>
+              </Form.Group>
+            ) : null
+          }
           <Form.Group className="row">
             <div className="col-lg-12 col-md-12">
               <Form.Label>Observações</Form.Label>
@@ -217,6 +189,7 @@ class PassoEntrega extends Component {
                         type="text"
                         name="valorEntrega"
                         value={this.props.valorEntrega.value}
+                        placeholder="Informe o valor da entrega"
                         onChange={this.props.inputChangeHandler}
                         onBlur={this.props.inputBlurHandler}
                         onKeyDown={this.inputKeyDownHandler}
@@ -230,6 +203,8 @@ class PassoEntrega extends Component {
                     </FormControl.Feedback>
             </div>
           </Form.Group>
+          <hr/>
+          {this.props.stepDefultButtons}
       </div>
     );
   }

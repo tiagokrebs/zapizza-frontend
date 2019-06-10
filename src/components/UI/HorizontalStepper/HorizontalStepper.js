@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepContent from '@material-ui/core/StepContent';
-import classes from './VerticalStepper.module.css';
+import classes from './HorizontalStepper.module.css';
 import StepButton from '@material-ui/core/StepButton';
 
 import { Button } from 'react-bootstrap';
@@ -21,7 +21,7 @@ import { Button } from 'react-bootstrap';
 * renderização.
 */
 
-class VerticalStepper extends Component {
+class HorizontalStepper extends Component {
     state = {
         activeStep: 0,
         completed: new Set(),
@@ -110,6 +110,9 @@ class VerticalStepper extends Component {
           if (completed.size !== this.totalSteps() - this.skippedSteps()) {
               this.handleNext();
           } else {
+            if (this.props.parentCompleteSteps) {
+              this.props.parentCompleteSteps();
+            }
             this.handleFinish();
           }
         });
@@ -159,18 +162,46 @@ class VerticalStepper extends Component {
         const stepsContent = this.props.stepsContent;
         const { activeStep } = this.state
 
+        const stepDefultButtons = (
+          <div className={classes.ActionsContainer}>
+            {
+              activeStep !== steps.length && (
+                  <Button
+                  variant="outline-secondary"
+                  onClick={this.handleComplete}
+                  className={classes.Button}
+                  size="sm"
+                  >
+                  {
+                    this.isLastStep() || this.allStepsCompleted() ? "Concluir" : "Próximo"
+                  }
+                  </Button>
+              )
+            }
+            {
+              this.isStepOptional(activeStep) &&
+                !this.state.completed.has(this.state.activeStep) && (
+                <Button
+                    variant="outline-secondary"
+                    onClick={this.handleSkip}
+                    className={classes.Button}
+                    size="sm"
+                >
+                    Pular
+                </Button>)
+            }
+            </div>
+        );
+
         // todo: aplicar conceito de tema para Material UI. Útil para projeto posterior
 
         return (
             <div className={classes.Root}>
-                <Stepper nonLinear activeStep={activeStep} orientation="vertical">
+                <Stepper nonLinear alternativeLabel activeStep={activeStep}>
                 {
                   steps.map((label, index) => {
                     const props = {};
                     const buttonProps = {};
-                    // if (this.isStepOptional(index)) {
-                    //   buttonProps.optional = <p variant="caption">Optional</p>;
-                    // }
                     if (this.isStepSkipped(index)) {
                       props.completed = false;
                     }
@@ -183,67 +214,37 @@ class VerticalStepper extends Component {
                         >
                           {label}
                         </StepButton>
-                        <StepContent>
-                          {
-                            // Componente recebido em lista precisa ser clonado para passagem de props do parent
-                            React.isValidElement(stepsContent[index]) ?
-                              React.cloneElement(stepsContent[index], {handleComplete: this.handleComplete}) :
-                              stepsContent[index]
-                          }
-                          <div className={classes.ActionsContainer}>
-                            <div className="col-lg-12 col-md-12">
-                            {this.isStepOptional(activeStep) &&
-                              !this.state.completed.has(this.state.activeStep) && (
-                                <Button
-                                  variant="outline-secondary"
-                                  onClick={this.handleSkip}
-                                  className={classes.Button}
-                                  size="sm"
-                                  style={{float: 'right'}}
-                                >
-                                  Pular
-                                </Button>
-                              )}
-                              {activeStep !== steps.length &&
-                                (
-                                  <Button
-                                    style={{float: 'right'}}
-                                    variant="outline-secondary"
-                                    onClick={this.handleComplete}
-                                    className={classes.Button}
-                                    size="sm"
-                                  >
-                                    {this.isLastStep() ? "Concluir" : "Próximo"}
-                                  </Button>
-                                )}
-                            </div>
-                          </div>
-                      </StepContent>
                       </Step>
                     );
                   })
                 }
                 </Stepper>
-                {
-                  this.allStepsCompleted() && (
-                    <div className={classes.ResetContainer}>
-                        <Button onClick={this.handleReset} className={classes.Button} size="sm">
-                          Recomeçar
-                        </Button>
-                        <Button 
-                          type="submit" 
-                          name="form.submitted"
-                          className={classes.Button} 
-                          size="sm"
-                        >
-                          Finalizar
-                        </Button>
+                <div>
+                    {
+                    // Componente recebido em lista precisa ser clonado para passagem de props do parent
+                    React.isValidElement(stepsContent[activeStep]) ?
+                        React.cloneElement(stepsContent[activeStep], {
+                          handleComplete: this.handleComplete,
+                          stepDefultButtons: stepDefultButtons
+                        }) : stepsContent[activeStep]
+                    }
+                    
+                </div>
+                {/* {
+                  this.allStepsCompleted() ? (
+                    <div>
+                        {
+                          // Componente recebido em lista precisa ser clonado para passagem de props do parent
+                          React.cloneElement(this.props.allCompleteStep, {
+                            handleReset: this.handleReset
+                          })
+                        }
                     </div>
-                  )
-                }
+                  ) : null
+                } */}
             </div>
         );
     }
 }
 
-export default VerticalStepper;
+export default HorizontalStepper;

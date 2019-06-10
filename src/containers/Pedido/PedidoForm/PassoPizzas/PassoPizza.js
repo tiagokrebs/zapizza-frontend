@@ -149,7 +149,6 @@ class PassoPizzas extends Component {
 
         return (
             <div className={`col-lg-12 col-md-12 ${classes.PassoPizzas}`}>
-                <hr/>
                 {label}
                 <Form.Label>Tamanho</Form.Label>
                 <Form.Group className="row">
@@ -178,7 +177,8 @@ class PassoPizzas extends Component {
                                                 id={this.props.pizzaId}
                                                 onClick={this.onTamanhoClick(tamanho.hash_id)}
                                             >
-                                                {tamanho.sigla.toUpperCase()}
+                                                {/* {tamanho.sigla.toUpperCase()} */}
+                                                {tamanho.descricao}
                                             </Button>
                                         </OverlayTrigger>
                                     )
@@ -226,6 +226,8 @@ class PassoPizzas extends Component {
                         invalidFeedback={this.props.pizza.bordas.error}
                     />
                 </Form.Group>
+                <hr/>
+                {this.props.stepDefultButtons}
             </div>
         );
     }

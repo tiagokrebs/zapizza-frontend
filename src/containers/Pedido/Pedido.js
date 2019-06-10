@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import classes from './Pedido.module.css';
-import HocAux from '../../hoc/HocAux/HocAux';
+import HocAux from '../../hoc/hocAux/hocAux';
 // import { Nav, Button } from 'react-bootstrap';
 
 

@@ -42,9 +42,17 @@ class PassoAdicionais extends Component {
        * permissão de duplicação de itens
        */
       if (action.action === 'select-option') {
+        // let contAd = 1;
+        // this.props.selectedAdicionais.value.forEach(adicional => {
+        //   let hash_id = adicional.value.split('_')[0];
+        //   if (action.option.value === hash_id) {
+        //     contAd++;
+        //   }
+        // });
+
         const adicional = {
           ...action.option,
-          value: action.option.value + '_' + Math.floor(Date.now()/1000)
+          value: action.option.value + '_' + Math.floor(Date.now()),
         };
         this.props.addAdicional(adicional);
       } else if (action.removedValue && (action.action === 'pop-value' || action.action === 'remove-value')) {
@@ -93,11 +101,14 @@ class PassoAdicionais extends Component {
                   isInvalid={this.props.selectedAdicionais.touched && this.props.selectedAdicionais.invalid}
                   invalidFeedback={this.props.selectedAdicionais.error}
                   innerRef={this.adicionaisRef}
-                  hideSelectedOptions={false} // ajuste para duplicar seleção de itens
+                  hideSelectedOptions={true} // ajuste para duplicar seleção de itens
                   isOptionSelected={() => false} // utilizado para não marcar selecionados
+                  getOptionValue={opt => opt.value} 
               />
               </div>
           </Form.Group>
+          <hr/>
+          {this.props.stepDefultButtons}
       </div>
     );
   }

@@ -2,7 +2,7 @@ import React from 'react';
 
 import classes from './SideDrawer.module.css';
 import Backdrop from '../../UI/Backdrop/Backdrop';
-import HocAux from '../../../hoc/HocAux/HocAux';
+import HocAux from '../../../hoc/hocAux/hocAux';
 import DrawerUser from './DrawerUser/DrawerUser';
 import DrawerMenu from './DrawerMenu/DrawerMenu';
 
