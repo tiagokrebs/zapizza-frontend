@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 
 import classes from './PassoEntrega.module.css';
 import { Form, FormControl, FormCheck } from 'react-bootstrap';
-import MaskedInput, { conformToMask } from 'react-text-mask';
+import MaskedInput from 'react-text-mask';
 import * as masks from '../../../../shared/inputMasks';
-import EnderecoForm from '../../../Cliente/ClienteForm/EnderecoForm/EnderecoForm';
 
 class PassoEntrega extends Component {
   tipoEntregaRef = React.createRef();

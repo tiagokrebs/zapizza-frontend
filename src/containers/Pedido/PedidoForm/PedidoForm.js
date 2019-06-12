@@ -16,6 +16,7 @@ import PassoEntrega from './PassoEntrega/PassoEntrega';
 import PedidoResumo from './PedidoResumo/PedidoRemumo';
 import * as yup from 'yup';
 import { yupLocale, inputsToValidation, inputsRestartValidity, inputsDefineErrors } from '../../../shared/yupHelpers';
+import { deleteTamanhoError } from '../../../store/actions/tamanho';
 
 class PedidoForm extends Component {
     getInitialState = () => {
@@ -330,6 +331,7 @@ class PedidoForm extends Component {
             })
     }
 
+    // todo: validações para limites de uso no passo pizza
     // todo: formas de revisar o pedido e totais durante e após finalização para confirmação final
     // todo: scrool top 0 ao mudar de passo e ao finaizar
 
@@ -405,6 +407,55 @@ class PedidoForm extends Component {
             const updatedInputs = inputsRestartValidity(this.state.inputs);
             this.setState({inputs: updatedInputs});
 
+            // validação manual de quantidade de sabores por tamanho
+            let error = false;
+            this.state.inputs.pizzas.forEach((pizza, index) => {
+                let saboresPermitidos = 0;
+                let bordasPermitidas = 0;
+                this.props.tamanhos.forEach(tamanho => {
+                    if (tamanho.hash_id === pizza.tamanho.value) {
+                        saboresPermitidos = tamanho.quantSabores;
+                        bordasPermitidas = tamanho.quantBordas;
+                    }
+                });
+                if (saboresPermitidos < pizza.sabores.value.length) {
+                    let pizzas = [...this.state.inputs.pizzas]
+                    pizzas[index].sabores.touched = true;
+                    pizzas[index].sabores.invalid = true;
+                    pizzas[index].sabores.error = 'O tamanho permite apenas ' + saboresPermitidos + ' sabor(es)';
+                    this.setState({...this.state,
+                        inputs: {
+                            ...this.state.inputs,
+                            pizzas: pizzas
+                    }});
+
+                    error = true;
+                }
+                if (bordasPermitidas < pizza.bordas.value.length) {
+                    let pizzas = [...this.state.inputs.pizzas]
+                    pizzas[index].bordas.touched = true;
+                    pizzas[index].bordas.invalid = true;
+                    pizzas[index].bordas.error = 'O tamanho permite apenas ' + bordasPermitidas + ' borda(s)';
+                    this.setState({...this.state,
+                        inputs: {
+                            ...this.state.inputs,
+                            pizzas: pizzas
+                    }});
+
+                    error = true;
+                }
+            });
+
+            /**
+             * se quantidade de sabores ou bordas excede limite chama reject()
+             * return não é chamado para que validação por schema prossiga
+             * caso reject() seja chamado nesse ponto o resolve() posterior
+             * não terá efeito
+             */
+            if (error) {
+                reject();
+            }
+
             // valida e define retorno dos erros em state
             if (schema) {
                 schema.validate(formValues, {abortEarly: false})
@@ -420,6 +471,7 @@ class PedidoForm extends Component {
                     });
                     this.setState({formIsValid: false});
                     this.setState({ loading: false });
+                    reject('Falha na validação');
                 });
             }
         });
@@ -487,7 +539,6 @@ class PedidoForm extends Component {
             this.checkFormIsValid
         ];
         const optionalSteps = [2];
-        const allCompleteStep = <PedidoResumo />;
 
         return (
             <Form noValidate onSubmit={this.submitHandler} className={classes.PedidoForm}>
@@ -512,12 +563,6 @@ class PedidoForm extends Component {
                         <PedidoResumo />
                     </div>
                 </div>
-                {/* {
-                    !this.state.allStepsCompleted ? null : (
-                        <PedidoResumo />
-                    )
-                } */}
-                {/* <PedidoResumo /> */}
             </Form>
         );
     }

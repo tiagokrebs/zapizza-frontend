@@ -109,8 +109,6 @@ const select = (props) => {
                     hideSelectedOptions={props.hideSelectedOptions}
                     tabSelectsValue={false}
                     isOptionSelected={props.isOptionSelected}
-                    getOptionValue={props.getOptionValue} 
-                    getOptionLabel={props.getOptionLabel}
                   />
                 {inputError}
             </div>
@@ -140,8 +138,6 @@ const select = (props) => {
                     hideSelectedOptions={props.hideSelectedOptions}
                     tabSelectsValue={false}
                     isOptionSelected={props.isOptionSelected}
-                    getOptionValue={props.getOptionValue} 
-                    getOptionLabel={props.getOptionLabel}
                   />
                 {inputError}
             </div>

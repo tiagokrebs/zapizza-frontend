@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 // import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
-import StepContent from '@material-ui/core/StepContent';
 import classes from './HorizontalStepper.module.css';
 import StepButton from '@material-ui/core/StepButton';
 
@@ -61,7 +60,7 @@ class HorizontalStepper extends Component {
         // É o último passo mas nem todos os passos foram completados
         // Encontra o primeiro passo que não foi completado
         const steps = this.props.steps;
-        activeStep = steps.findIndex((step, i) => !this.state.completed.has(i));
+        activeStep = steps.findIndex((_step, i) => !this.state.completed.has(i));
       } else {
         activeStep = this.state.activeStep + 1;
       }
@@ -115,7 +114,8 @@ class HorizontalStepper extends Component {
             }
             this.handleFinish();
           }
-        });
+        })
+      .catch(() => {});
     };
 
     handleReset = () => {
