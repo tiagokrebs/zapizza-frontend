@@ -9,6 +9,7 @@ class PassoEntrega extends Component {
   tipoEntregaRef = React.createRef();
 
   componentDidMount = () => {
+    this.props.onUpdateSize();
     this.tipoEntregaRef.current.focus();
   }
 

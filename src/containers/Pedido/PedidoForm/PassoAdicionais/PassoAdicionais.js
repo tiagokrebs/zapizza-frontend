@@ -8,6 +8,7 @@ class PassoAdicionais extends Component {
   adicionaisRef = React.createRef();
 
   componentDidMount = () => {
+    this.props.onUpdateSize();
     this.adicionaisRef.current.focus();
   }
 

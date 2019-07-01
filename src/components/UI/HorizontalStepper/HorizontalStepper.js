@@ -81,16 +81,17 @@ class HorizontalStepper extends Component {
     //   }));
     // };
 
-    handleStep = step => () => {
-      this.setState({
-        activeStep: step,
-      });
+    handleStep = step => {
+        this.setState({
+          activeStep: step,
+        });
     }
 
-    handleComplete = () => {
+    handleComplete = step => () => {
       // se passo validação do paso corrente ok prossegue
       const isValid = this.props.stepsValidation[this.state.activeStep];
-      isValid(this.state.activeStep)
+      if (isValid) {
+        isValid(this.state.activeStep)
         .then(() => {
           const completed = new Set(this.state.completed);
           const skipped = new Set(this.state.skipped);
@@ -106,16 +107,29 @@ class HorizontalStepper extends Component {
            * `if (!this.allStepsComplete())` however state is not set when we do this,
            * thus we have to resort to not being very DRY.
            */
-          if (completed.size !== this.totalSteps() - this.skippedSteps()) {
-              this.handleNext();
+          if (step >= 0) {
+            this.handleStep(step);
           } else {
-            if (this.props.parentCompleteSteps) {
-              this.props.parentCompleteSteps();
+            if (completed.size !== this.totalSteps() - this.skippedSteps()) {
+              this.handleNext();
+            } else {
+              if (this.props.parentCompleteSteps) {
+                this.props.parentCompleteSteps();
+              }
+              this.handleFinish();
             }
-            this.handleFinish();
           }
         })
-      .catch(() => {});
+        .catch(() => {
+          if (step >= 0) {
+            this.handleStep(step);
+          }
+        });
+      } else {
+        if (step >= 0) {
+          this.handleStep(step);
+        }
+      }
     };
 
     handleReset = () => {
@@ -168,7 +182,7 @@ class HorizontalStepper extends Component {
               activeStep !== steps.length && (
                   <Button
                   variant="outline-secondary"
-                  onClick={this.handleComplete}
+                  onClick={this.handleComplete(-1)}
                   className={classes.Button}
                   size="sm"
                   >
@@ -208,11 +222,12 @@ class HorizontalStepper extends Component {
                     return (
                       <Step key={label} {...props}>
                         <StepButton disableRipple
-                          onClick={this.handleStep(index)}
+                          // onClick={this.handleStep(index)}
+                          onClick={this.handleComplete(index)}
                           completed={this.isStepComplete(index)}
                           {...buttonProps}
                         >
-                          {label}
+                        {label}
                         </StepButton>
                       </Step>
                     );
@@ -224,7 +239,7 @@ class HorizontalStepper extends Component {
                     // Componente recebido em lista precisa ser clonado para passagem de props do parent
                     React.isValidElement(stepsContent[activeStep]) ?
                         React.cloneElement(stepsContent[activeStep], {
-                          handleComplete: this.handleComplete,
+                          handleComplete: this.handleComplete(-1),
                           stepDefultButtons: stepDefultButtons
                         }) : stepsContent[activeStep]
                     }

@@ -8,6 +8,7 @@ class PassoPizzas extends Component {
     tamanhosRef = React.createRef();
 
     componentDidMount = () => {
+        this.props.onUpdateSize();
         if (this.props.pizzaId === 0) {
             this.tamanhosRef.current.focus();
         }

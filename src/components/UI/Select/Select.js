@@ -102,7 +102,7 @@ const select = (props) => {
                     onChange={props.onChange}
                     onKeyDown={props.onKeyDown}
                     formatOptionLabel={formatOptionLabel}
-                    getOptionValue ={(option)=>option.label}
+                    getOptionValue ={props.getOptionValue ? props.getOptionValue : (option)=>option.label}
                     value={props.value}
                     inputValue={props.inputValue}
                     ref={props.innerRef}

@@ -16,7 +16,6 @@ import PassoEntrega from './PassoEntrega/PassoEntrega';
 import PedidoResumo from './PedidoResumo/PedidoRemumo';
 import * as yup from 'yup';
 import { yupLocale, inputsToValidation, inputsRestartValidity, inputsDefineErrors } from '../../../shared/yupHelpers';
-import { deleteTamanhoError } from '../../../store/actions/tamanho';
 
 class PedidoForm extends Component {
     getInitialState = () => {
@@ -130,6 +129,13 @@ class PedidoForm extends Component {
                 endereco: '', // endereço primário para exibição no card de seleção
                 enderecos: [] // outros endereços para escolha no PassoEntrega
             },
+            totalPizzas: 0,
+            resumoPizzas: [],
+            totalAdicionais: 0,
+            resumoAdicionais: '',
+            totalEntrega: 0,
+            resumoEntrega: '',
+            totalPedido: 0,
             allStepsCompleted: false,
             formIsValid: false,
             formSubmitSuceed: false
@@ -174,7 +180,7 @@ class PedidoForm extends Component {
                 inputs: {
                     ...this.state.inputs,
                     pizzas: pizzas
-                }});
+                }}, () => this.setTotais());
         }
     }
 
@@ -190,7 +196,7 @@ class PedidoForm extends Component {
             ]
           }
         }
-      });
+      }, () => this.setTotais());
     }
 
     remAdicional = (value) => {
@@ -209,17 +215,26 @@ class PedidoForm extends Component {
             ]
           }
         }
-      });
+      }, () => this.setTotais());
     }
 
     componentDidMount() {
-        this.props.onGetTamanhos();
-        this.props.onGetSabores();
-        this.props.onGetBordas();
-        this.props.onGetAdicionais();
+        if (this.props.tamanhos.length === 0) {
+            this.props.onGetTamanhos();
+        }
+        if (this.props.sabores.length === 0) {
+            this.props.onGetSabores();
+        }
+        if (this.props.bordas.length === 0) {
+            this.props.onGetBordas();
+        }
+        if (this.props.adicionais.length === 0) {
+            this.props.onGetAdicionais();
+        }
     }
 
     inputChangeHandler = (event) => {
+        // alterações nos inputs utiliza callback em setState para calculo de totais
         if (["adicionais", "tipoEntrega", "obsEntrega", "valorEntrega", "enderecoEntrega"].includes(event.target.name)) {
             // handler para inputs fixos
             const updatedFormElement = updateObject(this.state.inputs[event.target.name], {
@@ -230,7 +245,7 @@ class PedidoForm extends Component {
                 [event.target.name]: updatedFormElement
             });
 
-            this.setState({inputs: updatedinputs});
+            this.setState({inputs: updatedinputs}, () => this.setTotais());
         } else if (["tamanho", "sabores", "bordas"].includes(event.target.name)) {
             // handler para inputs dinamicos de telefone
             let pizzas = [...this.state.inputs.pizzas]
@@ -239,7 +254,8 @@ class PedidoForm extends Component {
                 inputs: {
                     ...this.state.inputs,
                     pizzas: pizzas
-            }});
+                }
+            }, () => this.setTotais());
         } else {
             // handler para inputs dinamicos de endereco
             // let enderecos = [...this.state.inputs.enderecos]
@@ -327,13 +343,107 @@ class PedidoForm extends Component {
                         endereco: endereco,
                         enderecos: cliente.enderecos
                     }
-                });
+                }, () => this.setTotais());
             })
     }
 
-    // todo: validações para limites de uso no passo pizza
-    // todo: formas de revisar o pedido e totais durante e após finalização para confirmação final
-    // todo: scrool top 0 ao mudar de passo e ao finaizar
+    setTotais = () => {
+        let totPizzas = 0, totAdcionais = 0, totEntrega = 0;
+        let resPizzas = '', listaResPizzas = [], resAdicionais = '', resEntrega = '';
+
+        // pizzas
+        this.state.inputs.pizzas.forEach((pizza, index) => {
+            const tamanhoId = pizza.tamanho.value;
+            const totalSabores = pizza.sabores.value.length;
+            const totalBordas = pizza.bordas.value.length;
+
+            // texto resumo tamanho
+            this.props.tamanhos.forEach(tamanho => {
+                if (tamanho.hash_id === tamanhoId) {
+                    resPizzas = resPizzas.concat('#', index+1, ' ', tamanho.descricao);
+                }
+            });
+            
+            // valor sabores + texto resumo
+            pizza.sabores.value.forEach(sabor => {
+                const saborId = sabor.value;
+                let valorSabor = 0;
+                this.props.sabores.forEach(sabor => {
+                    if (sabor.hash_id === saborId) {
+                        sabor.tamanhos.forEach(tamanho => {
+                            if (tamanho.hash_id === tamanhoId) {
+                                valorSabor = tamanho.valor / totalSabores;
+                                totPizzas += valorSabor;
+                            }
+                        });
+                        resPizzas = resPizzas.concat(', ', sabor.descricao);
+                    }
+                });
+            });
+            
+            // valor bordas + texto resumo
+            pizza.bordas.value.forEach(borda => {
+                const bordaId = borda.value;
+                let valorBorda = 0;
+                this.props.bordas.forEach((borda, index) => {
+                    if (borda.hash_id === bordaId) {
+                        valorBorda = borda.valor / totalBordas;
+                        totPizzas += valorBorda;
+                        resPizzas = resPizzas.concat(index === 0 ? 'Borda de ' : ', ', borda.descricao);
+                    }
+                });
+            });
+
+            listaResPizzas = [
+                ...listaResPizzas,
+                resPizzas
+            ];
+            resPizzas = '';            
+        });
+
+        // valor adicionais + texto resumo
+        this.state.inputs.adicionais.value.forEach((adicional, index) => {
+            this.props.adicionais.forEach(add => {
+                if (add.hash_id === adicional.hash_id) {
+                    totAdcionais += add.valor;
+                    resAdicionais = resAdicionais.concat(index === 0 ? '' : ', ', add.descricao)
+                }
+            });
+        });
+
+        // valor entrega + texto resumo
+        totEntrega = Number(masks.valorP6S2Unmask(this.state.inputs.valorEntrega.value));
+        if (this.state.inputs.tipoEntrega.value === 'E') {
+            let endereco = '';
+            this.state.selectedClienteData.enderecos.forEach(end => {
+                if (this.state.inputs.enderecoEntrega.value === end.hash_id) {
+                    endereco = end.logradouro +
+                    (end.numero ? ', ' + end.numero : '') +
+                    (end.complemento ? ', ' + end.complemento : '') +
+                    (end.bairro ? ', ' + end.bairro : '') +
+                    (end.cidade ? ', ' + end.cidade : '');
+                }
+            });
+            resEntrega = resEntrega.concat('Entrega. ', endereco, '. ', this.state.inputs.obsEntrega.value);
+        } else {
+            resEntrega = resEntrega.concat('Busca. ', this.state.inputs.obsEntrega.value);
+        }
+
+        // totais com ajuste para teto sempre em múltiplos de 0.5
+        totPizzas = Math.ceil(totPizzas/0.5)*0.5;
+        totAdcionais = Math.ceil(totAdcionais/0.5)*0.5
+        totEntrega = Math.ceil(totEntrega/0.5)*0.5
+        this.setState({
+            totalPizzas: totPizzas,
+            resumoPizzas: listaResPizzas,
+            totalAdicionais: totAdcionais,
+            resumoAdicionais: resAdicionais,
+            totalEntrega: totEntrega,
+            resumoEntrega: resEntrega,
+            totalPedido: totPizzas + totAdcionais + totEntrega
+        });
+
+    }
 
     checkFormIsValid = (passo) => {
         /**
@@ -378,18 +488,34 @@ class PedidoForm extends Component {
 
             // cria schema com base em passo
             let schema;
+            let inputs;
             if (passo === 0) {
                 // PassoCliente
                 schema = yup.object().shape(shapeCliente);
+                // inputs = {
+                //     cliente: {...this.state.inputs.cliente}
+                // }
             } else if (passo === 1) {
                 // PassoPizzas
                 schema = yup.object().shape(shapePizzas);
+                // inputs = {
+                //     pizzas: {...this.state.inputs.pizzas}
+                // }
             } else if (passo === 2) {
               // PassoAdicionais
               schema = yup.object().shape(shapeAdicionais);
+            //   inputs = {
+            //     adicionais: {...this.state.inputs.adicionais}
+            //     }
             } else if (passo === 3) {
               // PassoEntrega
               schema = yup.object().shape(shapeEntrega);
+            //   inputs = {
+            //     tipoEntrega: {...this.state.inputs.tipoEntrega},
+            //     enderecoEntrega: {...this.state.inputs.enderecoEntrega},
+            //     obsEntrega: {...this.state.inputs.obsEntrega},
+            //     valorEntrega: {...this.state.inputs.valorEntrega}
+            //     }
             } else {
               // todos os passos
               schema = yup.object().shape({
@@ -398,13 +524,15 @@ class PedidoForm extends Component {
                   ...shapeAdicionais,
                   ...shapeEntrega
               });
+            //   inputs = {...this.state.inputs}
             }
 
-            // cria objeto com base em state para validação)
+            // cria objeto com base em state para validação
             const formValues = inputsToValidation(this.state.inputs);
 
             // reinicia validade dos inputs do form em state
             const updatedInputs = inputsRestartValidity(this.state.inputs);
+           
             this.setState({inputs: updatedInputs});
 
             // validação manual de quantidade de sabores por tamanho
@@ -500,6 +628,7 @@ class PedidoForm extends Component {
                 getClienteData={this.getClienteData}
                 selectedClienteData={this.state.selectedClienteData}
                 formIsValid={this.checkFormIsValid}
+                onUpdateSize={this.props.onUpdateSize}
             />,
             <PassoPizzas
                 tamanhos={this.props.tamanhos}
@@ -511,6 +640,7 @@ class PedidoForm extends Component {
                 formIsValid={this.checkFormIsValid}
                 addPizza={this.addPizza}
                 remPizza={this.remPizza}
+                onUpdateSize={this.props.onUpdateSize}
                 />,
             <PassoAdicionais
               adicionais={this.props.adicionais}
@@ -520,6 +650,7 @@ class PedidoForm extends Component {
               formIsValid={this.checkFormIsValid}
               addAdicional={this.addAdicional}
               remAdicional={this.remAdicional}
+              onUpdateSize={this.props.onUpdateSize}
               />,
             <PassoEntrega
                 tipoEntrega={this.state.inputs.tipoEntrega}
@@ -530,6 +661,7 @@ class PedidoForm extends Component {
                 inputChangeHandler={this.inputChangeHandler}
                 inputBlurHandler={this.inputBlurHandler}
                 formIsValid={this.checkFormIsValid}
+                onUpdateSize={this.props.onUpdateSize}
             />
         ];
         const stepsValidation = [
@@ -555,12 +687,21 @@ class PedidoForm extends Component {
                                     stepsContent={stepsContent}
                                     stepsValidation={stepsValidation}
                                     optionalSteps={optionalSteps}
-                                    parentCompleteSteps={this.completeSteps} />
+                                    parentCompleteSteps={this.completeSteps}/>
                             </div>
                         </div>
                     </div>
                     <div className="col-sm-6">
-                        <PedidoResumo />
+                        <PedidoResumo
+                            totalPizzas={this.state.totalPizzas}
+                            totalAdicionais={this.state.totalAdicionais}
+                            totalEntrega={this.state.totalEntrega}
+                            totalPedido={this.state.totalPedido}
+                            resumoPizzas={this.state.resumoPizzas}
+                            resumoAdicionais={this.state.resumoAdicionais}
+                            resumoEntrega={this.state.resumoEntrega}
+                            cancelAction={this.props.cancelAll}
+                            />
                     </div>
                 </div>
             </Form>

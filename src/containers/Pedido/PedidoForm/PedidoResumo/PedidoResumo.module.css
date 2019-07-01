@@ -44,3 +44,10 @@
 .CardFooter button[type="submit"] {
     float: right;
 }
+
+.Buttons {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+    border-top: 1px solid #e9ecef;
+}

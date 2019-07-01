@@ -5,6 +5,10 @@ import { Form } from 'react-bootstrap';
 import Select from '../../../../components/UI/Select/Select';
 
 class PassoCliente extends Component {
+    // componentDidMount = () => {
+        
+    // }
+
     getAsyncOptions = (inputValue) => {
         if (/^[0-9]+$/.test(inputValue)) {
             // quando input possui apenas números pesquisa por telefone é disparada
