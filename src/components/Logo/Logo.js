@@ -7,7 +7,7 @@ import classes from './Logo.module.css';
 const logo = (props) => (
     <Link to="/">
         <div className={`${classes.Logo} navbar-brand`}>
-            <img src={zapizzaLogo} alt="Zapizza" />
+            {/* <img src={zapizzaLogo} alt="Zapizza" /> */}
         </div>
     </Link>
 );

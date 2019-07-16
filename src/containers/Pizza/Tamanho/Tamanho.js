@@ -11,7 +11,9 @@ import HocAux from '../../../hoc/hocAux/hocAux';
 import TamanhoForm from './TamanhoForm/TamanhoForm';
 import DeleteForm from '../../../components/DeleteForm/DeleteForm';
 import * as actions from '../../../store/actions';
-import RowActions from '../../../components/DataTable/RowActions/RowActions';
+import RowActionAtivar from '../../../components/DataTable/RowActions/RowActionAtivar';
+import RowActionEditar from '../../../components/DataTable/RowActions/RowActionEditar';
+import RowActionExcluir from '../../../components/DataTable/RowActions/RowActionExcluir';
 
 class Tamanho extends Component {
     state = {
@@ -98,12 +100,22 @@ class Tamanho extends Component {
                 text: '',
                 align: 'center',
                 formatter: (cellContent, row) => {
-                    return <RowActions
-                        row={row}
-                        modalFormUpdate={this.modalFormUpdate}
-                        submitEnableHandler={this.submitEnableHandler}
-                        modalFormDelete={this.modalFormDelete}
-                        />
+                    return (
+                        <div>
+                            <RowActionAtivar
+                                row={row}
+                                submitEnableHandler={this.submitEnableHandler}
+                            />
+                            <RowActionEditar
+                                row={row}
+                                modalFormUpdate={this.modalFormUpdate}
+                            />
+                            <RowActionExcluir
+                                row={row}
+                                modalFormDelete={this.modalFormDelete}
+                            />
+                        </div>
+                    )
                 }
             },
             {

@@ -7,7 +7,11 @@
     background: transparent;
     border-bottom: 1px solid #594336;
     display: flex;
-    /* justify-content: space-between; */
+    justify-content: space-between;
+}
+
+.CardHeader button {
+    margin-left: 10px;
 }
 
 .CardTitle {

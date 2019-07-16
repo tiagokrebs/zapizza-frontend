@@ -4,7 +4,9 @@ import classes from './Cliente.module.css';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/';
 import ZappSpinner from '../../components/ZappSpinner/ZappSpinner';
-import RowActions from '../../components/DataTable/RowActions/RowActions';
+import RowActionAtivar from '../../components/DataTable/RowActions/RowActionAtivar';
+import RowActionEditar from '../../components/DataTable/RowActions/RowActionEditar';
+import RowActionExcluir from '../../components/DataTable/RowActions/RowActionExcluir';
 import { Badge, Nav, Button } from 'react-bootstrap';
 import DataTableB from '../../components/UI/DataTableB/DataTableB';
 import PageTitle from '../../components/Page/PageTitle/PageTitle';
@@ -139,12 +141,22 @@ class Cliente extends Component {
                 text: '',
                 align: 'center',
                 formatter: (cellContent, row) => {
-                    return <RowActions
-                        row={row}
-                        modalFormUpdate={this.modalFormUpdate}
-                        submitEnableHandler={this.submitEnableHandler}
-                        modalFormDelete={this.modalFormDelete}
-                        />
+                    return (
+                        <div>
+                            <RowActionAtivar
+                                row={row}
+                                submitEnableHandler={this.submitEnableHandler}
+                            />
+                            <RowActionEditar
+                                row={row}
+                                modalFormUpdate={this.modalFormUpdate}
+                            />
+                            <RowActionExcluir
+                                row={row}
+                                modalFormDelete={this.modalFormDelete}
+                            />
+                        </div>
+                    )
                 }
             },
             {
